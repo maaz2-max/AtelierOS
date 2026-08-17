@@ -214,6 +214,86 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Right Action Controls (Desktop + Mobile Trigger) */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {/* Language & Country Selector Dropdown */}
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '5px 10px',
+                  background: 'var(--color-surface-secondary, #F8FAFC)',
+                  border: '1px solid var(--color-border, #E2E8F0)',
+                  borderRadius: 'var(--radius-sm, 6px)',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: 'var(--color-text-primary, #0F172A)',
+                  cursor: 'pointer'
+                }}
+                title="Select Language & Country"
+              >
+                <span>
+                  {currentLanguage === 'en' ? '🇬🇧' : currentLanguage === 'fr' ? '🇫🇷' : '🇨🇭'}
+                </span>
+                <span>{currentLanguage.toUpperCase()}</span>
+                <ChevronDown size={12} color="#64748B" />
+              </button>
+
+              {langDropdownOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '6px',
+                  background: 'var(--color-surface, #FFFFFF)',
+                  border: '1px solid var(--color-border, #E2E8F0)',
+                  borderRadius: '12px',
+                  padding: '6px',
+                  boxShadow: '0 12px 32px rgba(0, 0, 0, 0.12)',
+                  zIndex: 1300,
+                  minWidth: '220px'
+                }}>
+                  {[
+                    { code: 'en', flag: '🇬🇧', label: 'English', sub: 'Global / UK' },
+                    { code: 'fr', flag: '🇫🇷', label: 'Français', sub: 'France (TVA 20.0%)' },
+                    { code: 'fr-CH', flag: '🇨🇭', label: 'Français', sub: 'Suisse (TVA 8.1%)' },
+                    { code: 'de-CH', flag: '🇨🇭', label: 'Deutsch', sub: 'Schweiz (MWST 8.1%)' }
+                  ].map(l => (
+                    <div
+                      key={l.code}
+                      onClick={() => {
+                        onLanguageChange(l.code as SupportedLanguage);
+                        setLangDropdownOpen(false);
+                      }}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        background: currentLanguage === l.code ? 'var(--brand-blue-soft, #EFF6FF)' : 'transparent',
+                        color: currentLanguage === l.code ? 'var(--brand-blue, #2563EB)' : 'var(--color-text-primary, #0F172A)',
+                        fontWeight: currentLanguage === l.code ? '700' : '500',
+                        fontSize: '12px',
+                        transition: 'background 0.15s ease'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '16px' }}>{l.flag}</span>
+                        <div>
+                          <div>{l.label}</div>
+                          <div style={{ fontSize: '10px', color: '#64748B', fontWeight: '400' }}>{l.sub}</div>
+                        </div>
+                      </div>
+                      {currentLanguage === l.code && <Check size={14} color="#2563EB" />}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Log In Button */}
             <button
               onClick={onOpenLogin}
@@ -341,24 +421,33 @@ export const Header: React.FC<HeaderProps> = ({
               Quote Approval Portal
             </button>
 
-            <div style={{ display: 'flex', gap: '8px', marginTop: '8px', paddingTop: '12px', borderTop: '1px solid var(--color-border)' }}>
-              {['en', 'fr', 'fr-CH', 'de-CH'].map(l => (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginTop: '8px', paddingTop: '12px', borderTop: '1px solid var(--color-border)' }}>
+              {[
+                { code: 'en', flag: '🇬🇧', label: 'English (UK)' },
+                { code: 'fr', flag: '🇫🇷', label: 'Français (FR)' },
+                { code: 'fr-CH', flag: '🇨🇭', label: 'Français (CH)' },
+                { code: 'de-CH', flag: '🇨🇭', label: 'Deutsch (CH)' }
+              ].map(l => (
                 <button
-                  key={l}
-                  onClick={() => { onLanguageChange(l as SupportedLanguage); setMobileMenuOpen(false); }}
+                  key={l.code}
+                  onClick={() => { onLanguageChange(l.code as SupportedLanguage); setMobileMenuOpen(false); }}
                   style={{
-                    flex: 1,
-                    padding: '8px',
+                    padding: '8px 10px',
                     borderRadius: 'var(--radius-sm)',
-                    border: currentLanguage === l ? '1px solid var(--brand-blue)' : '1px solid var(--color-border)',
-                    background: currentLanguage === l ? 'var(--brand-blue-soft)' : 'var(--color-surface)',
-                    color: currentLanguage === l ? 'var(--brand-blue)' : 'var(--color-text-secondary)',
+                    border: currentLanguage === l.code ? '1px solid var(--brand-blue)' : '1px solid var(--color-border)',
+                    background: currentLanguage === l.code ? 'var(--brand-blue-soft)' : 'var(--color-surface)',
+                    color: currentLanguage === l.code ? 'var(--brand-blue)' : 'var(--color-text-primary)',
                     fontSize: '12px',
                     fontWeight: '600',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px'
                   }}
                 >
-                  {l.toUpperCase()}
+                  <span>{l.flag}</span>
+                  <span>{l.label}</span>
                 </button>
               ))}
             </div>

@@ -214,7 +214,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Right Action Controls (Desktop + Mobile Trigger) */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {/* Language & Country Selector Dropdown */}
+            {/* Clean Language & Country Selector Dropdown */}
             <div style={{ position: 'relative' }}>
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
@@ -222,22 +222,20 @@ export const Header: React.FC<HeaderProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '5px 10px',
-                  background: 'var(--color-surface-secondary, #F8FAFC)',
+                  padding: '6px 12px',
+                  background: '#FFFFFF',
                   border: '1px solid var(--color-border, #E2E8F0)',
                   borderRadius: 'var(--radius-sm, 6px)',
                   fontSize: '12px',
-                  fontWeight: '600',
+                  fontWeight: '700',
                   color: 'var(--color-text-primary, #0F172A)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
                 }}
-                title="Select Language & Country"
+                title="Select Language & Region"
               >
-                <span>
-                  {currentLanguage === 'en' ? '🇬🇧' : currentLanguage === 'fr' ? '🇫🇷' : '🇨🇭'}
-                </span>
                 <span>{currentLanguage.toUpperCase()}</span>
-                <ChevronDown size={12} color="#64748B" />
+                <ChevronDown size={13} color="#64748B" />
               </button>
 
               {langDropdownOpen && (
@@ -246,19 +244,19 @@ export const Header: React.FC<HeaderProps> = ({
                   top: '100%',
                   right: 0,
                   marginTop: '6px',
-                  background: 'var(--color-surface, #FFFFFF)',
-                  border: '1px solid var(--color-border, #E2E8F0)',
-                  borderRadius: '12px',
+                  background: '#FFFFFF',
+                  border: '1px solid #E2E8F0',
+                  borderRadius: '14px',
                   padding: '6px',
-                  boxShadow: '0 12px 32px rgba(0, 0, 0, 0.12)',
+                  boxShadow: '0 14px 35px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04)',
                   zIndex: 1300,
                   minWidth: '220px'
                 }}>
                   {[
-                    { code: 'en', flag: '🇬🇧', label: 'English', sub: 'Global / UK' },
-                    { code: 'fr', flag: '🇫🇷', label: 'Français', sub: 'France (TVA 20.0%)' },
-                    { code: 'fr-CH', flag: '🇨🇭', label: 'Français', sub: 'Suisse (TVA 8.1%)' },
-                    { code: 'de-CH', flag: '🇨🇭', label: 'Deutsch', sub: 'Schweiz (MWST 8.1%)' }
+                    { code: 'en', label: 'English', sub: 'Global / UK' },
+                    { code: 'fr', label: 'Français', sub: 'France (TVA 20.0%)' },
+                    { code: 'fr-CH', label: 'Français (CH)', sub: 'Suisse (TVA 8.1%)' },
+                    { code: 'de-CH', label: 'Deutsch (CH)', sub: 'Schweiz (MWST 8.1%)' }
                   ].map(l => (
                     <div
                       key={l.code}
@@ -267,27 +265,26 @@ export const Header: React.FC<HeaderProps> = ({
                         setLangDropdownOpen(false);
                       }}
                       style={{
-                        padding: '8px 12px',
-                        borderRadius: '8px',
+                        padding: '10px 14px',
+                        borderRadius: '10px',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        background: currentLanguage === l.code ? 'var(--brand-blue-soft, #EFF6FF)' : 'transparent',
-                        color: currentLanguage === l.code ? 'var(--brand-blue, #2563EB)' : 'var(--color-text-primary, #0F172A)',
+                        background: currentLanguage === l.code ? '#EFF6FF' : 'transparent',
+                        color: currentLanguage === l.code ? '#2563EB' : '#1E293B',
                         fontWeight: currentLanguage === l.code ? '700' : '500',
-                        fontSize: '12px',
+                        fontSize: '13px',
                         transition: 'background 0.15s ease'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ fontSize: '16px' }}>{l.flag}</span>
-                        <div>
-                          <div>{l.label}</div>
-                          <div style={{ fontSize: '10px', color: '#64748B', fontWeight: '400' }}>{l.sub}</div>
+                      <div>
+                        <div style={{ lineHeight: 1.2 }}>{l.label}</div>
+                        <div style={{ fontSize: '11px', color: currentLanguage === l.code ? '#3B82F6' : '#64748B', fontWeight: '400', marginTop: '2px' }}>
+                          {l.sub}
                         </div>
                       </div>
-                      {currentLanguage === l.code && <Check size={14} color="#2563EB" />}
+                      {currentLanguage === l.code && <Check size={16} color="#2563EB" />}
                     </div>
                   ))}
                 </div>

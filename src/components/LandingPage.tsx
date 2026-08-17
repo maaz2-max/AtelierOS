@@ -70,32 +70,32 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   const featureTabs = [
     {
-      title: "Central Scheduling Engine",
-      subtitle: "Single availability pipeline for staff, web bookings, and AI.",
+      title: t.landing?.feat1Title || "Central Scheduling Engine",
+      subtitle: t.landing?.feat1Desc || "Single availability pipeline for staff, web bookings, and AI.",
       icon: CalendarIcon,
       metrics: "100% Conflict-Free",
       color: "#0071e3",
       accent: "#EBF5FF"
     },
     {
-      title: "Mechanic Tablet Bay Mode",
-      subtitle: "Large 48px touch targets for rugged workshop stations.",
+      title: t.landing?.feat2Title || "Mechanic Tablet Bay Mode",
+      subtitle: t.landing?.feat2Desc || "Large 48px touch targets for rugged workshop stations.",
       icon: Tablet,
       metrics: "3.5x Faster Checklists",
       color: "#10b981",
       accent: "#ECFDF5"
     },
     {
-      title: "Cross-Border FR & CH Invoicing",
-      subtitle: "Deterministic tax compliance, Chorus Pro & Swiss QR-Bills.",
+      title: t.landing?.feat3Title || "Cross-Border FR & CH Invoicing",
+      subtitle: t.landing?.feat3Desc || "Deterministic tax compliance, Chorus Pro & Swiss QR-Bills.",
       icon: Receipt,
       metrics: "EUR 20% & CHF 8.1%",
       color: "#f76b15",
       accent: "#FFF4ED"
     },
     {
-      title: "Magic Link Quote Approvals",
-      subtitle: "Customers inspect parts & digitally sign in seconds.",
+      title: t.landing?.feat4Title || "Magic Link Quote Approvals",
+      subtitle: t.landing?.feat4Desc || "Customers inspect parts & digitally sign in seconds.",
       icon: FileCheck2,
       metrics: "< 3 Min Turnaround",
       color: "#7c3aed",
@@ -235,7 +235,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             textTransform: 'uppercase',
             fontFamily: 'var(--font-mono)'
           }}>
-            Automotive Superintelligence • France &amp; Switzerland
+            {t.landing?.badgeMultiTenant || "Automotive Superintelligence • France & Switzerland"}
           </span>
         </div>
 
@@ -249,7 +249,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           maxWidth: '1080px',
           color: '#101010'
         }}>
-          Precision Workshop Management for Europe's Elite Automotive Garages.
+          {t.landing?.heroTitle || "Precision Workshop Management for Europe's Elite Automotive Garages."}
         </h1>
 
         {/* Subtitle */}
@@ -262,7 +262,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           fontWeight: '400',
           letterSpacing: '-0.01em'
         }}>
-          Engineered for France and Switzerland from day one. Single central scheduling engine, grease-resistant tablet mechanic stations, deterministic cross-border invoicing, and Chorus Pro e-invoicing.
+          {t.landing?.heroSubtitle || "Engineered for France and Switzerland from day one. Single central scheduling engine, grease-resistant tablet mechanic stations, deterministic cross-border invoicing, and Chorus Pro e-invoicing."}
         </p>
 
         {/* Octolane-Style Pill Action Buttons */}
@@ -294,7 +294,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               transition: 'all 0.15s ease'
             }}
           >
-            <span>Launch Workshop App</span>
+            <span>{t.landing?.ctaLaunchApp || "Launch Workshop App"}</span>
             <ArrowRight size={16} />
           </button>
 
@@ -318,6 +318,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             }}
           >
             <CalendarIcon size={16} color="#0071E3" />
+            <span>{t.landing?.ctaCustomerBooking || "Customer Web Booking"}</span>
           </button>
         </div>
 
@@ -580,10 +581,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             RETURN ON INVESTMENT
           </span>
           <h2 style={{ fontSize: 'clamp(26px, 4.5vw, 42px)', fontWeight: '800', letterSpacing: '-0.03em', margin: '0 0 10px', color: '#101010' }}>
-            Calculate Your Workshop ROI
+            {t.landing?.roiTitle || "Calculate Your Workshop ROI"}
           </h2>
           <p style={{ fontSize: 'clamp(14px, 2.5vw, 16px)', color: '#64748B', maxWidth: '650px', margin: '0 auto' }}>
-            See how much administrative time and billable revenue AtelierOS recovers for your garage every month.
+            {t.landing?.roiSubtitle || "See how much administrative time and billable revenue AtelierOS recovers for your garage every month."}
           </p>
         </div>
 
@@ -596,7 +597,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* Sliders Input Column */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '22px', flexWrap: 'wrap', gap: '8px' }}>
-              <span style={{ fontSize: '14px', fontWeight: '700', color: '#101010' }}>Garage Currency</span>
+              <span style={{ fontSize: '14px', fontWeight: '700', color: '#101010' }}>{t.common?.currency || "Garage Currency"}</span>
               <div style={{ display: 'flex', background: '#FFFFFF', borderRadius: '9999px', padding: '3px', boxShadow: 'var(--shadow-octo)' }}>
                 <button
                   onClick={() => setPricingCurrency('EUR')}
@@ -634,7 +635,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Slider 1: Mechanics Count */}
             <div style={{ marginBottom: '26px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '4px' }}>
-                <label style={{ fontSize: '13px', color: '#475569', fontWeight: '600' }}>Number of Active Mechanics</label>
+                <label style={{ fontSize: '13px', color: '#475569', fontWeight: '600' }}>{t.landing?.roiMechanicsLabel || "Number of Active Mechanics"}</label>
                 <span style={{ fontSize: '15px', fontWeight: '700', color: '#0071E3', fontFamily: 'var(--font-mono)' }}>{mechanicsCount} Techs</span>
               </div>
               <input
@@ -650,7 +651,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Slider 2: Monthly Work Orders */}
             <div style={{ marginBottom: '18px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '4px' }}>
-                <label style={{ fontSize: '13px', color: '#475569', fontWeight: '600' }}>Work Orders Completed / Month</label>
+                <label style={{ fontSize: '13px', color: '#475569', fontWeight: '600' }}>{t.landing?.roiMonthlyWorkOrders || "Work Orders Completed / Month"}</label>
                 <span style={{ fontSize: '15px', fontWeight: '700', color: '#10B981', fontFamily: 'var(--font-mono)' }}>{monthlyOrders} Orders</span>
               </div>
               <input
@@ -676,14 +677,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             boxShadow: 'var(--shadow-octo)'
           }}>
             <div style={{ marginBottom: '22px' }}>
-              <div className="octo-telemetry">ADMINISTRATIVE HOURS SAVED / MONTH</div>
+              <div className="octo-telemetry">{t.landing?.roiHoursSaved || "ADMINISTRATIVE HOURS SAVED / MONTH"}</div>
               <div style={{ fontSize: 'clamp(34px, 6.5vw, 48px)', fontWeight: '800', color: '#101010', letterSpacing: '-0.03em', margin: '4px 0' }}>
                 {hoursSavedPerMonth} <span style={{ fontSize: '18px', fontWeight: '500', color: '#64748B' }}>Hours</span>
               </div>
             </div>
 
             <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '18px' }}>
-              <div className="octo-telemetry" style={{ color: '#10B981' }}>ESTIMATED MONTHLY REVENUE GAIN</div>
+              <div className="octo-telemetry" style={{ color: '#10B981' }}>{t.landing?.roiRevenueGain || "ESTIMATED MONTHLY REVENUE GAIN"}</div>
               <div style={{ fontSize: 'clamp(34px, 6.5vw, 48px)', fontWeight: '800', color: '#10B981', letterSpacing: '-0.03em', margin: '4px 0' }}>
                 {pricingCurrency === 'EUR' ? `€${revenueGain.toLocaleString()}` : `CHF ${revenueGain.toLocaleString()}`}
               </div>

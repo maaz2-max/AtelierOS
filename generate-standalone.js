@@ -119,7 +119,10 @@ const iconSvgMap = {
   LayoutDashboard: '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
   Inbox: '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
   Bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
-  Command: '<path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3z"/>'
+  Command: '<path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3z"/>',
+  Flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+  CheckCircle: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+  Play: '<polygon points="5 3 19 12 5 21 5 3"/>'
 };
 
 async function build() {
@@ -165,7 +168,7 @@ const _Icons = new Proxy(_iconSvgMap, {
   }
 });
 
-const { Activity, AlertCircle, AlertTriangle, ArrowLeft, ArrowRight, Bell, Bot, Building2, Calculator, Calendar, CalendarIcon, Camera, Car, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, ClipboardList, Clock, Code, Command, Copy, Cpu, CreditCard, DollarSign, Edit3, ExternalLink, Eye, FileCheck2, FileText, Filter, Fuel, Gauge, Globe2, HelpCircle, Inbox, Info, Layers, LayoutDashboard, Lock, LogOut, Mail, MapPin, MessageSquare, Moon, PenTool, Phone, Plus, Printer, QrCode, Receipt, RotateCcw, Save, Search, Send, Server, ShieldCheck, Sliders, Smartphone, Sparkles, Sun, Tablet, Timer, Trash2, User, UserPlus, Users, Wrench, X, XCircle, Zap } = _Icons;
+const { Activity, AlertCircle, AlertTriangle, ArrowLeft, ArrowRight, Bell, Bot, Building2, Calculator, Calendar, CalendarIcon, Camera, Car, Check, CheckCircle, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, ClipboardList, Clock, Code, Command, Copy, Cpu, CreditCard, DollarSign, Edit3, ExternalLink, Eye, FileCheck2, FileText, Filter, Flame, Fuel, Gauge, Globe2, HelpCircle, Inbox, Info, Layers, LayoutDashboard, Lock, LogOut, Mail, MapPin, MessageSquare, Moon, PenTool, Phone, Play, Plus, Printer, QrCode, Receipt, RotateCcw, Save, Search, Send, Server, ShieldCheck, Sliders, Smartphone, Sparkles, Sun, Tablet, Timer, Trash2, User, UserPlus, Users, Wrench, X, XCircle, Zap } = _Icons;
 `;
 
     const files = [

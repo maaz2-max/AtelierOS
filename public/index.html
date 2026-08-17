@@ -76,6 +76,24 @@
   --color-ai-border: #DDD6FE;
   --color-ai-dark: #A78BFA;
 
+  /* Octolane High-Contrast Design Tokens */
+  --octo-ink: #101010;
+  --octo-ink-hover: #1F1F1F;
+  --octo-surface: #F4F5F7;
+  --octo-surface-hover: #ECEEF2;
+  --octo-orange: #F76B15;
+  --octo-orange-soft: #FFF4ED;
+  --octo-orange-border: #FFD4B8;
+  --octo-emerald: #10B981;
+  --octo-emerald-soft: #ECFDF5;
+  --octo-emerald-border: #A7F3D0;
+  --octo-blue: #0071E3;
+  --octo-blue-soft: #EBF5FF;
+  --octo-blue-border: #B9DCFE;
+  --octo-purple: #7C3AED;
+  --octo-purple-soft: #F5F3FF;
+  --octo-purple-border: #DDD6FE;
+
   /* Restrained Border Radii */
   --radius-xs: 4px;
   --radius-sm: 6px;
@@ -83,6 +101,8 @@
   --radius-button: 8px;
   --radius-card: 10px;
   --radius-modal: 14px;
+  --radius-pill: 9999px;
+  --radius-superellipse: 24px;
   --radius-full: 9999px;
 
   /* Typography */
@@ -91,6 +111,8 @@
 
   /* Shadows - Minimalist 1px Border Dominant */
   --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-octo: 0 0 0 0.5px rgba(10, 11, 13, 0.09), 0 2px 6px rgba(10, 11, 13, 0.06);
+  --shadow-dropdown: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
   --shadow-dropdown: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
   --shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.05);
 
@@ -363,10 +385,55 @@ html, body {
   }
 }
 
-  maxWidth: 620px;
-  box-shadow: var(--shadow-modal);
-  overflow: hidden;
+/* ==========================================================================
+   Octolane Kinetic Animations & Superellipse Components
+   ========================================================================== */
+
+@keyframes spinCw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
+
+@keyframes spinCcw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.04); }
+}
+
+.octo-superellipse {
+  border-radius: 24px;
+  background: var(--octo-surface);
+  border: 1px solid rgba(10, 11, 13, 0.08);
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+}
+.octo-superellipse:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+}
+
+.octo-chip {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-octo);
+  background: #FFFFFF;
+}
+
+.octo-telemetry {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
 
   </style>
 </head>

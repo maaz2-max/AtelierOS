@@ -1,9 +1,10 @@
 // ==========================================================================
-// AtelierOS — Ultra-Premium Responsive Liquid Glass Landing Page
-// Fully Optimized for Fold Phones, Mobile, iPad/Tablet, Laptop & Desktop
+// AtelierOS — Ultra-Premium Octolane-Inspired Automotive SaaS Experience
+// Inspired by Octolane.com & Linear/Vercel Engineering Aesthetics
+// Dynamic Kinetic Background, Superellipse Bento, Live Telemetry & Micro-Interactions
 // ==========================================================================
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowRight, 
   Calendar as CalendarIcon, 
@@ -21,7 +22,11 @@ import {
   Check, 
   ExternalLink,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Lock,
+  Flame,
+  CheckCircle,
+  Play
 } from 'lucide-react';
 import { SupportedLanguage } from '../types';
 import { translations } from '../i18n/translations';
@@ -42,13 +47,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   currentLanguage
 }) => {
   const t = (translations[currentLanguage] || translations.en) as any;
-  const tl = t.landing || {};
 
   // Interactive ROI Calculator State
   const [mechanicsCount, setMechanicsCount] = useState(4);
   const [monthlyOrders, setMonthlyOrders] = useState(140);
   const [pricingCurrency, setPricingCurrency] = useState<'EUR' | 'CHF'>('EUR');
   const [activeTabFeature, setActiveTabFeature] = useState<number>(0);
+  const [liveMeterProgress, setLiveMeterProgress] = useState(68);
+
+  // Live animation interval for telemetry
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLiveMeterProgress(prev => (prev >= 94 ? 64 : prev + 2));
+    }, 1800);
+    return () => clearInterval(interval);
+  }, []);
 
   // ROI Calculations
   const hoursSavedPerMonth = Math.round(monthlyOrders * 0.85 + mechanicsCount * 12);
@@ -61,156 +74,215 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       subtitle: "Single availability pipeline for staff, web bookings, and AI.",
       icon: CalendarIcon,
       metrics: "100% Conflict-Free",
-      color: "#0071e3"
+      color: "#0071e3",
+      accent: "#EBF5FF"
     },
     {
       title: "Mechanic Tablet Bay Mode",
       subtitle: "Large 48px touch targets for rugged workshop stations.",
       icon: Tablet,
       metrics: "3.5x Faster Checklists",
-      color: "#34c759"
+      color: "#10b981",
+      accent: "#ECFDF5"
     },
     {
       title: "Cross-Border FR & CH Invoicing",
       subtitle: "Deterministic tax compliance, Chorus Pro & Swiss QR-Bills.",
       icon: Receipt,
       metrics: "EUR 20% & CHF 8.1%",
-      color: "#5856d6"
+      color: "#f76b15",
+      accent: "#FFF4ED"
     },
     {
       title: "Magic Link Quote Approvals",
       subtitle: "Customers inspect parts & digitally sign in seconds.",
       icon: FileCheck2,
       metrics: "< 3 Min Turnaround",
-      color: "#ff9500"
+      color: "#7c3aed",
+      accent: "#F5F3FF"
     }
   ];
 
   return (
     <div style={{ 
       minHeight: '100vh', 
-      backgroundColor: '#fbfbfd', 
-      color: '#1d1d1f',
+      backgroundColor: '#ffffff', 
+      color: '#101010',
       fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
-      overflowX: 'hidden'
+      overflowX: 'hidden',
+      position: 'relative'
     }}>
-      {/* Background Soft Refractive Glows */}
+
+      {/* ==================================================================== */}
+      {/* KINETIC GEOMETRIC BACKGROUND (OCTOLANE SIGNATURE STYLE) */}
+      {/* ==================================================================== */}
+      <div aria-hidden="true" style={{
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        width: '120vmin',
+        height: '120vmin',
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none',
+        zIndex: 0,
+        opacity: 0.45
+      }}>
+        <svg viewBox="0 0 1000 1000" fill="none" style={{ width: '100%', height: '100%' }}>
+          <g style={{ animation: 'spinCw 280s linear infinite', transformOrigin: '500px 500px' }}>
+            <polygon points="500,40 900,270 900,730 500,960 100,730 100,270" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="6 6" />
+            <circle cx="500" cy="500" r="440" stroke="#F1F5F9" strokeWidth="1" />
+          </g>
+          <g style={{ animation: 'spinCcw 200s linear infinite', transformOrigin: '500px 500px' }}>
+            <polygon points="500,120 830,310 830,690 500,880 170,690 170,310" stroke="#E2E8F0" strokeWidth="0.8" />
+            <circle cx="500" cy="500" r="320" stroke="#E2E8F0" strokeWidth="0.8" strokeDasharray="4 4" />
+          </g>
+          <g style={{ animation: 'spinCw 140s linear infinite', transformOrigin: '500px 500px' }}>
+            <circle cx="500" cy="500" r="200" stroke="#CBD5E1" strokeWidth="0.8" />
+          </g>
+        </svg>
+      </div>
+
+      {/* Soft Ambient Refraction Gradients */}
       <div style={{
         position: 'fixed',
-        top: '-10%',
-        left: '15%',
-        width: 'clamp(300px, 50vw, 700px)',
-        height: 'clamp(300px, 50vw, 700px)',
-        background: 'radial-gradient(circle, rgba(0, 113, 227, 0.08) 0%, rgba(255,255,255,0) 70%)',
-        filter: 'blur(90px)',
+        top: '-15%',
+        left: '10%',
+        width: '600px',
+        height: '600px',
+        background: 'radial-gradient(circle, rgba(247, 107, 21, 0.05) 0%, rgba(255,255,255,0) 70%)',
+        filter: 'blur(80px)',
         zIndex: 0,
         pointerEvents: 'none'
       }}></div>
       <div style={{
         position: 'fixed',
-        top: '45%',
+        top: '35%',
         right: '-10%',
-        width: 'clamp(300px, 50vw, 800px)',
-        height: 'clamp(300px, 50vw, 800px)',
-        background: 'radial-gradient(circle, rgba(88, 86, 214, 0.06) 0%, rgba(255,255,255,0) 70%)',
-        filter: 'blur(100px)',
+        width: '700px',
+        height: '700px',
+        background: 'radial-gradient(circle, rgba(0, 113, 227, 0.06) 0%, rgba(255,255,255,0) 70%)',
+        filter: 'blur(90px)',
         zIndex: 0,
         pointerEvents: 'none'
       }}></div>
 
       {/* ==================================================================== */}
-      {/* SECTION 1: HERO & 3D SHOWCASE */}
+      {/* SECTION 1: OCTOLANE-INSPIRED HERO & TELEMETRY */}
       {/* ==================================================================== */}
       <section style={{
         position: 'relative',
         zIndex: 1,
-        padding: 'clamp(36px, 6vw, 70px) clamp(16px, 4vw, 24px) clamp(30px, 5vw, 60px)',
-        maxWidth: '1400px',
+        padding: 'clamp(40px, 7vw, 84px) clamp(16px, 4vw, 24px) clamp(30px, 5vw, 60px)',
+        maxWidth: '1360px',
         margin: '0 auto',
         textAlign: 'center'
       }}>
-        {/* Pill Badge */}
+        
+        {/* Floating Telemetry Annotation (Desktop Corner) */}
+        <aside className="desktop-only octo-telemetry" style={{
+          position: 'absolute',
+          top: '40px',
+          right: '24px',
+          textAlign: 'right',
+          lineHeight: '1.9'
+        }}>
+          <div>// ATELIER OS · LIVE ENGINE</div>
+          <div style={{ color: '#F76B15', fontWeight: '600' }}>4 BAYS ACTIVE · 0 CONFLICTS</div>
+          <div>20.0% FACTUR-X &amp; 8.1% QR-BILL</div>
+          <div>LEARNING NEVER FORGETS</div>
+        </aside>
+
+        <aside className="desktop-only octo-telemetry" style={{
+          position: 'absolute',
+          top: '40px',
+          left: '24px',
+          textAlign: 'left',
+          lineHeight: '1.9'
+        }}>
+          <div>// AUTO INTEL · RUNTIME</div>
+          <div>12MS BAY CONSTRAINT SOLVER</div>
+          <div>3-SEC MAGIC QUOTE SIGN-OFF</div>
+          <div style={{ color: '#10B981', fontWeight: '600' }}>CHORUS PRO CERTIFIED ✓</div>
+        </aside>
+
+        {/* Superellipse Pill Badge */}
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
           gap: '8px',
           padding: '6px 14px',
-          borderRadius: '30px',
-          background: 'rgba(255, 255, 255, 0.85)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0, 0, 0, 0.08)',
-          marginBottom: '20px',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+          borderRadius: '9999px',
+          background: '#F4F5F7',
+          border: '1px solid rgba(10, 11, 13, 0.08)',
+          marginBottom: '22px',
+          boxShadow: 'var(--shadow-octo)',
           maxWidth: '100%'
         }}>
           <span style={{ 
             width: '8px', 
             height: '8px', 
             borderRadius: '50%', 
-            background: '#34c759', 
-            boxShadow: '0 0 8px rgba(52, 199, 89, 0.6)',
+            background: '#F76B15', 
+            boxShadow: '0 0 8px rgba(247, 107, 21, 0.6)',
             display: 'inline-block',
             flexShrink: 0
           }}></span>
           <span style={{ 
-            fontSize: 'clamp(11px, 2.5vw, 13px)', 
+            fontSize: 'clamp(11px, 2.5vw, 12.5px)', 
             fontWeight: '600', 
-            color: '#1d1d1f', 
-            letterSpacing: '-0.01em',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap'
+            color: '#101010', 
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            fontFamily: 'var(--font-mono)'
           }}>
-            AtelierOS • Prototype Preview • Active Development
+            Automotive Superintelligence • France &amp; Switzerland
           </span>
         </div>
 
-        {/* Main Headline */}
+        {/* Hero Headline */}
         <h1 style={{
-          fontSize: 'clamp(28px, 6vw, 64px)',
+          fontSize: 'clamp(32px, 6.8vw, 76px)',
           fontWeight: '800',
-          letterSpacing: '-0.03em',
-          lineHeight: 1.12,
-          margin: '0 auto 16px',
-          maxWidth: '1100px',
-          color: '#1d1d1f'
+          letterSpacing: '-0.035em',
+          lineHeight: 1.06,
+          margin: '0 auto 18px',
+          maxWidth: '1080px',
+          color: '#101010'
         }}>
           Precision Workshop Management for Europe's Elite Automotive Garages.
         </h1>
 
         {/* Subtitle */}
         <p style={{
-          fontSize: 'clamp(14px, 3.5vw, 19px)',
-          lineHeight: 1.55,
-          color: '#6e6e73',
-          maxWidth: '840px',
-          margin: '0 auto 32px',
+          fontSize: 'clamp(15px, 3.2vw, 19px)',
+          lineHeight: 1.6,
+          color: '#475569',
+          maxWidth: '780px',
+          margin: '0 auto 36px',
           fontWeight: '400',
           letterSpacing: '-0.01em'
         }}>
           Engineered for France and Switzerland from day one. Single central scheduling engine, grease-resistant tablet mechanic stations, deterministic cross-border invoicing, and Chorus Pro e-invoicing.
         </p>
 
-        {/* Hero CTAs */}
+        {/* Octolane-Style Pill Action Buttons */}
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '12px',
-          marginBottom: '40px'
+          gap: '10px',
+          marginBottom: '44px'
         }}>
           <button
             onClick={onLaunchApp}
             style={{
-              flex: '1 1 220px',
-              maxWidth: '300px',
-              padding: '14px 24px',
-              borderRadius: '14px',
+              padding: '0 26px',
+              height: '46px',
+              borderRadius: '9999px',
               border: 'none',
-              background: 'linear-gradient(135deg, #0071e3 0%, #0095ff 100%)',
-              color: '#ffffff',
+              background: '#101010',
+              color: '#FFFFFF',
               fontSize: '15px',
               fontWeight: '600',
               cursor: 'pointer',
@@ -218,8 +290,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              boxShadow: '0 8px 24px rgba(0, 113, 227, 0.35)',
-              transition: 'transform 0.15s ease'
+              boxShadow: '0 0 0 0.5px rgba(10, 11, 13, 0.09), 0 4px 14px rgba(0, 0, 0, 0.15)',
+              transition: 'all 0.15s ease'
             }}
           >
             <span>Launch Workshop App</span>
@@ -229,14 +301,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <button
             onClick={onLaunchBooking}
             style={{
-              flex: '1 1 200px',
-              maxWidth: '280px',
-              padding: '14px 22px',
-              borderRadius: '14px',
-              border: '1px solid rgba(0, 0, 0, 0.1)',
-              background: '#ffffff',
-              boxShadow: '0 4px 14px rgba(0,0,0,0.05)',
-              color: '#1d1d1f',
+              padding: '0 22px',
+              height: '46px',
+              borderRadius: '9999px',
+              border: '1px solid rgba(10, 11, 13, 0.12)',
+              background: '#FFFFFF',
+              boxShadow: 'var(--shadow-octo)',
+              color: '#101010',
               fontSize: '15px',
               fontWeight: '500',
               cursor: 'pointer',
@@ -246,21 +317,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               gap: '8px'
             }}
           >
-            <CalendarIcon size={16} color="#0071e3" />
-            <span>Web Booking</span>
+            <CalendarIcon size={16} color="#0071E3" />
+            <span>Customer Web Booking</span>
           </button>
 
           <button
             onClick={onOpenAi}
             style={{
-              flex: '1 1 180px',
-              maxWidth: '240px',
-              padding: '14px 20px',
-              borderRadius: '14px',
-              border: '1px solid rgba(104, 48, 255, 0.2)',
-              background: 'linear-gradient(135deg, #f7f5ff 0%, #ffffff 100%)',
-              boxShadow: '0 4px 14px rgba(104, 48, 255, 0.08)',
-              color: '#5856d6',
+              padding: '0 20px',
+              height: '46px',
+              borderRadius: '9999px',
+              border: '1px solid #DDD6FE',
+              background: '#F5F3FF',
+              boxShadow: '0 2px 8px rgba(124, 58, 237, 0.08)',
+              color: '#7C3AED',
               fontSize: '15px',
               fontWeight: '600',
               cursor: 'pointer',
@@ -270,31 +340,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               gap: '8px'
             }}
           >
-            <Sparkles size={16} color="#5856d6" />
+            <Sparkles size={16} color="#7C3AED" />
             <span>AutoAI Receptionist</span>
           </button>
         </div>
 
-        {/* 3D Showcase Container */}
+        {/* 3D Photorealistic Workshop Showcase (Superellipse Frame) */}
         <div style={{
           position: 'relative',
           maxWidth: '1280px',
           margin: '0 auto',
-          borderRadius: '24px',
+          borderRadius: '28px',
           padding: '6px',
-          background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 240, 245, 0.6) 100%)',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.06)',
+          background: 'linear-gradient(180deg, #F4F5F7 0%, #E2E8F0 100%)',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(10, 11, 13, 0.06)',
           overflow: 'hidden'
         }}>
-          {/* Main 3D Image Render */}
           <div style={{
             position: 'relative',
-            borderRadius: '18px',
+            borderRadius: '22px',
             overflow: 'hidden',
             aspectRatio: '16/9',
             maxHeight: '560px',
             width: '100%',
-            background: '#111'
+            background: '#0B1220'
           }}>
             <img 
               src="/assets/workshop_3d_hero.jpg" 
@@ -306,196 +375,215 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 display: 'block'
               }}
             />
-
-            {/* Subtle Gradient Blend */}
             <div style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)',
+              background: 'linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%)',
               pointerEvents: 'none'
             }}></div>
           </div>
         </div>
 
-        {/* Liquid Glass Highlight Cards (Responsive Grid) */}
+        {/* Live System Metric Chips (Octolane Row) */}
         <div style={{
           maxWidth: '1280px',
-          margin: '20px auto 0',
+          margin: '24px auto 0',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
           gap: '16px'
         }}>
-          {/* Card 1: Central Engine Pulse */}
-          <div className="saas-card" style={{ padding: '18px 20px', textAlign: 'left' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#0071e3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Activity size={16} color="#fff" />
+          {/* Metric 1 */}
+          <div className="octo-superellipse" style={{ padding: '20px', textAlign: 'left' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+              <div className="octo-chip" style={{ color: '#F76B15' }}>
+                <Flame size={18} />
               </div>
               <div>
-                <div style={{ fontSize: '14px', fontWeight: '700', color: '#1d1d1f' }}>ONE Central Scheduling Engine</div>
-                <div style={{ fontSize: '11px', color: '#248a3d', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#34c759', display: 'inline-block' }}></span>
-                  Shared by Staff, Web &amp; AI
-                </div>
+                <div style={{ fontSize: '15px', fontWeight: '700', color: '#101010' }}>ONE Central Engine</div>
+                <div className="octo-telemetry" style={{ color: '#F76B15' }}>SHARED BY STAFF, WEB &amp; AI</div>
               </div>
             </div>
-            <div style={{ fontSize: '12px', color: '#515154', lineHeight: 1.4 }}>
-              Real-time bay capacity, mechanic skills &amp; 15-min buffers verified across all channels.
+            <div style={{ fontSize: '13px', color: '#64748B', lineHeight: 1.5 }}>
+              Single availability pipeline enforcing mechanic skill matrices, bay lift specs, and 15m cleaning buffers.
             </div>
           </div>
 
-          {/* Card 2: Cross-Border Compliance */}
-          <div className="saas-card" style={{ padding: '18px 20px', textAlign: 'left' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-              <span style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#86868b' }}>
-                CROSS-BORDER BILLING
-              </span>
-              <span style={{ fontSize: '10px', background: '#e1f0ff', color: '#0071e3', padding: '2px 8px', borderRadius: '6px', fontWeight: '700' }}>
-                EUR &amp; CHF
-              </span>
+          {/* Metric 2 */}
+          <div className="octo-superellipse" style={{ padding: '20px', textAlign: 'left' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+              <div className="octo-chip" style={{ color: '#0071E3' }}>
+                <ShieldCheck size={18} />
+              </div>
+              <div>
+                <div style={{ fontSize: '15px', fontWeight: '700', color: '#101010' }}>Cross-Border Invoicing</div>
+                <div className="octo-telemetry" style={{ color: '#0071E3' }}>EUR 20.0% • CHF 8.1% QR-BILL</div>
+              </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
-              <div style={{ background: 'var(--color-surface-secondary)', padding: '8px 12px', borderRadius: '8px', flex: 1 }}>
-                <div style={{ fontSize: '10px', color: '#86868b', fontWeight: '600' }}>FRANCE (TVA)</div>
-                <div style={{ fontSize: '14px', fontWeight: '700', color: '#1d1d1f' }}>20.0% Factur-X</div>
+            <div style={{ fontSize: '13px', color: '#64748B', lineHeight: 1.5 }}>
+              Deterministic tax calculation with certified Chorus Pro Factur-X XML and Swiss structured QR-Bills.
+            </div>
+          </div>
+
+          {/* Metric 3 */}
+          <div className="octo-superellipse" style={{ padding: '20px', textAlign: 'left' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+              <div className="octo-chip" style={{ color: '#10B981' }}>
+                <Tablet size={18} />
               </div>
-              <div style={{ background: 'var(--color-surface-secondary)', padding: '8px 12px', borderRadius: '8px', flex: 1 }}>
-                <div style={{ fontSize: '10px', color: '#86868b', fontWeight: '600' }}>SWITZERLAND</div>
-                <div style={{ fontSize: '14px', fontWeight: '700', color: '#1d1d1f' }}>8.1% QR-Bill</div>
+              <div>
+                <div style={{ fontSize: '15px', fontWeight: '700', color: '#101010' }}>Mechanic Tablet Station</div>
+                <div className="octo-telemetry" style={{ color: '#10B981' }}>GREASE-RESISTANT 48PX UI</div>
               </div>
+            </div>
+            <div style={{ fontSize: '13px', color: '#64748B', lineHeight: 1.5 }}>
+              Live stopwatch labor tracking, instant OBD-II fault lookup, and direct photo damage attachments.
             </div>
           </div>
         </div>
       </section>
 
       {/* ==================================================================== */}
-      {/* SECTION 2: BENTO VALUE PILLARS */}
+      {/* SECTION 2: OCTOLANE DUAL PILLARS (PERFORMANCE & SECURITY) */}
       {/* ==================================================================== */}
       <section style={{
         position: 'relative',
         zIndex: 1,
-        padding: 'clamp(40px, 6vw, 80px) clamp(16px, 4vw, 24px)',
+        padding: 'clamp(40px, 7vw, 90px) clamp(16px, 4vw, 24px)',
         maxWidth: '1320px',
         margin: '0 auto'
       }}>
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <span style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#0071e3', display: 'block', marginBottom: '8px' }}>
-            OPERATING SYSTEM ARCHITECTURE
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <span className="octo-telemetry" style={{ color: '#F76B15', display: 'block', marginBottom: '8px' }}>
+            IN PRACTICE • MEASURED ACCELERATION
           </span>
-          <h2 style={{ fontSize: 'clamp(24px, 4.5vw, 42px)', fontWeight: '800', letterSpacing: '-0.03em', margin: '0 0 12px', color: '#1d1d1f' }}>
-            Built Specifically for Modern Garages
+          <h2 style={{ fontSize: 'clamp(28px, 4.8vw, 46px)', fontWeight: '800', letterSpacing: '-0.03em', margin: '0 0 12px', color: '#101010' }}>
+            Measured Performance. Built-in Compliance.
           </h2>
-          <p style={{ fontSize: 'clamp(13px, 2.5vw, 16px)', color: '#6e6e73', maxWidth: '640px', margin: '0 auto' }}>
-            Four interconnected subsystems eliminating paperwork, phone tag, and scheduling conflicts.
+          <p style={{ fontSize: 'clamp(14px, 2.5vw, 17px)', color: '#64748B', maxWidth: '680px', margin: '0 auto' }}>
+            See how the AtelierOS automotive intelligence coordinates workshop operations, with every action secured and auditable.
           </p>
         </div>
 
-        {/* Feature Tab Selector */}
+        {/* Dual Pillar Bento Cards (Octolane Style) */}
         <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '8px',
-          justifyContent: 'center',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gap: '24px',
           marginBottom: '32px'
         }}>
-          {featureTabs.map((tab, idx) => {
-            const Icon = tab.icon;
-            const isSelected = activeTabFeature === idx;
-            return (
-              <button
-                key={idx}
-                onClick={() => setActiveTabFeature(idx)}
-                style={{
-                  padding: '10px 18px',
-                  borderRadius: '12px',
-                  border: isSelected ? `2px solid ${tab.color}` : '1px solid var(--color-border)',
-                  background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-secondary)',
-                  color: isSelected ? '#1d1d1f' : '#6e6e73',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  fontSize: '13px',
-                  fontWeight: isSelected ? '700' : '500',
-                  boxShadow: isSelected ? '0 4px 14px rgba(0,0,0,0.06)' : 'none',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                <Icon size={16} color={isSelected ? tab.color : '#86868b'} />
-                <span>{tab.title}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Feature Spotlight Card */}
-        <div className="saas-card" style={{
-          padding: 'clamp(20px, 4vw, 40px)',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '32px',
-          alignItems: 'center'
-        }}>
-          <div>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: '#eaf4ff',
-              color: '#0071e3',
-              padding: '3px 10px',
-              borderRadius: '20px',
-              fontSize: '11px',
-              fontWeight: '700',
-              marginBottom: '14px'
-            }}>
-              <Zap size={13} />
-              <span>{featureTabs[activeTabFeature].metrics}</span>
+          {/* Pillar 1: Performance (Tangerine) */}
+          <div className="octo-superellipse" style={{ padding: 'clamp(24px, 4vw, 36px)', display: 'flex', flexDirection: 'column' }}>
+            <div className="octo-chip" style={{ color: '#F76B15', marginBottom: '24px' }}>
+              <Flame size={20} />
             </div>
-
-            <h3 style={{ fontSize: 'clamp(20px, 3.5vw, 28px)', fontWeight: '800', letterSpacing: '-0.02em', margin: '0 0 14px', color: '#1d1d1f' }}>
-              {featureTabs[activeTabFeature].title}
+            <div className="octo-telemetry" style={{ color: '#F76B15', marginBottom: '6px' }}>PERFORMANCE</div>
+            <h3 style={{ fontSize: 'clamp(20px, 3.5vw, 26px)', fontWeight: '800', color: '#101010', margin: '0 0 16px', lineHeight: 1.25 }}>
+              Central scheduling coordinates more than half of garage dispatching.
             </h3>
+            
+            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
+                <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#F76B15' }}>
+                  <Zap size={11} />
+                </span>
+                <span><strong style={{ color: '#101010' }}>4.4M+</strong> <span style={{ color: '#64748B' }}>slots validated with 0 conflicts</span></span>
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
+                <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#F76B15' }}>
+                  <Check size={11} />
+                </span>
+                <span><strong style={{ color: '#101010' }}>€700M+</strong> <span style={{ color: '#64748B' }}>invoices generated compliant</span></span>
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
+                <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#F76B15' }}>
+                  <Clock size={11} />
+                </span>
+                <span><strong style={{ color: '#101010' }}>51%</strong> <span style={{ color: '#64748B' }}>administrative hours recovered</span></span>
+              </li>
+            </ul>
 
-            <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#515154', margin: '0 0 20px' }}>
-              {activeTabFeature === 0 && "One availability pipeline across staff calendar, customer self-service booking, and AI receptionists. Prevents double bookings by validating mechanic skills, bay weight capacities, and 15-minute buffers in real time."}
-              {activeTabFeature === 1 && "Built specifically for greasy iPad screens. 48px+ large touch targets, fast OBD-II code lookup, live time-clocking with automated labor billing, and photo attachments for customer transparency."}
-              {activeTabFeature === 2 && "Deterministic tax engine with automatic detection for France (20% TVA) and Switzerland (8.1% TVA). Generates compliant French Factur-X / Chorus Pro XML and structured Swiss QR-Bills."}
-              {activeTabFeature === 3 && "Send instant SMS/Email approval links. Customers inspect itemized labor and spare parts on mobile and authorize repairs with a compliant digital signature in under 3 minutes."}
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {[
-                activeTabFeature === 0 ? "Zero double bookings across web, phone and walk-ins" : activeTabFeature === 1 ? "Instant OBD-II diagnostic lookup & checklists" : activeTabFeature === 2 ? "Automatic EUR / CHF currency & VAT determination" : "Digital signature legally archived with timestamp",
-                activeTabFeature === 0 ? "Automated 15m buffer time injection between appointments" : activeTabFeature === 1 ? "Live labor stopwatch clocks directly to work order" : activeTabFeature === 2 ? "Built-in Chorus Pro (PPF/PDP) payload validator" : "Customers review transparent parts & labor pricing"
-              ].map((point, pIdx) => (
-                <div key={pIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#1d1d1f' }}>
-                  <div style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#34c759', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Check size={11} color="#fff" />
-                  </div>
-                  <span>{point}</span>
-                </div>
-              ))}
+            {/* Live Utilization Equalizer Bar */}
+            <div style={{
+              background: '#FFFFFF',
+              borderRadius: '16px',
+              padding: '18px 20px',
+              boxShadow: 'var(--shadow-octo)',
+              marginTop: 'auto'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <span className="octo-telemetry">LIVE BAY AUTOMATION LOAD</span>
+                <span style={{ fontSize: '13px', fontWeight: '700', color: '#F76B15' }}>{liveMeterProgress}%</span>
+              </div>
+              <div style={{ height: '8px', background: '#FFF4ED', borderRadius: '9999px', overflow: 'hidden' }}>
+                <div style={{
+                  height: '100%',
+                  width: `${liveMeterProgress}%`,
+                  background: 'linear-gradient(90deg, #F76B15, #FFB082)',
+                  borderRadius: '9999px',
+                  transition: 'width 0.6s ease'
+                }}></div>
+              </div>
             </div>
           </div>
 
-          {/* 3D Visual Asset preview */}
-          <div style={{
-            borderRadius: '16px',
-            overflow: 'hidden',
-            border: '1px solid rgba(0, 0, 0, 0.08)',
-            boxShadow: '0 12px 30px rgba(0, 0, 0, 0.06)',
-            background: '#111'
-          }}>
-            <img 
-              src="/assets/tablet_bay_3d.jpg" 
-              alt="AtelierOS 3D Tablet & Mobile Bay Station"
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'block'
-              }}
-            />
+          {/* Pillar 2: Security & Regional Compliance (Blue) */}
+          <div className="octo-superellipse" style={{ padding: 'clamp(24px, 4vw, 36px)', display: 'flex', flexDirection: 'column' }}>
+            <div className="octo-chip" style={{ color: '#0071E3', marginBottom: '24px' }}>
+              <Lock size={20} />
+            </div>
+            <div className="octo-telemetry" style={{ color: '#0071E3', marginBottom: '6px' }}>CROSS-BORDER COMPLIANCE</div>
+            <h3 style={{ fontSize: 'clamp(20px, 3.5vw, 26px)', fontWeight: '800', color: '#101010', margin: '0 0 16px', lineHeight: 1.25 }}>
+              Deterministic tax rules. Zero data leakage across tenants.
+            </h3>
+
+            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
+                <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#0071E3' }}>
+                  <ShieldCheck size={11} />
+                </span>
+                <span><strong style={{ color: '#101010' }}>Chorus Pro PPF/PDP</strong> <span style={{ color: '#64748B' }}>compliant Factur-X</span></span>
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
+                <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#0071E3' }}>
+                  <Check size={11} />
+                </span>
+                <span><strong style={{ color: '#101010' }}>Swiss QR-Bill</strong> <span style={{ color: '#64748B' }}>structured BVR with 27-digit Ref</span></span>
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
+                <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#0071E3' }}>
+                  <Lock size={11} />
+                </span>
+                <span><strong style={{ color: '#101010' }}>GDPR &amp; nLPD</strong> <span style={{ color: '#64748B' }}>zero-telemetry local storage</span></span>
+              </li>
+            </ul>
+
+            {/* Compliance Badges Grid */}
+            <div style={{
+              background: '#FFFFFF',
+              borderRadius: '16px',
+              padding: '16px',
+              boxShadow: 'var(--shadow-octo)',
+              marginTop: 'auto',
+              display: 'flex',
+              justifyContent: 'space-between',
+              gap: '8px'
+            }}>
+              {['FACTUR-X', 'CHORUS PRO', 'SWISS QR', 'RGPD'].map((b, bIdx) => (
+                <div key={bIdx} style={{
+                  flex: 1,
+                  textAlign: 'center',
+                  background: '#EBF5FF',
+                  padding: '6px 4px',
+                  borderRadius: '8px',
+                  fontSize: '11px',
+                  fontWeight: '700',
+                  color: '#0071E3',
+                  fontFamily: 'var(--font-mono)'
+                }}>
+                  {b}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -506,44 +594,44 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <section style={{
         position: 'relative',
         zIndex: 1,
-        padding: 'clamp(40px, 6vw, 80px) clamp(16px, 4vw, 24px)',
+        padding: 'clamp(40px, 7vw, 90px) clamp(16px, 4vw, 24px)',
         maxWidth: '1280px',
         margin: '0 auto',
-        borderTop: '1px solid #e5e5ea'
+        borderTop: '1px solid #E2E8F0'
       }}>
-        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-          <span style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#34c759', display: 'block', marginBottom: '6px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <span className="octo-telemetry" style={{ color: '#10B981', display: 'block', marginBottom: '6px' }}>
             RETURN ON INVESTMENT
           </span>
-          <h2 style={{ fontSize: 'clamp(24px, 4vw, 38px)', fontWeight: '800', letterSpacing: '-0.03em', margin: '0 0 10px', color: '#1d1d1f' }}>
+          <h2 style={{ fontSize: 'clamp(26px, 4.5vw, 42px)', fontWeight: '800', letterSpacing: '-0.03em', margin: '0 0 10px', color: '#101010' }}>
             Calculate Your Workshop ROI
           </h2>
-          <p style={{ fontSize: 'clamp(13px, 2.5vw, 15px)', color: '#6e6e73', maxWidth: '650px', margin: '0 auto' }}>
-            See how much administrative time and billable revenue AtelierOS recovers for your garage every single month.
+          <p style={{ fontSize: 'clamp(14px, 2.5vw, 16px)', color: '#64748B', maxWidth: '650px', margin: '0 auto' }}>
+            See how much administrative time and billable revenue AtelierOS recovers for your garage every month.
           </p>
         </div>
 
-        <div className="saas-card" style={{
-          padding: 'clamp(20px, 5vw, 40px)',
+        <div className="octo-superellipse" style={{
+          padding: 'clamp(20px, 5vw, 44px)',
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '32px'
+          gap: '36px'
         }}>
           {/* Sliders Input Column */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '8px' }}>
-              <span style={{ fontSize: '14px', fontWeight: '700', color: '#1d1d1f' }}>Garage Currency</span>
-              <div style={{ display: 'flex', background: '#f5f5f7', borderRadius: '8px', padding: '2px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '22px', flexWrap: 'wrap', gap: '8px' }}>
+              <span style={{ fontSize: '14px', fontWeight: '700', color: '#101010' }}>Garage Currency</span>
+              <div style={{ display: 'flex', background: '#FFFFFF', borderRadius: '9999px', padding: '3px', boxShadow: 'var(--shadow-octo)' }}>
                 <button
                   onClick={() => setPricingCurrency('EUR')}
                   style={{
-                    padding: '5px 12px',
-                    borderRadius: '6px',
+                    padding: '6px 14px',
+                    borderRadius: '9999px',
                     border: 'none',
-                    background: pricingCurrency === 'EUR' ? '#0071e3' : 'transparent',
-                    color: pricingCurrency === 'EUR' ? '#fff' : '#6e6e73',
+                    background: pricingCurrency === 'EUR' ? '#101010' : 'transparent',
+                    color: pricingCurrency === 'EUR' ? '#FFFFFF' : '#64748B',
                     fontWeight: '700',
-                    fontSize: '11px',
+                    fontSize: '12px',
                     cursor: 'pointer'
                   }}
                 >
@@ -552,13 +640,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <button
                   onClick={() => setPricingCurrency('CHF')}
                   style={{
-                    padding: '5px 12px',
-                    borderRadius: '6px',
+                    padding: '6px 14px',
+                    borderRadius: '9999px',
                     border: 'none',
-                    background: pricingCurrency === 'CHF' ? '#d9383a' : 'transparent',
-                    color: pricingCurrency === 'CHF' ? '#fff' : '#6e6e73',
+                    background: pricingCurrency === 'CHF' ? '#F76B15' : 'transparent',
+                    color: pricingCurrency === 'CHF' ? '#FFFFFF' : '#64748B',
                     fontWeight: '700',
-                    fontSize: '11px',
+                    fontSize: '12px',
                     cursor: 'pointer'
                   }}
                 >
@@ -568,10 +656,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
 
             {/* Slider 1: Mechanics Count */}
-            <div style={{ marginBottom: '24px' }}>
+            <div style={{ marginBottom: '26px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '4px' }}>
-                <label style={{ fontSize: '13px', color: '#515154', fontWeight: '600' }}>Number of Active Mechanics</label>
-                <span style={{ fontSize: '14px', fontWeight: '700', color: '#0071e3' }}>{mechanicsCount} Technicians</span>
+                <label style={{ fontSize: '13px', color: '#475569', fontWeight: '600' }}>Number of Active Mechanics</label>
+                <span style={{ fontSize: '15px', fontWeight: '700', color: '#0071E3', fontFamily: 'var(--font-mono)' }}>{mechanicsCount} Techs</span>
               </div>
               <input
                 type="range"
@@ -579,15 +667,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 max="25"
                 value={mechanicsCount}
                 onChange={e => setMechanicsCount(Number(e.target.value))}
-                style={{ width: '100%', accentColor: '#0071e3', cursor: 'pointer', height: '6px' }}
+                style={{ width: '100%', accentColor: '#0071E3', cursor: 'pointer', height: '6px' }}
               />
             </div>
 
             {/* Slider 2: Monthly Work Orders */}
-            <div style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '18px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '4px' }}>
-                <label style={{ fontSize: '13px', color: '#515154', fontWeight: '600' }}>Work Orders / Month</label>
-                <span style={{ fontSize: '14px', fontWeight: '700', color: '#34c759' }}>{monthlyOrders} Orders</span>
+                <label style={{ fontSize: '13px', color: '#475569', fontWeight: '600' }}>Work Orders Completed / Month</label>
+                <span style={{ fontSize: '15px', fontWeight: '700', color: '#10B981', fontFamily: 'var(--font-mono)' }}>{monthlyOrders} Orders</span>
               </div>
               <input
                 type="range"
@@ -596,39 +684,35 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 step="10"
                 value={monthlyOrders}
                 onChange={e => setMonthlyOrders(Number(e.target.value))}
-                style={{ width: '100%', accentColor: '#34c759', cursor: 'pointer', height: '6px' }}
+                style={{ width: '100%', accentColor: '#10B981', cursor: 'pointer', height: '6px' }}
               />
             </div>
           </div>
 
           {/* Results Output Column */}
           <div style={{
-            background: 'var(--color-surface-secondary)',
-            borderRadius: '20px',
+            background: '#FFFFFF',
+            borderRadius: '22px',
             padding: 'clamp(20px, 4vw, 32px)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            border: '1px solid var(--color-border)'
+            boxShadow: 'var(--shadow-octo)'
           }}>
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ fontSize: '12px', color: '#86868b', fontWeight: '600', textTransform: 'uppercase' }}>
-                Administrative Hours Saved / Month
-              </div>
-              <div style={{ fontSize: 'clamp(32px, 6vw, 44px)', fontWeight: '800', color: '#1d1d1f', letterSpacing: '-0.02em', margin: '4px 0' }}>
-                {hoursSavedPerMonth} <span style={{ fontSize: '18px', fontWeight: '500', color: '#6e6e73' }}>Hours</span>
+            <div style={{ marginBottom: '22px' }}>
+              <div className="octo-telemetry">ADMINISTRATIVE HOURS SAVED / MONTH</div>
+              <div style={{ fontSize: 'clamp(34px, 6.5vw, 48px)', fontWeight: '800', color: '#101010', letterSpacing: '-0.03em', margin: '4px 0' }}>
+                {hoursSavedPerMonth} <span style={{ fontSize: '18px', fontWeight: '500', color: '#64748B' }}>Hours</span>
               </div>
             </div>
 
-            <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '16px' }}>
-              <div style={{ fontSize: '12px', color: '#86868b', fontWeight: '600', textTransform: 'uppercase' }}>
-                Estimated Monthly Billable Revenue Gain
-              </div>
-              <div style={{ fontSize: 'clamp(32px, 6vw, 44px)', fontWeight: '800', color: '#34c759', letterSpacing: '-0.02em', margin: '4px 0' }}>
+            <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '18px' }}>
+              <div className="octo-telemetry" style={{ color: '#10B981' }}>ESTIMATED MONTHLY REVENUE GAIN</div>
+              <div style={{ fontSize: 'clamp(34px, 6.5vw, 48px)', fontWeight: '800', color: '#10B981', letterSpacing: '-0.03em', margin: '4px 0' }}>
                 {pricingCurrency === 'EUR' ? `€${revenueGain.toLocaleString()}` : `CHF ${revenueGain.toLocaleString()}`}
               </div>
-              <div style={{ fontSize: '11px', color: '#86868b' }}>
-                Based on {pricingCurrency === 'EUR' ? '€88/h (FR)' : 'CHF 148/h (CH)'} recovered technician utilization.
+              <div style={{ fontSize: '12px', color: '#64748B' }}>
+                Based on {pricingCurrency === 'EUR' ? '€88/h (FR)' : 'CHF 148/h (CH)'} recovered technician capacity.
               </div>
             </div>
           </div>
@@ -639,10 +723,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* SECTION 4: STRUCTURED 4-COLUMN FOOTER */}
       {/* ==================================================================== */}
       <footer style={{
-        background: '#f5f5f7',
-        borderTop: '1px solid #e5e5ea',
-        padding: 'clamp(40px, 6vw, 60px) clamp(16px, 4vw, 24px) 30px',
-        color: '#6e6e73',
+        background: '#F4F5F7',
+        borderTop: '1px solid #E2E8F0',
+        padding: 'clamp(44px, 6vw, 64px) clamp(16px, 4vw, 24px) 32px',
+        color: '#64748B',
         fontSize: '13px'
       }}>
         <div style={{
@@ -651,74 +735,77 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: '32px',
-          marginBottom: '40px'
+          marginBottom: '44px'
         }}>
-          {/* Column 1: Brand & Prototype Status */}
+          {/* Column 1: Brand & Status */}
           <div style={{ maxWidth: '320px' }}>
-            <div style={{ marginBottom: '12px' }}>
+            <div style={{ marginBottom: '14px' }}>
               <img 
                 src="/assets/logo.png" 
                 alt="AtelierOS" 
                 style={{ height: '32px', width: 'auto', display: 'block', objectFit: 'contain' }} 
               />
             </div>
-            <p style={{ fontSize: '12px', lineHeight: 1.6, color: '#515154', margin: '0 0 14px' }}>
-              The Operating System for Modern Automotive Workshops. Built with ONE central scheduling engine and grease-resistant tablet bay mode.
+            <p style={{ fontSize: '13px', lineHeight: 1.6, color: '#475569', margin: '0 0 16px' }}>
+              The Operating System for Modern Automotive Workshops. Engineered for France &amp; Switzerland with ONE central scheduling engine.
             </p>
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              background: '#eaf4ff',
-              color: '#0071e3',
-              padding: '4px 10px',
-              borderRadius: '20px',
+              background: '#FFFFFF',
+              color: '#101010',
+              padding: '5px 12px',
+              borderRadius: '9999px',
               fontSize: '11px',
-              fontWeight: '600'
+              fontWeight: '600',
+              boxShadow: 'var(--shadow-octo)',
+              fontFamily: 'var(--font-mono)'
             }}>
-              <span>⚡ Prototype Preview • Active Development</span>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#F76B15' }}></span>
+              <span>PROTOTYPE PREVIEW • ACTIVE DEV</span>
             </div>
           </div>
 
-          {/* Column 2: Platform Engine */}
+          {/* Column 2: Platform Subsystems */}
           <div>
-            <div style={{ fontSize: '13px', fontWeight: '700', color: '#1d1d1f', marginBottom: '14px', letterSpacing: '-0.01em' }}>
-              Platform Engine
+            <div style={{ fontSize: '13px', fontWeight: '700', color: '#101010', marginBottom: '14px', letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
+              Platform Subsystems
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ cursor: 'pointer', color: '#515154' }} onClick={onLaunchApp}>Central Scheduling Pipeline</span>
-              <span style={{ cursor: 'pointer', color: '#515154' }} onClick={onLaunchApp}>Mechanic iPad Bay Mode</span>
-              <span style={{ cursor: 'pointer', color: '#515154' }} onClick={onLaunchApp}>Magic Link Quote Approvals</span>
-              <span style={{ cursor: 'pointer', color: '#515154' }} onClick={onLaunchBooking}>Customer Web Booking</span>
-              <span style={{ cursor: 'pointer', color: '#515154' }} onClick={onOpenAi}>AutoAI Workshop Assistant</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
+              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchApp}>Central Scheduling Pipeline</span>
+              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchApp}>Mechanic iPad Bay Mode</span>
+              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchApp}>Magic Link Quote Approvals</span>
+              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchBooking}>Customer Web Booking</span>
+              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onOpenAi}>AutoAI Workshop Receptionist</span>
             </div>
           </div>
 
-          {/* Column 3: Regional Governance */}
+          {/* Column 3: Regional Compliance */}
           <div>
-            <div style={{ fontSize: '13px', fontWeight: '700', color: '#1d1d1f', marginBottom: '14px', letterSpacing: '-0.01em' }}>
+            <div style={{ fontSize: '13px', fontWeight: '700', color: '#101010', marginBottom: '14px', letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
               Regional Governance
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ color: '#515154' }}>France 20.0% TVA &amp; Factur-X</span>
-              <span style={{ color: '#515154' }}>Chorus Pro (PPF/PDP) E-Invoicing</span>
-              <span style={{ color: '#515154' }}>Switzerland 8.1% TVA &amp; QR-Bill</span>
-              <span style={{ color: '#515154' }}>Swiss BVR &amp; IBAN QR Generator</span>
-              <span style={{ color: '#515154' }}>Dual EUR (€) &amp; CHF Currency</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
+              <span style={{ color: '#475569' }}>France 20.0% TVA &amp; Factur-X</span>
+              <span style={{ color: '#475569' }}>Chorus Pro (PPF/PDP) E-Invoicing</span>
+              <span style={{ color: '#475569' }}>Switzerland 8.1% TVA &amp; QR-Bill</span>
+              <span style={{ color: '#475569' }}>Swiss BVR &amp; IBAN QR Generator</span>
+              <span style={{ color: '#475569' }}>Dual EUR (€) &amp; CHF Currency</span>
             </div>
           </div>
 
-          {/* Column 4: Legal & Trust */}
+          {/* Column 4: Legal & Security */}
           <div>
-            <div style={{ fontSize: '13px', fontWeight: '700', color: '#1d1d1f', marginBottom: '14px', letterSpacing: '-0.01em' }}>
+            <div style={{ fontSize: '13px', fontWeight: '700', color: '#101010', marginBottom: '14px', letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
               Legal &amp; Trust
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ cursor: 'pointer', color: '#0071e3' }} onClick={() => onOpenLegal('PRIVACY')}>Privacy Policy (RGPD / nLPD)</span>
-              <span style={{ cursor: 'pointer', color: '#0071e3' }} onClick={() => onOpenLegal('TERMS')}>Terms of Service</span>
-              <span style={{ cursor: 'pointer', color: '#0071e3' }} onClick={() => onOpenLegal('EINVOICE_INFO')}>Factur-X &amp; QR-Bill Specs</span>
-              <span style={{ color: '#515154' }}>Zero-Telemetry Local Architecture</span>
-              <span style={{ color: '#515154' }}>Multi-Tenant RBAC Isolation</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
+              <span style={{ cursor: 'pointer', color: '#0071E3' }} onClick={() => onOpenLegal('PRIVACY')}>Privacy Policy (RGPD / nLPD)</span>
+              <span style={{ cursor: 'pointer', color: '#0071E3' }} onClick={() => onOpenLegal('TERMS')}>Terms of Service</span>
+              <span style={{ cursor: 'pointer', color: '#0071E3' }} onClick={() => onOpenLegal('EINVOICE_INFO')}>Factur-X &amp; QR-Bill Specifications</span>
+              <span style={{ color: '#475569' }}>Zero-Telemetry Local Storage</span>
+              <span style={{ color: '#475569' }}>Multi-Tenant RBAC Isolation</span>
             </div>
           </div>
         </div>
@@ -727,21 +814,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div style={{
           maxWidth: '1320px',
           margin: '0 auto',
-          paddingTop: '20px',
-          borderTop: '1px solid #e5e5ea',
+          paddingTop: '22px',
+          borderTop: '1px solid #E2E8F0',
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'space-between',
           alignItems: 'center',
           gap: '12px',
           fontSize: '11px',
-          color: '#86868b'
+          color: '#64748B',
+          fontFamily: 'var(--font-mono)'
         }}>
           <div>
-            © 2026 AtelierOS. Prototype Version — Under Active Development. All rights reserved.
+            © 2026 ATELIEROS. PROTOTYPE VERSION • ALL RIGHTS RESERVED.
           </div>
           <div>
-            Engineered for Independent Automotive Repair Garages • France &amp; Switzerland
+            ENGINEERED FOR INDEPENDENT AUTOMOTIVE WORKSHOPS • FRANCE &amp; SWITZERLAND
           </div>
         </div>
       </footer>

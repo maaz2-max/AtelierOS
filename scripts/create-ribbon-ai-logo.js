@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" fill="none">
+const fs = require('fs');
+const path = require('path');
+
+// Ultra-premium 3D Ribbon "Ai" Logo with dynamic volumetric lighting and smooth gradient curves
+const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" fill="none">
   <defs>
     <!-- Ribbon Main Gradient -->
     <linearGradient id="ribbonGrad1" x1="30" y1="160" x2="170" y2="40" gradientUnits="userSpaceOnUse">
@@ -81,4 +85,12 @@
     <circle cx="158" cy="46" r="14" fill="url(#dotGrad)" />
     <ellipse cx="153" cy="41" rx="5" ry="3" fill="#FFFFFF" opacity="0.65" transform="rotate(-30 153 41)" />
   </g>
-</svg>
+</svg>`;
+
+const assetsDir = path.join(__dirname, '..', 'assets');
+const publicAssetsDir = path.join(__dirname, '..', 'public', 'assets');
+
+fs.writeFileSync(path.join(assetsDir, 'ai_logo.svg'), svgContent, 'utf-8');
+fs.writeFileSync(path.join(publicAssetsDir, 'ai_logo.svg'), svgContent, 'utf-8');
+
+console.log('✓ 3D Ribbon "Ai" Logo successfully created!');

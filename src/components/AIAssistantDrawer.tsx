@@ -150,45 +150,41 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({
             <div style={{
               width: '42px',
               height: '42px',
-              borderRadius: '12px',
-              background: '#0F172A',
-              border: '1px solid rgba(168, 85, 247, 0.4)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              overflow: 'hidden',
               flexShrink: 0,
-              boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)'
+              filter: 'drop-shadow(0 4px 10px rgba(0, 102, 255, 0.4))'
             }}>
-              <svg width="34" height="34" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="40" height="40" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <linearGradient id="aiHexGradDrawer" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#A855F7" />
-                    <stop offset="50%" stopColor="#7C3AED" />
-                    <stop offset="100%" stopColor="#4F46E5" />
+                  <linearGradient id="aiRibbonGradD" x1="30" y1="160" x2="160" y2="40" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#00D2FF" />
+                    <stop offset="40%" stopColor="#0066FF" />
+                    <stop offset="80%" stopColor="#0047E0" />
+                    <stop offset="100%" stopColor="#00D2FF" />
                   </linearGradient>
-                  <linearGradient id="aiCarGlowDrawer" x1="50" y1="100" x2="150" y2="150" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#FFFFFF" />
-                    <stop offset="100%" stopColor="#C7D2FE" />
+                  <linearGradient id="aiArchGradD" x1="40" y1="140" x2="110" y2="30" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#0080FF" />
+                    <stop offset="50%" stopColor="#00D2FF" />
+                    <stop offset="100%" stopColor="#0055FF" />
+                  </linearGradient>
+                  <linearGradient id="aiLoopGradD" x1="80" y1="60" x2="160" y2="160" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#004CD8" />
+                    <stop offset="50%" stopColor="#0077FF" />
+                    <stop offset="100%" stopColor="#00D4FF" />
+                  </linearGradient>
+                  <linearGradient id="aiDotGradD" x1="145" y1="35" x2="175" y2="65" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#00E5FF" />
+                    <stop offset="60%" stopColor="#0066FF" />
+                    <stop offset="100%" stopColor="#003ACC" />
                   </linearGradient>
                 </defs>
-                <path d="M100 16 L168 54 L168 128 L116 166 L110 188 L90 166 L32 128 L32 54 Z" fill="url(#aiHexGradDrawer)" />
-                <path d="M100 28 L156 60 L156 122 L112 152 L106 170 L94 152 L44 122 L44 60 Z" fill="#0B1220" />
-                <line x1="100" y1="50" x2="100" y2="90" stroke="#C084FC" strokeWidth="3" strokeLinecap="round" />
-                <circle cx="100" cy="48" r="6" fill="#C084FC" />
-                <circle cx="100" cy="48" r="2.5" fill="#FFFFFF" />
-                <path d="M68 64 L86 64 L94 88" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="68" cy="64" r="5" fill="#A855F7" />
-                <circle cx="68" cy="64" r="2" fill="#FFFFFF" />
-                <path d="M132 64 L114 64 L106 88" stroke="#818CF8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="132" cy="64" r="5" fill="#818CF8" />
-                <circle cx="132" cy="64" r="2" fill="#FFFFFF" />
-                <path d="M68 116 C74 98, 86 94, 100 94 C114 94, 126 98, 132 116 Z" fill="#1E293B" stroke="#A855F7" strokeWidth="2" />
-                <path d="M78 112 C82 102, 90 98, 100 98 C104 98, 108 99, 112 101" stroke="#E0E7FF" strokeWidth="1.8" strokeLinecap="round" />
-                <path d="M54 126 C54 120, 60 116, 68 116 L132 116 C140 116, 146 120, 146 126 L144 136 C144 140, 140 142, 134 142 L66 142 C60 142, 56 140, 56 136 Z" fill="url(#aiCarGlowDrawer)" />
-                <polygon points="62,126 78,126 74,130 62,128" fill="#38BDF8" />
-                <polygon points="138,126 122,126 126,130 138,128" fill="#38BDF8" />
-                <path d="M84 134 L116 134 L112 138 L88 138 Z" fill="#0B1220" />
+                <path d="M96 54 C 106 72, 118 108, 126 132 C 134 156, 148 162, 160 148 C 170 136, 172 108, 172 84 C 172 74, 154 74, 154 84 C 154 104, 152 124, 146 134 C 142 140, 136 138, 130 120 C 122 96, 112 64, 98 42 Z" fill="url(#aiLoopGradD)" />
+                <path d="M36 148 C 32 120, 52 48, 86 36 C 108 28, 122 42, 120 66 C 118 86, 102 128, 96 142 C 92 152, 78 152, 78 140 C 78 126, 86 98, 92 78 C 96 66, 92 56, 82 58 C 64 62, 52 106, 54 136 C 56 150, 40 158, 36 148 Z" fill="url(#aiArchGradD)" />
+                <path d="M62 136 C 70 126, 82 124, 104 140 C 108 144, 102 152, 94 148 C 78 140, 70 142, 62 148 C 56 152, 54 144, 62 136 Z" fill="url(#aiRibbonGradD)" opacity="0.95" />
+                <circle cx="158" cy="46" r="15" fill="url(#aiDotGradD)" />
+                <ellipse cx="153" cy="41" rx="5" ry="3" fill="#FFFFFF" opacity="0.75" transform="rotate(-30 153 41)" />
               </svg>
             </div>
             <div>

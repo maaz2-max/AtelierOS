@@ -288,9 +288,37 @@ ${css}
 </html>`;
 
     fs.writeFileSync(path.join(__dirname, 'index.html'), html, 'utf-8');
+
+    // Also populate public/ directory for zero-config Vercel/Netlify hosting
+    const publicDir = path.join(__dirname, 'public');
+    const publicDistDir = path.join(publicDir, 'dist');
+    const publicAssetsDir = path.join(publicDir, 'assets');
+
+    if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
+    if (!fs.existsSync(publicDistDir)) fs.mkdirSync(publicDistDir, { recursive: true });
+    if (!fs.existsSync(publicAssetsDir)) fs.mkdirSync(publicAssetsDir, { recursive: true });
+
+    fs.writeFileSync(path.join(publicDir, 'index.html'), html, 'utf-8');
+    fs.writeFileSync(path.join(publicDistDir, 'app.compiled.js'), compiledJS, 'utf-8');
+
+    // Copy assets to public/assets/
+    const srcAssetsDir = path.join(__dirname, 'assets');
+    if (fs.existsSync(srcAssetsDir)) {
+      const assetFiles = fs.readdirSync(srcAssetsDir);
+      for (const af of assetFiles) {
+        fs.copyFileSync(path.join(srcAssetsDir, af), path.join(publicAssetsDir, af));
+      }
+    }
+
+    // Copy 404.html to public/
+    const src404 = path.join(__dirname, '404.html');
+    if (fs.existsSync(src404)) {
+      fs.copyFileSync(src404, path.join(publicDir, '404.html'));
+    }
+
     console.log('\n✓ AtelierOS Production Build successfully created!');
     console.log('  Single compiled file: dist/app.compiled.js (' + Math.round(compiledJS.length / 1024) + ' KB)');
-    console.log('  Clean index.html created.');
+    console.log('  Clean index.html & public/ directory created for Vercel.');
   } catch (err) {
     console.error('Build error:', err.message || err);
     process.exit(1);

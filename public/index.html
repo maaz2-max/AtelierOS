@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="AtelierOS">
+  <meta name="theme-color" content="#0F172A">
+  <title>AtelierOS — Smarter Workshops. Better Cars.</title>
+  <meta name="description" content="The operating system for the modern automobile workshop. Multi-tenant SaaS for France & Switzerland.">
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+/* ==========================================================================
+   AtelierOS — Enterprise Design Tokens & Typography
+   Inspired by Linear, Vercel & Stripe Engineering Aesthetics
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Brand Tokens */
+  --brand-blue: #2563EB;
+  --brand-blue-hover: #1D4ED8;
+  --brand-blue-soft: #EFF6FF;
+  --brand-blue-border: #BFDBFE;
+  --brand-navy: #0B1220;
+
+  /* Light Theme Surfaces */
+  --color-bg: #F6F8FB;
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #F8FAFC;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-hover: #F1F5F9;
+  --color-surface-selected: #EFF6FF;
+  --color-sidebar: #FFFFFF;
+
+  /* Light Theme Borders */
+  --color-border: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+
+  /* Light Theme Typography */
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748B;
+  --color-text-disabled: #94A3B8;
+  --color-text-inverse: #FFFFFF;
+
+  /* Semantic Accents */
+  --color-success: #16A34A;
+  --color-success-soft: #F0FDF4;
+  --color-success-border: #BBF7D0;
+  --color-success-dark: #22C55E;
+
+  --color-warning: #D97706;
+  --color-warning-soft: #FFFBEB;
+  --color-warning-border: #FDE68A;
+  --color-warning-dark: #F59E0B;
+
+  --color-danger: #DC2626;
+  --color-danger-soft: #FEF2F2;
+  --color-danger-border: #FECACA;
+  --color-danger-dark: #EF4444;
+
+  --color-info: #0284C7;
+  --color-info-soft: #F0F9FF;
+  --color-info-border: #BAE6FD;
+
+  --color-ai: #7C3AED;
+  --color-ai-soft: #F5F3FF;
+  --color-ai-border: #DDD6FE;
+  --color-ai-dark: #A78BFA;
+
+  /* Restrained Border Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-input: 8px;
+  --radius-button: 8px;
+  --radius-card: 10px;
+  --radius-modal: 14px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', monospace;
+
+  /* Shadows - Minimalist 1px Border Dominant */
+  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-dropdown: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.05);
+
+  /* Spacing Grid (8px Base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+}
+
+/* Dark Theme Tokens */
+[data-theme="dark"] {
+  --color-bg: #080D14;
+  --color-sidebar: #0B1220;
+  --color-surface: #111827;
+  --color-surface-secondary: #0F172A;
+  --color-surface-elevated: #162032;
+  --color-surface-hover: #192436;
+  --color-surface-selected: rgba(59, 130, 246, 0.12);
+
+  --color-border: #233044;
+  --color-border-strong: #334155;
+
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #CBD5E1;
+  --color-text-muted: #94A3B8;
+  --color-text-disabled: #64748B;
+
+  --brand-blue: #3B82F6;
+  --brand-blue-hover: #60A5FA;
+  --brand-blue-soft: rgba(59, 130, 246, 0.15);
+  --brand-blue-border: rgba(59, 130, 246, 0.3);
+
+  --color-success: #22C55E;
+  --color-success-soft: rgba(34, 197, 94, 0.12);
+  --color-success-border: rgba(34, 197, 94, 0.25);
+
+  --color-warning: #F59E0B;
+  --color-warning-soft: rgba(245, 158, 11, 0.12);
+  --color-warning-border: rgba(245, 158, 11, 0.25);
+
+  --color-danger: #EF4444;
+  --color-danger-soft: rgba(239, 68, 68, 0.12);
+  --color-danger-border: rgba(239, 68, 68, 0.25);
+
+  --color-info: #38BDF8;
+  --color-info-soft: rgba(56, 189, 248, 0.12);
+
+  --color-ai: #A78BFA;
+  --color-ai-soft: rgba(167, 139, 250, 0.15);
+  --color-ai-border: rgba(167, 139, 250, 0.3);
+
+  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-dropdown: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 25px 60px rgba(0, 0, 0, 0.7);
+}
+
+/* Reset & Global */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: var(--color-bg);
+}
+
+/* Technical Monospace Identifiers */
+.font-mono, .tech-id, .license-plate, .vin-code, .currency-amount {
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Global Scrollbar Hiding — Seamless, Clean Canvas */
+html, body {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+  overflow-y: auto;
+}
+
+* {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+*::-webkit-scrollbar,
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0px !important;
+  height: 0px !important;
+  background: transparent !important;
+}
+
+/* Reusable UI Utility Classes */
+.saas-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.saas-card-hover:hover {
+  border-color: var(--color-border-strong);
+  background-color: var(--color-surface-hover);
+}
+
+.saas-btn-primary {
+  background-color: var(--brand-blue);
+  color: #FFFFFF;
+  border: 1px solid transparent;
+  border-radius: var(--radius-button);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.15s ease;
+}
+.saas-btn-primary:hover {
+  background-color: var(--brand-blue-hover);
+}
+
+.saas-btn-secondary {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.saas-btn-secondary:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.saas-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+.saas-badge-success {
+  background-color: var(--color-success-soft);
+  color: var(--color-success);
+  border-color: var(--color-success-border);
+}
+.saas-badge-warning {
+  background-color: var(--color-warning-soft);
+  color: var(--color-warning);
+  border-color: var(--color-warning-border);
+}
+.saas-badge-danger {
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+.saas-badge-blue {
+  background-color: var(--brand-blue-soft);
+  color: var(--brand-blue);
+  border-color: var(--brand-blue-border);
+}
+.saas-badge-ai {
+  background-color: var(--color-ai-soft);
+  color: var(--color-ai);
+  border-color: var(--color-ai-border);
+}
+.saas-badge-neutral {
+  background-color: var(--color-surface-secondary);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+
+/* Command Palette Overlay */
+.cmd-palette-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15vh;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.cmd-palette-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-modal);
+  width: 100%;
+  maxWidth: 620px;
+  box-shadow: var(--shadow-modal);
+  overflow: hidden;
+}
+
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div style="max-width:1200px;margin:60px auto;padding:24px;display:flex;flex-direction:column;gap:20px;">
+      <div style="height:48px;width:280px;background:#e2e8f0;border-radius:8px;"></div>
+      <div style="height:240px;background:#e2e8f0;border-radius:10px;"></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+        <div style="height:140px;background:#e2e8f0;border-radius:10px;"></div>
+        <div style="height:140px;background:#e2e8f0;border-radius:10px;"></div>
+        <div style="height:140px;background:#e2e8f0;border-radius:10px;"></div>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="/dist/app.compiled.js?v=3.5.1" onerror="this.onerror=null;this.src='dist/app.compiled.js?v=3.5.1';"></script>
+</body>
+</html>

@@ -151,15 +151,45 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({
               width: '42px',
               height: '42px',
               borderRadius: '12px',
-              background: '#F5F3FF',
-              border: '1px solid #DDD6FE',
+              background: '#0F172A',
+              border: '1px solid rgba(168, 85, 247, 0.4)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               overflow: 'hidden',
-              flexShrink: 0
+              flexShrink: 0,
+              boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)'
             }}>
-              <img src="/assets/ai_logo.png" alt="AutoAI" style={{ width: '34px', height: '34px', objectFit: 'contain' }} />
+              <svg width="34" height="34" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="aiHexGradDrawer" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#A855F7" />
+                    <stop offset="50%" stopColor="#7C3AED" />
+                    <stop offset="100%" stopColor="#4F46E5" />
+                  </linearGradient>
+                  <linearGradient id="aiCarGlowDrawer" x1="50" y1="100" x2="150" y2="150" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#FFFFFF" />
+                    <stop offset="100%" stopColor="#C7D2FE" />
+                  </linearGradient>
+                </defs>
+                <path d="M100 16 L168 54 L168 128 L116 166 L110 188 L90 166 L32 128 L32 54 Z" fill="url(#aiHexGradDrawer)" />
+                <path d="M100 28 L156 60 L156 122 L112 152 L106 170 L94 152 L44 122 L44 60 Z" fill="#0B1220" />
+                <line x1="100" y1="50" x2="100" y2="90" stroke="#C084FC" strokeWidth="3" strokeLinecap="round" />
+                <circle cx="100" cy="48" r="6" fill="#C084FC" />
+                <circle cx="100" cy="48" r="2.5" fill="#FFFFFF" />
+                <path d="M68 64 L86 64 L94 88" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="68" cy="64" r="5" fill="#A855F7" />
+                <circle cx="68" cy="64" r="2" fill="#FFFFFF" />
+                <path d="M132 64 L114 64 L106 88" stroke="#818CF8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="132" cy="64" r="5" fill="#818CF8" />
+                <circle cx="132" cy="64" r="2" fill="#FFFFFF" />
+                <path d="M68 116 C74 98, 86 94, 100 94 C114 94, 126 98, 132 116 Z" fill="#1E293B" stroke="#A855F7" strokeWidth="2" />
+                <path d="M78 112 C82 102, 90 98, 100 98 C104 98, 108 99, 112 101" stroke="#E0E7FF" strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M54 126 C54 120, 60 116, 68 116 L132 116 C140 116, 146 120, 146 126 L144 136 C144 140, 140 142, 134 142 L66 142 C60 142, 56 140, 56 136 Z" fill="url(#aiCarGlowDrawer)" />
+                <polygon points="62,126 78,126 74,130 62,128" fill="#38BDF8" />
+                <polygon points="138,126 122,126 126,130 138,128" fill="#38BDF8" />
+                <path d="M84 134 L116 134 L112 138 L88 138 Z" fill="#0B1220" />
+              </svg>
             </div>
             <div>
               <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#101010', margin: 0, letterSpacing: '-0.02em' }}>{tai.title}</h2>

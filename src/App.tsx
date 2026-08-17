@@ -371,12 +371,12 @@ export const App: React.FC = () => {
           bottom: '24px',
           right: '24px',
           zIndex: 1200,
-          width: '58px',
-          height: '58px',
+          width: '60px',
+          height: '60px',
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)',
-          border: '2px solid rgba(255, 255, 255, 0.9)',
-          boxShadow: '0 8px 24px rgba(124, 58, 237, 0.4), 0 2px 6px rgba(0,0,0,0.1)',
+          background: 'linear-gradient(135deg, #1E1B4B 0%, #0F172A 100%)',
+          border: '2px solid rgba(168, 85, 247, 0.6)',
+          boxShadow: '0 10px 28px rgba(124, 58, 237, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1)',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
@@ -387,11 +387,44 @@ export const App: React.FC = () => {
         }}
         title="AutoAI Assistant"
       >
-        <img 
-          src="/assets/ai_logo.png" 
-          alt="AutoAI" 
-          style={{ width: '38px', height: '38px', objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }} 
-        />
+        {/* Direct Inline Vector AutoAI Logo */}
+        <svg width="42" height="42" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+          <defs>
+            <linearGradient id="aiHexGradApp" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#A855F7" />
+              <stop offset="50%" stopColor="#7C3AED" />
+              <stop offset="100%" stopColor="#4F46E5" />
+            </linearGradient>
+            <linearGradient id="aiCarGlowApp" x1="50" y1="100" x2="150" y2="150" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#FFFFFF" />
+              <stop offset="100%" stopColor="#C7D2FE" />
+            </linearGradient>
+          </defs>
+          <path d="M100 16 L168 54 L168 128 L116 166 L110 188 L90 166 L32 128 L32 54 Z" fill="url(#aiHexGradApp)" />
+          <path d="M100 28 L156 60 L156 122 L112 152 L106 170 L94 152 L44 122 L44 60 Z" fill="#0B1220" />
+          
+          <line x1="100" y1="50" x2="100" y2="90" stroke="#C084FC" strokeWidth="3" strokeLinecap="round" />
+          <circle cx="100" cy="48" r="6" fill="#C084FC" />
+          <circle cx="100" cy="48" r="2.5" fill="#FFFFFF" />
+          
+          <path d="M68 64 L86 64 L94 88" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="68" cy="64" r="5" fill="#A855F7" />
+          <circle cx="68" cy="64" r="2" fill="#FFFFFF" />
+
+          <path d="M132 64 L114 64 L106 88" stroke="#818CF8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="132" cy="64" r="5" fill="#818CF8" />
+          <circle cx="132" cy="64" r="2" fill="#FFFFFF" />
+
+          <path d="M68 116 C74 98, 86 94, 100 94 C114 94, 126 98, 132 116 Z" fill="#1E293B" stroke="#A855F7" strokeWidth="2" />
+          <path d="M78 112 C82 102, 90 98, 100 98 C104 98, 108 99, 112 101" stroke="#E0E7FF" strokeWidth="1.8" strokeLinecap="round" />
+          
+          <path d="M54 126 C54 120, 60 116, 68 116 L132 116 C140 116, 146 120, 146 126 L144 136 C144 140, 140 142, 134 142 L66 142 C60 142, 56 140, 56 136 Z" fill="url(#aiCarGlowApp)" />
+          
+          <polygon points="62,126 78,126 74,130 62,128" fill="#38BDF8" />
+          <polygon points="138,126 122,126 126,130 138,128" fill="#38BDF8" />
+          <path d="M84 134 L116 134 L112 138 L88 138 Z" fill="#0B1220" />
+        </svg>
+
         {/* Soft Online Pulse Badge */}
         <span style={{
           position: 'absolute',

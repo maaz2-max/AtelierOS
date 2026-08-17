@@ -36,42 +36,40 @@ class SimpleZip {
     for (const file of this.files) {
       const nameBuf = Buffer.from(file.name, 'utf-8');
       
-      // Local File Header (30 bytes + name)
       const lh = Buffer.alloc(30 + nameBuf.length);
-      lh.writeUInt32LE(0x04034b50, 0); // Signature
-      lh.writeUInt16LE(20, 4);         // Version needed
-      lh.writeUInt16LE(0, 6);          // General flag
-      lh.writeUInt16LE(8, 8);          // Compression method (Deflate)
-      lh.writeUInt16LE(0, 10);         // Last mod time
-      lh.writeUInt16LE(0, 12);         // Last mod date
-      lh.writeUInt32LE(file.crc, 14);  // CRC32
-      lh.writeUInt32LE(file.compressedData.length, 18); // Compressed size
-      lh.writeUInt32LE(file.uncompressedSize, 22);     // Uncompressed size
-      lh.writeUInt16LE(nameBuf.length, 26);            // Filename length
-      lh.writeUInt16LE(0, 28);                         // Extra field length
+      lh.writeUInt32LE(0x04034b50, 0);
+      lh.writeUInt16LE(20, 4);
+      lh.writeUInt16LE(0, 6);
+      lh.writeUInt16LE(8, 8);
+      lh.writeUInt16LE(0, 10);
+      lh.writeUInt16LE(0, 12);
+      lh.writeUInt32LE(file.crc, 14);
+      lh.writeUInt32LE(file.compressedData.length, 18);
+      lh.writeUInt32LE(file.uncompressedSize, 22);
+      lh.writeUInt16LE(nameBuf.length, 26);
+      lh.writeUInt16LE(0, 28);
       nameBuf.copy(lh, 30);
 
       localHeaders.push(lh, file.compressedData);
 
-      // Central Directory Header (46 bytes + name)
       const cdh = Buffer.alloc(46 + nameBuf.length);
-      cdh.writeUInt32LE(0x02014b50, 0); // Signature
-      cdh.writeUInt16LE(20, 4);          // Version made by
-      cdh.writeUInt16LE(20, 6);          // Version needed
-      cdh.writeUInt16LE(0, 8);           // General flag
-      cdh.writeUInt16LE(8, 10);          // Compression method
-      cdh.writeUInt16LE(0, 12);          // Time
-      cdh.writeUInt16LE(0, 14);          // Date
-      cdh.writeUInt32LE(file.crc, 16);   // CRC32
-      cdh.writeUInt32LE(file.compressedData.length, 20); // Comp size
-      cdh.writeUInt32LE(file.uncompressedSize, 24);     // Uncomp size
-      cdh.writeUInt16LE(nameBuf.length, 28);            // Name length
-      cdh.writeUInt16LE(0, 30);                         // Extra length
-      cdh.writeUInt16LE(0, 32);                         // Comment length
-      cdh.writeUInt16LE(0, 34);                         // Disk number
-      cdh.writeUInt16LE(0, 36);                         // Internal attr
-      cdh.writeUInt32LE(0, 38);                         // External attr
-      cdh.writeUInt32LE(offset, 42);                    // Local header offset
+      cdh.writeUInt32LE(0x02014b50, 0);
+      cdh.writeUInt16LE(20, 4);
+      cdh.writeUInt16LE(20, 6);
+      cdh.writeUInt16LE(0, 8);
+      cdh.writeUInt16LE(8, 10);
+      cdh.writeUInt16LE(0, 12);
+      cdh.writeUInt16LE(0, 14);
+      cdh.writeUInt32LE(file.crc, 16);
+      cdh.writeUInt32LE(file.compressedData.length, 20);
+      cdh.writeUInt32LE(file.uncompressedSize, 24);
+      cdh.writeUInt16LE(nameBuf.length, 28);
+      cdh.writeUInt16LE(0, 30);
+      cdh.writeUInt16LE(0, 32);
+      cdh.writeUInt16LE(0, 34);
+      cdh.writeUInt16LE(0, 36);
+      cdh.writeUInt32LE(0, 38);
+      cdh.writeUInt32LE(offset, 42);
       nameBuf.copy(cdh, 46);
 
       cdHeaders.push(cdh);
@@ -81,16 +79,15 @@ class SimpleZip {
     const cdOffset = offset;
     const cdSize = cdHeaders.reduce((acc, b) => acc + b.length, 0);
 
-    // End of Central Directory Record (22 bytes)
     const eocd = Buffer.alloc(22);
-    eocd.writeUInt32LE(0x06054b50, 0); // Signature
-    eocd.writeUInt16LE(0, 4);          // Disk number
-    eocd.writeUInt16LE(0, 6);          // Disk where CD starts
-    eocd.writeUInt16LE(this.files.length, 8);  // Number of CD records on disk
-    eocd.writeUInt16LE(this.files.length, 10); // Total number of CD records
-    eocd.writeUInt32LE(cdSize, 12);            // Size of CD
-    eocd.writeUInt32LE(cdOffset, 16);          // Offset of CD
-    eocd.writeUInt16LE(0, 20);                 // Comment length
+    eocd.writeUInt32LE(0x06054b50, 0);
+    eocd.writeUInt16LE(0, 4);
+    eocd.writeUInt16LE(0, 6);
+    eocd.writeUInt16LE(this.files.length, 8);
+    eocd.writeUInt16LE(this.files.length, 10);
+    eocd.writeUInt32LE(cdSize, 12);
+    eocd.writeUInt32LE(cdOffset, 16);
+    eocd.writeUInt16LE(0, 20);
 
     return Buffer.concat([...localHeaders, ...cdHeaders, eocd]);
   }
@@ -109,7 +106,7 @@ SimpleZip.crcTable = (() => {
   return table;
 })();
 
-// Build Word Document XML
+// XML Boilerplates
 const contentTypesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
   <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
@@ -132,14 +129,16 @@ const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
   <w:docDefaults>
     <w:rPrDefault>
-      <w:rPr>
-        <w:rFonts w:ascii="Segoe UI" w:hAnsi="Segoe UI" w:cs="Segoe UI"/>
-        <w:sz w:val="22"/>
-        <w:color w:val="2D3748"/>
-      </w:rPr>
+      <w:rFonts w:ascii="Segoe UI" w:hAnsi="Segoe UI" w:cs="Segoe UI"/>
+      <w:sz w:val="21"/>
+      <w:color w:val="2D3748"/>
     </w:rPrDefault>
   </w:docDefaults>
 </w:styles>`;
+
+function escapeXml(str) {
+  return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 function p(text, options = {}) {
   const { bold, size, color, align, spaceBefore, spaceAfter } = options;
@@ -149,7 +148,7 @@ function p(text, options = {}) {
   if (align || spaceBefore || spaceAfter) {
     pPr = '<w:pPr>';
     if (align) pPr += `<w:jc w:val="${align}"/>`;
-    if (spaceBefore || spaceAfter) pPr += `<w:spacing w:before="${spaceBefore || 0}" w:after="${spaceAfter || 120}"/>`;
+    if (spaceBefore || spaceAfter) pPr += `<w:spacing w:before="${spaceBefore || 0}" w:after="${spaceAfter || 100}"/>`;
     pPr += '</w:pPr>';
   }
 
@@ -161,84 +160,118 @@ function p(text, options = {}) {
     rPr += '</w:rPr>';
   }
 
-  const cleanText = (text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return `<w:p>${pPr}<w:r>${rPr}<w:t xml:space="preserve">${cleanText}</w:t></w:r></w:p>`;
+  return `<w:p>${pPr}<w:r>${rPr}<w:t xml:space="preserve">${escapeXml(text)}</w:t></w:r></w:p>`;
 }
 
 function heading1(text) {
-  return p(text, { bold: true, size: 36, color: '0066FF', spaceBefore: 300, spaceAfter: 150 });
+  return p(text, { bold: true, size: 30, color: '0066FF', spaceBefore: 280, spaceAfter: 120 });
 }
 
 function heading2(text) {
-  return p(text, { bold: true, size: 28, color: '101010', spaceBefore: 240, spaceAfter: 100 });
+  return p(text, { bold: true, size: 24, color: '0F172A', spaceBefore: 200, spaceAfter: 80 });
 }
 
-function heading3(text) {
-  return p(text, { bold: true, size: 24, color: '0071E3', spaceBefore: 180, spaceAfter: 80 });
+function bullet(text) {
+  return `<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="70"/></w:pPr><w:r><w:rPr><w:color w:val="0066FF"/><w:b/></w:rPr><w:t xml:space="preserve">▪ </w:t></w:r><w:r><w:t xml:space="preserve">${escapeXml(text)}</w:t></w:r></w:p>`;
 }
 
-function bullet(text, boldPrefix = '') {
-  const cleanPrefix = boldPrefix.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const cleanText = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return `<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="80"/></w:pPr><w:r><w:rPr><w:color w:val="0066FF"/><w:b/></w:rPr><w:t xml:space="preserve">▪ </w:t></w:r>${cleanPrefix ? `<w:r><w:rPr><w:b/><w:color w:val="101010"/></w:rPr><w:t xml:space="preserve">${cleanPrefix}: </w:t></w:r>` : ''}<w:r><w:t xml:space="preserve">${cleanText}</w:t></w:r></w:p>`;
+function sectionLabel(text) {
+  return `<w:p><w:pPr><w:spacing w:before="240" w:after="60"/></w:pPr><w:r><w:rPr><w:b/><w:sz w:val="18"/><w:color w:val="64748B"/><w:caps/></w:rPr><w:t xml:space="preserve">// ${escapeXml(text)}</w:t></w:r></w:p>`;
+}
+
+function flowBanner(stepsOrRows) {
+  const isArray = Array.isArray(stepsOrRows);
+  const text = isArray ? stepsOrRows.join('  ➔  ') : stepsOrRows;
+  return `<w:p><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F1F5F9"/><w:spacing w:before="100" w:after="100"/><w:ind w:left="180" w:right="180"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0F172A"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">${escapeXml(text)}</w:t></w:r></w:p>`;
 }
 
 function callout(text, title = 'IMPORTANT NOTE') {
-  return `<w:p><w:pPr><w:pBdr><w:left w:val="single" w:sz="24" w:space="12" w:color="0066FF"/></w:pBdr><w:shd w:val="clear" w:color="auto" w:fill="F0F7FF"/><w:spacing w:before="140" w:after="140"/><w:ind w:left="240" w:right="240"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0066FF"/><w:sz w:val="22"/></w:rPr><w:t xml:space="preserve">${title}: </w:t></w:r><w:r><w:rPr><w:color w:val="334155"/><w:sz w:val="21"/></w:rPr><w:t xml:space="preserve">${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</w:t></w:r></w:p>`;
+  return `<w:p><w:pPr><w:pBdr><w:left w:val="single" w:sz="24" w:space="12" w:color="0066FF"/></w:pBdr><w:shd w:val="clear" w:color="auto" w:fill="F0F7FF"/><w:spacing w:before="120" w:after="120"/><w:ind w:left="240" w:right="240"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0066FF"/><w:sz w:val="21"/></w:rPr><w:t xml:space="preserve">${title}: </w:t></w:r><w:r><w:rPr><w:color w:val="334155"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">${escapeXml(text)}</w:t></w:r></w:p>`;
 }
 
-// Assemble full bilingual document content
-const docBody = [
-  p('ATELIEROS — AUTO WORKSHOP OPERATING SYSTEM', { bold: true, size: 40, color: '0066FF', align: 'center', spaceBefore: 200, spaceAfter: 80 }),
-  p('MASTER PRODUCT REQUIREMENTS & ARCHITECTURE SPECIFICATION', { bold: true, size: 26, color: '475569', align: 'center', spaceAfter: 60 }),
-  p('Engineered for France 🇫🇷 & Switzerland 🇨🇭 • Dual Language: English & Français', { size: 20, color: '64748B', align: 'center', spaceAfter: 300 }),
+function renderTable(headers, rows) {
+  let tblXml = '<w:tbl><w:tblPr><w:tblW w:w="0" w:type="auto"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="CBD5E1"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="CBD5E1"/><w:left w:val="none"/><w:right w:val="none"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="E2E8F0"/><w:insideV w:val="none"/></w:tblBorders></w:tblPr>';
 
-  callout(
-    'All cost estimates, API token fees, hosting plans, and messaging charges in this document are conservative baseline estimates based on current standard vendor rates. Actual operational charges may vary depending on repair order volume, database storage growth, peak SMS/WhatsApp messaging traffic, selected French PDP provider contracts, and client customization preferences.',
-    '⚠️ IMPORTANT COST VARIANCE NOTICE'
-  ),
+  // Header Row
+  tblXml += '<w:tr><w:trPr><w:tblHeader/></w:trPr>';
+  headers.forEach(h => {
+    tblXml += `<w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="F8FAFC"/></w:tcPr><w:p><w:pPr><w:spacing w:before="80" w:after="80"/></w:pPr><w:r><w:rPr><w:b/><w:sz w:val="19"/><w:color w:val="0F172A"/></w:rPr><w:t xml:space="preserve">${escapeXml(h)}</w:t></w:r></w:p></w:tc>`;
+  });
+  tblXml += '</w:tr>';
 
-  heading1('1. EXECUTIVE SUMMARY & CORE MISSION'),
-  p('AtelierOS is a modern, high-precision Operating System for automotive repair workshops operating in France and Switzerland. It eliminates administrative friction and double-booking errors by unifying workshop agenda scheduling, mechanic tablet stations, instant magic-link quote approvals, and regulatory electronic invoicing into a single cohesive platform.'),
-  
-  heading2('The 4 Core Requirements from Luca Sigon'),
-  bullet('AtelierOS generates invoices internally and connects via a pluggable API connector to an approved French Plateforme Agréée (PA/PDP) or Chorus Pro (B2G), keeping staff inside the SaaS with 0 manual uploads.', '1. French E-Invoicing'),
-  bullet('Built from Day 1 for France & Switzerland with dual-currency (EUR € / CHF CHF), dynamic VAT rules (FR 20.0% vs CH 8.1%), Swiss UID numbers, and Swiss QR-Bill structured BVR generation.', '2. Swiss & Cross-Border Customers'),
-  bullet('A dedicated 60-second browser booking wizard accessible via SMS/Email link sharing the EXACT SAME central calendar engine (lift specs, mechanic skills, 15m buffers) with zero WhatsApp dependency.', '3. Web Booking (No WhatsApp Dependency)'),
-  bullet('OpenAI-powered receptionist that understands natural language symptoms ("car squeaks when braking") and books available slots directly from the central scheduling engine.', '4. AI-Assisted Intake'),
+  // Data Rows
+  rows.forEach(r => {
+    tblXml += '<w:tr>';
+    r.forEach(cell => {
+      tblXml += `<w:tc><w:p><w:pPr><w:spacing w:before="60" w:after="60"/></w:pPr><w:r><w:rPr><w:sz w:val="19"/><w:color w:val="334155"/></w:rPr><w:t xml:space="preserve">${escapeXml(cell)}</w:t></w:r></w:p></w:tc>`;
+    });
+    tblXml += '</w:tr>';
+  });
 
-  heading1('2. FRENCH E-INVOICING & PDP CLARIFICATION'),
-  p('There is an important regulatory separation of duties between AtelierOS and external French tax platforms:'),
-  bullet('Calculates parts, labor, deterministic multi-country VAT, generates sequential invoice numbers (FAC-FR-2026-0058), compiles Factur-X / UBL 2.1 XML data, builds Swiss QR-Bills, and renders hybrid PDF documents.', 'AtelierOS Invoicing Core'),
-  bullet('Normal B2B electronic invoice transmission and B2C/Cross-Border transaction e-reporting to the French DGFiP network. Paid directly by the garage to their chosen provider (e.g. Pennylane, Sage, etc.). AtelierOS charges €0/mo extra.', 'Plateforme Agréée (PA / PDP)'),
-  bullet('Dedicated exclusively to French government/public sector clients (town halls, police, public hospitals). 100% Free state-funded API platform.', 'Chorus Pro (PPF / B2G)'),
+  tblXml += '</w:tbl>';
+  return tblXml;
+}
 
-  heading1('3. ESTIMATED THIRD-PARTY INFRASTRUCTURE & MONTHLY CHARGES'),
-  p('The table below provides a transparent breakdown of baseline operational estimates for both a single-garage MVP pilot and a 10-garage production scale:'),
+// Load PRD JSON
+const prdJsonPath = path.join(__dirname, '..', 'docs', 'PRD_MASTER_SPECIFICATION.json');
+const prdData = JSON.parse(fs.readFileSync(prdJsonPath, 'utf-8'));
 
-  bullet('€0.00/mo (Free 300 emails/day) for MVP pilot; €19.00/mo (Starter up to 20,000 emails/mo) for 10 garages.', 'Brevo Email Automation'),
-  bullet('€5.00/mo (Meta grants 1,000 free conversations/mo) for MVP; €25.00 - €40.00/mo pooled PAYG across 10 garages.', 'WhatsApp & SMS Alerts'),
-  bullet('€2.50/mo (~1.5M tokens GPT-4o-mini) for MVP; €15.00 - €25.00/mo shared token pool for 10 garages.', 'OpenAI Diagnostic Intake'),
-  bullet('€0.00/mo (Free tier 500MB DB, 1GB storage) for MVP; €23.00/mo ($25 Pro Tier with daily backups & PITR) for 10 garages.', 'Supabase PostgreSQL 16'),
-  bullet('€0.00/mo (Hobby Tier) for MVP; €18.50/mo ($20 Pro Tier per team developer) for 10 garages.', 'Vercel Edge Hosting'),
-  bullet('Chorus Pro is 100% Free; PA/PDP subscription is managed directly by the garage. AtelierOS surcharge: €0.00/mo.', 'Approved French PDP'),
-  p('ESTIMATED PILOT TOTAL: ~€7.50 / month • ESTIMATED 10-GARAGE TOTAL: ~€100.50 / month (~€10 / garage / month)', { bold: true, color: '0066FF', spaceBefore: 80, spaceAfter: 120 }),
+const docBody = [];
 
-  heading1('4. RÉSUMÉ EN FRANÇAIS (FRENCH SPECIFICATION)'),
-  p("AtelierOS est le système d'exploitation nouvelle génération pour ateliers automobiles en France et en Suisse. Il intègre le planning centralisé, les tablettes mécaniciens 48px résistantes aux graisses, la validation de devis par lien magique en moins de 3 minutes et la facturation conforme Factur-X / QR-Facture suisse."),
-  bullet("Connexion API standardisée vers une Plateforme Agréée (PA) pour les entreprises et Chorus Pro pour le secteur public, avec mise à jour automatique des statuts (Transmise -> Validée -> Acceptée).", "Facturation Électronique Française"),
-  bullet("Gestion native EUR (€) et CHF (CHF), calcul déterministe de la TVA (France 20.0% / Suisse 8.1%), numéros IDE suisses et générateur de QR-Facture BVR structurée à 27 chiffres.", "Clients Suisses & Transfrontaliers"),
-  bullet("Page web accessible en 60 secondes sans dépendance à WhatsApp, connectée au même moteur de planning (ponts élévateurs, compétences mécaniciens, battements 15 min).", "Prise de Rendez-Vous Web"),
-  bullet("Compréhension des symptômes en langage naturel et proposition de créneaux réels directement reliés au planning central.", "Accueil par IA (AutoAI)"),
+// Title & Metadata
+docBody.push(p('CLIENT REQUIREMENTS — FUNCTIONAL & TECHNICAL SPECIFICATION', { bold: true, size: 36, color: '0066FF', align: 'center', spaceBefore: 200, spaceAfter: 80 }));
+docBody.push(p('Automotive Workshop Management SaaS • France 🇫🇷 & Switzerland 🇨🇭', { bold: true, size: 22, color: '475569', align: 'center', spaceAfter: 40 }));
+docBody.push(p('Bilingual Edition: English & Français • Scope: Central Scheduling, Invoicing, Tax, AI, Multi-Tenancy', { size: 18, color: '64748B', align: 'center', spaceAfter: 240 }));
 
-  heading1('5. CLIENT REVIEW & FEEDBACK REQUEST'),
-  p("We are committed to delivering the exact workflow that best supports your workshop operations.", { spaceAfter: 80 }),
-  callout(
-    "Please let us know if you would like any adjustments, if anything needs refinement or clarification, or if your garage accountant has specific preferences regarding the Plateforme Agréée (PA) provider selection. We are ready to adjust any technical detail upon your request!",
-    "💬 CLIENT FEEDBACK INVITATION"
-  ),
-  p('Document Version 4.3.0 • AtelierOS Engineering Team • 2026', { size: 18, color: '94A3B8', align: 'center', spaceBefore: 200 })
-];
+// Document Note Callout
+docBody.push(callout(prdData.document_note.english, 'DOCUMENT NOTE (EN)'));
+docBody.push(callout(prdData.document_note.french, 'NOTE DU DOCUMENT (FR)'));
+
+// Render Function for Language Sections
+function renderLanguageSections(sections, langPrefix) {
+  docBody.push(p(`=== PART: ${langPrefix.toUpperCase()} SPECIFICATION ===`, { bold: true, size: 28, color: '0066FF', spaceBefore: 300, spaceAfter: 120 }));
+
+  sections.forEach(sec => {
+    docBody.push(heading1(sec.title));
+
+    sec.content.forEach(item => {
+      if (item.type === 'paragraph') {
+        docBody.push(p(item.text, { spaceAfter: 80 }));
+      } else if (item.type === 'bullet') {
+        docBody.push(bullet(item.text));
+      } else if (item.type === 'section_label') {
+        docBody.push(sectionLabel(item.text));
+      } else if (item.type === 'callout') {
+        docBody.push(callout(item.text, 'CRITICAL NOTE'));
+      } else if (item.type === 'flow') {
+        docBody.push(flowBanner(item.steps));
+      } else if (item.type === 'banner_or_flow') {
+        if (item.rows) {
+          item.rows.forEach(r => docBody.push(flowBanner(r)));
+        }
+      } else if (item.type === 'table') {
+        docBody.push(renderTable(item.headers, item.rows));
+      } else if (item.type === 'subsection') {
+        docBody.push(heading2(item.title));
+        if (item.content) {
+          item.content.forEach(subItem => {
+            if (subItem.type === 'bullet') docBody.push(bullet(subItem.text));
+            else if (subItem.type === 'paragraph') docBody.push(p(subItem.text));
+          });
+        }
+      }
+    });
+  });
+}
+
+// Render English Sections
+renderLanguageSections(prdData.english.sections, 'English');
+
+// Render French Sections
+renderLanguageSections(prdData.french.sections, 'Français');
+
+// Document Footer
+docBody.push(p('End of Specification • Functional & Technical PRD Verified • 2026', { size: 18, color: '94A3B8', align: 'center', spaceBefore: 240 }));
 
 const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
@@ -264,13 +297,14 @@ const docxBuffer = zip.toBuffer();
 const outDir1 = path.join(__dirname, '..', 'docs');
 const outDir2 = path.join(__dirname, '..', 'public', 'docs');
 
-if (!fs.existsSync(outDir1)) fs.mkdirSync(outDir1, { recursive: true });
-if (!fs.existsSync(outDir2)) fs.mkdirSync(outDir2, { recursive: true });
-
-const docxPath1 = path.join(outDir1, 'AtelierOS_Master_PRD_Architecture.docx');
-const docxPath2 = path.join(outDir2, 'AtelierOS_Master_PRD_Architecture.docx');
+const docxPath1 = path.join(outDir1, 'Client_Requirements_Technical_PRD_EN_FR_Verified.docx');
+const docxPath2 = path.join(outDir2, 'Client_Requirements_Technical_PRD_EN_FR_Verified.docx');
+const legacyDocxPath1 = path.join(outDir1, 'AtelierOS_Master_PRD_Architecture.docx');
+const legacyDocxPath2 = path.join(outDir2, 'AtelierOS_Master_PRD_Architecture.docx');
 
 fs.writeFileSync(docxPath1, docxBuffer);
 fs.writeFileSync(docxPath2, docxBuffer);
+fs.writeFileSync(legacyDocxPath1, docxBuffer);
+fs.writeFileSync(legacyDocxPath2, docxBuffer);
 
-console.log(`✓ Master DOCX successfully generated! File size: ${docxBuffer.length} bytes`);
+console.log(`✓ Master DOCX successfully compiled! File size: ${docxBuffer.length} bytes`);

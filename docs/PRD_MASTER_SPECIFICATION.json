@@ -1,516 +1,2511 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "document_metadata": {
-    "title": "AtelierOS — Master Enterprise Product Requirements Document (PRD) & Technical Architecture Specification",
-    "version": "4.4.0-ENTERPRISE-MASTER",
-    "release_date": "2026-08-18",
-    "author": "Antigravity AI Engineering Team (for MARS Association & Auto Workshop Partners)",
-    "status": "APPROVED_MVP_IN_PRODUCTION_PREVIEW",
-    "cost_variance_disclaimer": {
-      "english": "IMPORTANT COST & USAGE NOTICE: All financial figures, API token fees, hosting plans, database tiers, and messaging charges in this document are conservative baseline estimates based on current standard vendor rates. Actual operational charges may vary depending on real-time repair order volume, database storage growth, peak SMS/WhatsApp messaging traffic, selected French PDP provider contracts, and client customization preferences.",
-      "french": "AVIS IMPORTANT SUR LES ESTIMATIONS DE COÛTS : Tous les montants indiqués (frais d'API, hébergement, messagerie, base de données) sont des estimations de base établies selon les tarifs standards des fournisseurs. Les coûts réels peuvent varier en fonction du volume d'ordres de réparation, de la volumétrie des photos/données, du trafic de messages et du contrat souscrit auprès de la Plateforme Agréée (PA) choisie."
-    }
+    "document_type": "Client Requirements - Functional & Technical Specification",
+    "languages": [
+      "English",
+      "French"
+    ],
+    "scope": [
+      "France",
+      "Switzerland",
+      "Central Scheduling",
+      "Customer Online Booking",
+      "AI-Assisted Booking",
+      "Work Orders",
+      "Quotes and Approval",
+      "Multi-Country Tax Architecture",
+      "French E-Invoicing Connector",
+      "GDPR",
+      "Multi-Tenancy"
+    ],
+    "product_name_omitted": true,
+    "marketing_tagline_omitted": true,
+    "pricing_and_costs_omitted": true,
+    "source_docx": "Client_Requirements_Technical_PRD_EN_FR_Verified.docx",
+    "generated_date": "2026-08-18"
   },
-
-  "project_overview": {
-    "product_name": "AtelierOS",
-    "product_category": "Automotive Workshop Management SaaS & Central Operating System",
-    "tagline": "The High-Precision Operating System for Modern Automotive Workshops. France 🇫🇷 & Switzerland 🇨🇭.",
-    "core_mission": "Eliminate administrative drag and workshop double-bookings by providing a unified 12ms availability engine, grease-resistant 48px mechanic tablet stations, instant magic-link quote approvals (< 3 min), customer web booking without WhatsApp dependency, and automated French Plateforme Agréée (PA/PDP) / Swiss QR-Bill cross-border billing without ever leaving the SaaS.",
-    "target_jurisdictions": [
+  "document_note": {
+    "english": "The SaaS/product name and marketing tagline are intentionally omitted. This document contains only the consolidated client requirements, the corrected technical architecture, and items that still require provider/accountant confirmation. No pricing, quotation amounts, subscription prices, or third-party cost estimates are included.",
+    "french": "Le nom du SaaS/produit et toute signature marketing sont volontairement omis. Ce document contient uniquement les exigences client consolidées, l’architecture technique corrigée et les éléments restant à confirmer avec le prestataire ou l’expert-comptable. Aucun prix, montant de devis, tarif d’abonnement ou estimation de coût tiers n’est inclus."
+  },
+  "english": {
+    "sections": [
       {
-        "region_name": "France (Domestic & Border Workshops)",
-        "country_code": "FR",
-        "currency": "EUR (€)",
-        "standard_vat_rate": 20.0,
-        "reduced_vat_rates": [10.0, 5.5],
-        "fiscal_identifiers": ["14-digit SIRET", "9-digit SIREN", "Numéro TVA Intracommunautaire (FRxx)", "Chorus Pro Service Code"],
-        "e_invoicing_mandate": "Factur-X (CII / UBL 2.1) via DGFiP Approved Platforms (PA/PDP, e.g. Pennylane) & Chorus Pro (PPF)",
-        "regulatory_compliance": "DGFiP 2026/2027 E-Invoicing Reform, RGPD, ISO 27001 Local Storage"
+        "title": "1. Executive Requirements Summary",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "The client requires a scalable, multi-tenant automotive workshop SaaS that can be deployed across multiple garages. The platform must manage the full operational lifecycle from customer intake and booking through diagnosis, quote approval, repair, quality check, delivery, invoicing, regulatory transmission/reporting, and post-service communications."
+          },
+          {
+            "type": "bullet",
+            "text": "Strict role-based access for owner/manager, mechanic, admin/front desk, customer, and SaaS super-admin."
+          },
+          {
+            "type": "bullet",
+            "text": "Customer and multi-vehicle registry with VIN, mileage, documents, service history, quotes, invoices, and communication preferences."
+          },
+          {
+            "type": "bullet",
+            "text": "One central scheduling engine shared by staff, customer self-booking, and AI-assisted booking."
+          },
+          {
+            "type": "bullet",
+            "text": "Mechanic skills, working hours, service bay/lift availability, service duration, closures, holidays, and blocked slots included in availability calculations."
+          },
+          {
+            "type": "bullet",
+            "text": "Work-order state machine controlling the full repair lifecycle."
+          },
+          {
+            "type": "bullet",
+            "text": "Deterministic pricing, labor, parts, consumables, margins, discounts, VAT/tax, quotes, approvals, and invoices."
+          },
+          {
+            "type": "bullet",
+            "text": "France + Switzerland-ready customer, currency, address, phone, tax identity, and reporting architecture."
+          },
+          {
+            "type": "bullet",
+            "text": "French e-invoicing through a replaceable approved-platform connector; Chorus Pro only for French public-sector invoicing."
+          },
+          {
+            "type": "bullet",
+            "text": "Customer-facing web booking accessible without WhatsApp, with secure SMS/email links."
+          },
+          {
+            "type": "bullet",
+            "text": "AI assistants must call approved application functions/APIs and must not maintain a separate calendar, write directly to the database, or invent prices."
+          },
+          {
+            "type": "bullet",
+            "text": "French-first UI with i18n from day one; English supported."
+          },
+          {
+            "type": "bullet",
+            "text": "EU-hosted production data, GDPR workflows, audit trails, and tenant isolation."
+          }
+        ]
       },
       {
-        "region_name": "Switzerland (Romandie & Swiss Cantons)",
-        "country_code": "CH",
-        "currency": "CHF (CHF)",
-        "standard_vat_rate": 8.1,
-        "reduced_vat_rates": [3.8, 2.6],
-        "fiscal_identifiers": ["IDE / UID (CHE-xxx.xxx.xxx)", "Numéro TVA Suisse (MWST)"],
-        "e_invoicing_mandate": "Swiss QR-Bill (Structured BVR with 27-digit reference + QR-IBAN)",
-        "regulatory_compliance": "Federal Tax Administration (ESTV), Swiss nLPD (New Federal Act on Data Protection)"
+        "title": "2. Roles & Workspaces",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Role",
+              "Primary access and responsibilities"
+            ],
+            "rows": [
+              [
+                "Garage Owner / Manager",
+                "Full workshop operations, scheduling, customers, vehicles, work orders, quotes, invoices, staff, pricing, settings, reporting and integrations."
+              ],
+              [
+                "Mechanic",
+                "Assigned work orders, diagnosis, OBD/DTC code lookup, parts/labor usage, repair progress, photos/documents, timer, and quality checklist."
+              ],
+              [
+                "Admin / Front Desk",
+                "Customers, vehicles, booking, calendar, documents, quotes, invoices, communications and customer coordination."
+              ],
+              [
+                "Customer",
+                "Secure booking, vehicle/service selection, quote approve/reject, booking status and permitted invoice/service information."
+              ],
+              [
+                "SaaS Super Admin",
+                "Garage onboarding, tenant lifecycle, plan entitlements, operational health and integration status without bypassing tenant privacy."
+              ]
+            ]
+          },
+          {
+            "type": "section_label",
+            "text": "CORE WORKFLOW"
+          }
+        ]
+      },
+      {
+        "title": "3. Full Workshop Lifecycle",
+        "content": [
+          {
+            "type": "flow",
+            "steps": [
+              "Request",
+              "Appointment",
+              "Diagnosis",
+              "Quote",
+              "Approval"
+            ]
+          },
+          {
+            "type": "flow",
+            "steps": [
+              "In Progress",
+              "Quality Check",
+              "Ready",
+              "Delivered",
+              "Invoice"
+            ]
+          },
+          {
+            "type": "flow",
+            "steps": [
+              "Validate",
+              "E-Invoice / Reporting Connector",
+              "External Platform",
+              "Status Returned",
+              "Records Updated"
+            ]
+          },
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "State-machine rule: Statuses are controlled transitions, not free-text labels. Role permissions and business rules must prevent invalid jumps, preserve auditability, and allow only defined exceptions."
+          }
+        ]
+      },
+      {
+        "title": "4. Customer & Vehicle Registry",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "One customer may own multiple vehicles."
+          },
+          {
+            "type": "bullet",
+            "text": "Customer type: Individual / Business."
+          },
+          {
+            "type": "bullet",
+            "text": "Country classification: France / Switzerland / EU / International."
+          },
+          {
+            "type": "bullet",
+            "text": "Country-aware addresses and phone numbers (+33, +41, future country rules)."
+          },
+          {
+            "type": "bullet",
+            "text": "Business/tax identifiers stored as structured data; Swiss business/VAT identifiers supported."
+          },
+          {
+            "type": "bullet",
+            "text": "Preferred invoice language and currency."
+          },
+          {
+            "type": "bullet",
+            "text": "GDPR consent, communication consent, retention/deletion metadata."
+          },
+          {
+            "type": "bullet",
+            "text": "Vehicle make/model/year, registration, VIN, mileage, fuel type, transmission, last/next service, service history and documents."
+          },
+          {
+            "type": "bullet",
+            "text": "Customer, vehicle, work order, quote, invoice, document and communication timelines remain linked."
+          },
+          {
+            "type": "section_label",
+            "text": "BOOKING & SCHEDULING"
+          }
+        ]
+      },
+      {
+        "title": "5. Central Scheduling Engine",
+        "content": [
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Non-negotiable architecture: Staff booking, public/customer web booking, and AI-assisted booking must all use the same Scheduling Service and the same appointment data. No separate AI calendar and no separate customer calendar."
+          },
+          {
+            "type": "flow",
+            "steps": [
+              "Booking Source",
+              "Service Rules",
+              "Availability Engine",
+              "Temporary Hold",
+              "Confirm / Request"
+            ]
+          },
+          {
+            "type": "subsection",
+            "title": "Availability must consider",
+            "content": [
+              {
+                "type": "bullet",
+                "text": "Workshop opening hours and location."
+              },
+              {
+                "type": "bullet",
+                "text": "Existing appointments and work orders."
+              },
+              {
+                "type": "bullet",
+                "text": "Mechanic schedules, leave and skill requirements."
+              },
+              {
+                "type": "bullet",
+                "text": "Bay/lift/resource capability and availability."
+              },
+              {
+                "type": "bullet",
+                "text": "Estimated service duration."
+              },
+              {
+                "type": "bullet",
+                "text": "Configurable buffer before/after a service (not hard-coded globally)."
+              },
+              {
+                "type": "bullet",
+                "text": "Blocked time slots, maintenance periods and internal holds."
+              },
+              {
+                "type": "bullet",
+                "text": "Public holidays and workshop closures."
+              },
+              {
+                "type": "bullet",
+                "text": "Service-specific online booking policy."
+              },
+              {
+                "type": "bullet",
+                "text": "Temporary slot holds and final revalidation before confirmation."
+              }
+            ]
+          },
+          {
+            "type": "subsection",
+            "title": "Conflict prevention",
+            "content": [
+              {
+                "type": "bullet",
+                "text": "No overlapping mechanic booking."
+              },
+              {
+                "type": "bullet",
+                "text": "No overlapping bay/lift booking."
+              },
+              {
+                "type": "bullet",
+                "text": "No booking outside working hours or during closure/leave."
+              },
+              {
+                "type": "bullet",
+                "text": "Required consecutive duration must remain available."
+              },
+              {
+                "type": "bullet",
+                "text": "Production confirmation must re-check availability transactionally to prevent race-condition double booking."
+              },
+              {
+                "type": "bullet",
+                "text": "Alternative valid slots should be proposed when a requested time is unavailable."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "6. Service Catalog & Booking Policies",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Field",
+              "Purpose"
+            ],
+            "rows": [
+              [
+                "Service name/category",
+                "Customer and staff-facing service classification."
+              ],
+              [
+                "Estimated duration",
+                "Default duration used by scheduling."
+              ],
+              [
+                "Required mechanic skills",
+                "Example: BRAKES, DIAGNOSTICS, ENGINE."
+              ],
+              [
+                "Required resource type",
+                "Example: two-post lift, diagnostic bay, quick-service bay."
+              ],
+              [
+                "Online bookable",
+                "Whether the customer may self-book this service."
+              ],
+              [
+                "Approval policy",
+                "AUTO / MANUAL / DISABLED / DIAGNOSTIC-FIRST."
+              ],
+              [
+                "Buffer rules",
+                "Optional workshop-configured setup/cleanup time."
+              ],
+              [
+                "Intake questions",
+                "Required questions before slot selection/confirmation."
+              ]
+            ]
+          },
+          {
+            "type": "section_label",
+            "text": "CUSTOMER SELF-SERVICE"
+          }
+        ]
+      },
+      {
+        "title": "7. Customer Web Booking Without WhatsApp Dependency",
+        "content": [
+          {
+            "type": "flow",
+            "steps": [
+              "Garage Website / SMS / Email",
+              "Booking Link",
+              "Vehicle + Service",
+              "Live Availability",
+              "Select Slot",
+              "Confirm"
+            ]
+          },
+          {
+            "type": "bullet",
+            "text": "Mobile-first booking page accessible from the garage website or a secure SMS/email link."
+          },
+          {
+            "type": "bullet",
+            "text": "No WhatsApp account is required."
+          },
+          {
+            "type": "bullet",
+            "text": "Customer selects or enters vehicle, selects a service or describes the issue, and answers service-specific questions."
+          },
+          {
+            "type": "bullet",
+            "text": "Available slots are fetched from the central scheduling engine in real time."
+          },
+          {
+            "type": "bullet",
+            "text": "Eligible services can auto-confirm; selected services can create a pending request requiring garage approval."
+          },
+          {
+            "type": "bullet",
+            "text": "Appointment/request is written into the central agenda and visible to staff."
+          },
+          {
+            "type": "bullet",
+            "text": "Customer receives booking reference and confirmation through configured channels."
+          },
+          {
+            "type": "bullet",
+            "text": "Secure tokenized links should expire and be rate-limited in production."
+          },
+          {
+            "type": "bullet",
+            "text": "Slot confirmation must be idempotent so repeated clicks do not create duplicate appointments."
+          }
+        ]
+      },
+      {
+        "title": "8. AI-Assisted Booking",
+        "content": [
+          {
+            "type": "flow",
+            "steps": [
+              "Customer Description",
+              "AI Clarifying Questions",
+              "Service Classification",
+              "Scheduling API",
+              "Suitable Slots",
+              "Customer Choice"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Example: a customer writes, “My car makes a noise when I brake.” The assistant may ask clarifying questions, classify the request as a brake inspection/diagnostic category, and call the central Scheduling Service using the configured duration, mechanic skill and resource requirements."
+          },
+          {
+            "type": "bullet",
+            "text": "AI is an orchestration layer, not an authoritative workshop system."
+          },
+          {
+            "type": "bullet",
+            "text": "Use typed/structured function calls to approved APIs such as check_availability, hold_slot, lookup_service, lookup_diagnostic_code and prepare_quote_draft."
+          },
+          {
+            "type": "bullet",
+            "text": "AI does not write directly to the database."
+          },
+          {
+            "type": "bullet",
+            "text": "AI does not calculate authoritative availability independently."
+          },
+          {
+            "type": "bullet",
+            "text": "AI does not invent parts or labor prices."
+          },
+          {
+            "type": "bullet",
+            "text": "Diagnostic suggestions must be clearly marked for technician verification."
+          },
+          {
+            "type": "section_label",
+            "text": "WORK ORDERS & COMMERCIAL"
+          }
+        ]
+      },
+      {
+        "title": "9. Work Orders, Diagnosis & Quality",
+        "content": [
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "REQUEST → APPOINTMENT → DIAGNOSIS → QUOTE → AWAITING APPROVAL → APPROVED → IN PROGRESS → QUALITY CHECK → READY → DELIVERED → INVOICED"
+              ]
+            ]
+          },
+          {
+            "type": "bullet",
+            "text": "Work order includes customer, vehicle, mileage, appointment, mechanic, bay, complaint, diagnosis, parts, labor, documents, internal notes and timeline."
+          },
+          {
+            "type": "bullet",
+            "text": "Mechanic records findings, fault/error codes, inspection results, recommended checks and urgency."
+          },
+          {
+            "type": "bullet",
+            "text": "OBD/DTC code lookup is supported as an information/diagnostic-assistance feature; direct hardware scanner integration is optional unless separately specified."
+          },
+          {
+            "type": "bullet",
+            "text": "Mechanic timer may track labor time, but pricing remains controlled by approved labor rules/templates."
+          },
+          {
+            "type": "bullet",
+            "text": "Photos and documents may be attached to the work order."
+          },
+          {
+            "type": "bullet",
+            "text": "Quality checklist must be completed before vehicle-ready status where configured."
+          },
+          {
+            "type": "bullet",
+            "text": "All material workflow changes create audit events."
+          }
+        ]
+      },
+      {
+        "title": "10. Quotes & Customer Approval",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "Configurable labor templates and hourly rates."
+          },
+          {
+            "type": "bullet",
+            "text": "Parts and consumables with quantity, unit price, margin/markup configuration and stock metadata."
+          },
+          {
+            "type": "bullet",
+            "text": "Deterministic quote calculations: subtotal, discount, tax/VAT treatment, total."
+          },
+          {
+            "type": "bullet",
+            "text": "Server-side production PDF/structured document generation."
+          },
+          {
+            "type": "bullet",
+            "text": "Secure magic-link portal for approve/reject without requiring a normal customer login."
+          },
+          {
+            "type": "bullet",
+            "text": "Approval evidence includes secure token use, timestamp, quote version and audit log; optional signature may be added if legally/business-required."
+          },
+          {
+            "type": "bullet",
+            "text": "Approved quote updates the work order automatically."
+          },
+          {
+            "type": "bullet",
+            "text": "AI may prepare a draft using approved templates/history, but prices must come from deterministic services."
+          },
+          {
+            "type": "section_label",
+            "text": "FRANCE + SWITZERLAND"
+          }
+        ]
+      },
+      {
+        "title": "11. Multi-Country Customer, Currency & Tax Architecture",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Dimension",
+              "France",
+              "Switzerland",
+              "Future EU / International"
+            ],
+            "rows": [
+              [
+                "Country code",
+                "FR",
+                "CH",
+                "ISO country code"
+              ],
+              [
+                "Currency",
+                "EUR",
+                "CHF or EUR by workshop policy",
+                "Configurable ISO currency"
+              ],
+              [
+                "Phone",
+                "French-aware",
+                "Swiss-aware",
+                "Country-aware"
+              ],
+              [
+                "Address",
+                "French fields/validation",
+                "Swiss fields/validation",
+                "Country-aware"
+              ],
+              [
+                "Customer type",
+                "Individual / Business",
+                "Individual / Business",
+                "Individual / Business"
+              ],
+              [
+                "Tax identity",
+                "French identifiers",
+                "Swiss business/VAT identifiers",
+                "Country-specific"
+              ],
+              [
+                "Tax treatment",
+                "Rule-engine decision",
+                "Rule-engine decision",
+                "Rule-engine decision"
+              ],
+              [
+                "Reporting route",
+                "Transaction-dependent",
+                "Cross-border transaction-dependent",
+                "Country/transaction-dependent"
+              ]
+            ]
+          },
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Critical correction: Do NOT implement “French customer = 20% VAT” and “Swiss customer = 8.1% VAT” as a simple customer-country rule. The Swiss standard VAT rate is 8.1%, but the tax treatment of a repair performed by a French workshop depends on the place of supply, customer status (B2B/B2C), transaction context and validated accounting rules. The tax engine must be configurable and legally reviewed before production."
+          }
+        ]
+      },
+      {
+        "title": "12. Tax Engine",
+        "content": [
+          {
+            "type": "flow",
+            "steps": [
+              "Seller / Repair Location",
+              "Customer Country",
+              "B2B / B2C",
+              "Tax Identity",
+              "Transaction Context",
+              "Tax Rule Result"
+            ]
+          },
+          {
+            "type": "bullet",
+            "text": "Central Tax Service; no scattered tax percentages inside UI components."
+          },
+          {
+            "type": "bullet",
+            "text": "Effective dates/versioning for tax rules."
+          },
+          {
+            "type": "bullet",
+            "text": "Invoice stores the actual tax rule/treatment applied at issue time."
+          },
+          {
+            "type": "bullet",
+            "text": "Support EUR and CHF from day one."
+          },
+          {
+            "type": "bullet",
+            "text": "Exchange-rate storage can be added where accounting/reporting requires it."
+          },
+          {
+            "type": "bullet",
+            "text": "Production tax rules must be supplied or validated by the client's accountant/compliance advisor."
+          }
+        ]
+      },
+      {
+        "title": "13. Swiss QR-Bill Support - Optional / Conditional",
+        "content": [
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Verified scope note: A Swiss QR-bill is a payment instrument, not an automatic requirement merely because the customer is Swiss. A 27-digit QR reference requires a QR-IBAN. Add this as a configurable module only if the garage's banking/payment setup supports it and the client confirms it is required."
+          },
+          {
+            "type": "bullet",
+            "text": "Support Swiss address and business identifiers independently of QR-bill support."
+          },
+          {
+            "type": "bullet",
+            "text": "If enabled, generate payment-part data according to current Swiss Payment Standards."
+          },
+          {
+            "type": "bullet",
+            "text": "Do not use legacy BVR/ESR wording as the primary modern terminology; the QR-bill replaced the old payment slips."
+          },
+          {
+            "type": "bullet",
+            "text": "Banking requirements must be confirmed with the garage/accountant/bank before production activation."
+          },
+          {
+            "type": "section_label",
+            "text": "FRENCH E-INVOICING"
+          }
+        ]
+      },
+      {
+        "title": "14. Invoice Generation vs E-Invoicing Transmission",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "The SaaS generates the invoice internally. The approved French platform is an external regulatory transmission/reporting connector; it is not the invoice generator."
+          },
+          {
+            "type": "flow",
+            "steps": [
+              "Repair Completed",
+              "Invoice Engine",
+              "Validate",
+              "E-Invoice Connector",
+              "Approved Platform / Chorus Pro",
+              "Status Callback"
+            ]
+          },
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "Callback / Provider Status → Invoice → Work Order → Customer / Vehicle Timeline → Audit Log"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "15. French Approved-Platform Connector",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "Provider-neutral EInvoiceConnector interface."
+          },
+          {
+            "type": "bullet",
+            "text": "Provider authentication/credentials stored server-side."
+          },
+          {
+            "type": "bullet",
+            "text": "Map internal invoice model to the selected provider's supported structured format and API."
+          },
+          {
+            "type": "bullet",
+            "text": "Submit applicable B2B e-invoices or required e-reporting data."
+          },
+          {
+            "type": "bullet",
+            "text": "Receive lifecycle status through webhook and/or polling."
+          },
+          {
+            "type": "bullet",
+            "text": "Normalize provider-specific statuses into internal statuses."
+          },
+          {
+            "type": "bullet",
+            "text": "Idempotent submissions, retry strategy, error handling and technical logs."
+          },
+          {
+            "type": "bullet",
+            "text": "Store provider/external reference IDs."
+          },
+          {
+            "type": "bullet",
+            "text": "Allow another approved platform to be added later without rebuilding customers, work orders, quotes or the invoice engine."
+          },
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Provider status: PROVIDER SELECTION PENDING. The final production provider should be chosen after checking the current DGFiP list of approved platforms, API documentation, sandbox access, status/webhook support, e-reporting support, interoperability and the garage/accountant preference. Pennylane may be evaluated as one candidate, but is not hard-coded as the selected provider."
+          }
+        ]
+      },
+      {
+        "title": "16. Chorus Pro Boundary",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Route",
+              "Use"
+            ],
+            "rows": [
+              [
+                "Approved French Platform (PA; formerly PDP)",
+                "Applicable French B2B e-invoicing and e-reporting flows under the French reform."
+              ],
+              [
+                "Chorus Pro",
+                "French public-sector (B2G) invoicing / public buyer workflow."
+              ],
+              [
+                "Cross-border / B2C e-reporting",
+                "Route through the selected approved platform where legally applicable; do not treat it as the same as domestic B2B e-invoicing."
+              ]
+            ]
+          },
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Important correction: Do not describe French e-invoicing as “DGFiP clearance” or promise a “DGFiP compliance seal” for each invoice. The system should track the lifecycle/status returned by the approved platform and official workflow specifications."
+          },
+          {
+            "type": "section_label",
+            "text": "COMMUNICATIONS & ADMIN"
+          }
+        ]
+      },
+      {
+        "title": "17. Communications",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Trigger",
+              "Channels / behavior"
+            ],
+            "rows": [
+              [
+                "Booking link",
+                "SMS / Email; WhatsApp optional."
+              ],
+              [
+                "Appointment confirmation/reminder",
+                "Email / SMS / WhatsApp according to consent and tenant configuration."
+              ],
+              [
+                "Quote ready/reminder",
+                "Secure magic link through configured channels."
+              ],
+              [
+                "Vehicle ready",
+                "Customer-ready notification and delivery status logging."
+              ],
+              [
+                "Invoice available",
+                "Email / customer portal / configured channel."
+              ],
+              [
+                "Review request",
+                "Optional post-delivery automation."
+              ]
+            ]
+          },
+          {
+            "type": "bullet",
+            "text": "Central Communication Service and editable templates per tenant/language."
+          },
+          {
+            "type": "bullet",
+            "text": "Delivery log with queued/sent/delivered/read/failed where supported by provider."
+          },
+          {
+            "type": "bullet",
+            "text": "Customer consent/preferences must be honored."
+          },
+          {
+            "type": "bullet",
+            "text": "All production provider accounts should be client-owned; application receives only required integration access."
+          }
+        ]
+      },
+      {
+        "title": "18. SaaS Administration & Multi-Tenancy",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "Strict tenant isolation using tenant_id on business records plus server-side authorization."
+          },
+          {
+            "type": "bullet",
+            "text": "PostgreSQL Row Level Security is recommended where applicable; a separate physical schema/database per garage is not required for the core design."
+          },
+          {
+            "type": "bullet",
+            "text": "Tenant-aware storage paths, background jobs, unique constraints and integration configuration."
+          },
+          {
+            "type": "bullet",
+            "text": "Automated tenant-leakage tests."
+          },
+          {
+            "type": "bullet",
+            "text": "SaaS super-admin can onboard/suspend tenants, manage plan entitlements and monitor platform/integration health without silently bypassing tenant privacy."
+          },
+          {
+            "type": "bullet",
+            "text": "Starter / Pro / AI plan names may be supported as feature-entitlement groups; no pricing is defined in this requirements document."
+          }
+        ]
+      },
+      {
+        "title": "19. Proposed Production Architecture",
+        "content": [
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "Staff Web / Tablet + Customer Web Portal: Next.js / responsive tablet-first UI / French-first i18n"
+              ],
+              [
+                "Identity + Tenant Context: Authentication • RBAC • magic links • public booking tokens"
+              ],
+              [
+                "Application/API Layer: Customer • Booking • Scheduling • Work Order • Quote • Invoice APIs"
+              ],
+              [
+                "Domain Services: Scheduling • Pricing • Tax • Invoice • Communications • Audit"
+              ],
+              [
+                "Connector Layer: PA e-invoicing • Chorus Pro • Email • SMS • WhatsApp • AI • Storage"
+              ],
+              [
+                "Data Layer: PostgreSQL/Supabase direction • RLS • EU-region data hosting • audit history"
+              ]
+            ]
+          },
+          {
+            "type": "section_label",
+            "text": "DATA & APIS"
+          }
+        ]
+      },
+      {
+        "title": "20. Core Data Model",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Domain",
+              "Key entities / records"
+            ],
+            "rows": [
+              [
+                "Tenancy & Access",
+                "Tenant, Location, User, Membership, Role, Permission."
+              ],
+              [
+                "Customer",
+                "Customer, Address, CustomerTaxIdentity, Consent, SecureToken."
+              ],
+              [
+                "Vehicle",
+                "Vehicle, ServiceHistory, VehicleDocument."
+              ],
+              [
+                "Workshop Resources",
+                "Mechanic, MechanicSkill, MechanicSchedule, Bay/Resource, ResourceCapability, Closure, AvailabilityBlock."
+              ],
+              [
+                "Services & Booking",
+                "Service, ServiceRequirement, BookingPolicy, IntakeQuestion, BookingRequest, SlotHold, Appointment."
+              ],
+              [
+                "Operations",
+                "WorkOrder, Diagnosis, WorkOrderStatusHistory, QualityCheck, Attachment."
+              ],
+              [
+                "Commercial",
+                "LaborTemplate, Part, Consumable, Quote, QuoteLine, Approval."
+              ],
+              [
+                "Tax & Currency",
+                "TaxProfile, TaxRule, Currency, optional ExchangeRate."
+              ],
+              [
+                "Invoicing",
+                "Invoice, InvoiceLine, EInvoiceSubmission, ProviderEvent, ReportingRecord."
+              ],
+              [
+                "Communications",
+                "Message, MessageTemplate, DeliveryEvent."
+              ],
+              [
+                "Platform",
+                "Notification, AuditLog, PlanEntitlement, IntegrationConfig."
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "21. Module / API Boundaries",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Module",
+              "Responsibilities"
+            ],
+            "rows": [
+              [
+                "BookingService",
+                "Public booking sessions, secure tokens, policy, booking requests, slot holds and confirmation."
+              ],
+              [
+                "SchedulingService",
+                "Availability, conflicts, resource matching, alternative slots and final reservation validation."
+              ],
+              [
+                "CustomerService",
+                "Customer/country/tax profile/consent management."
+              ],
+              [
+                "VehicleService",
+                "Vehicle registry and history."
+              ],
+              [
+                "WorkOrderService",
+                "Repair lifecycle and controlled state transitions."
+              ],
+              [
+                "PricingService",
+                "Labor, parts, consumables, discounts and deterministic commercial calculations."
+              ],
+              [
+                "TaxService",
+                "Country/customer/transaction tax determination."
+              ],
+              [
+                "QuoteService",
+                "Quote generation, versions, approval/rejection lifecycle."
+              ],
+              [
+                "InvoiceService",
+                "Invoice creation, validation, immutable issued snapshot and document generation."
+              ],
+              [
+                "EInvoiceConnector",
+                "Provider-neutral transmission/reporting abstraction."
+              ],
+              [
+                "CommunicationService",
+                "Email/SMS/WhatsApp dispatch and logging."
+              ],
+              [
+                "AI Orchestrator",
+                "Structured function-calling against approved APIs only."
+              ],
+              [
+                "AuditService",
+                "Immutable business-event history."
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "22. Representative API Flows",
+        "content": [
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "Customer Slot Search → Booking API → Scheduling Service → Skills + Bays + Hours + Existing Bookings → Valid Slots"
+              ]
+            ]
+          },
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "AI Intake → Structured Tool Call → Scheduling / Service APIs → Valid Slots → Customer Chooses → Booking Service Confirms"
+              ]
+            ]
+          },
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "Repair Complete → Invoice Service → Tax Service → Validate → E-Invoice Connector → Provider → Status Event → Records Updated"
+              ]
+            ]
+          },
+          {
+            "type": "section_label",
+            "text": "SECURITY, GDPR & DELIVERY"
+          }
+        ]
+      },
+      {
+        "title": "23. Security, GDPR & Reliability",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "EU-region production hosting for relevant personal data, subject to final hosting architecture."
+          },
+          {
+            "type": "bullet",
+            "text": "Strict tenant isolation at database and service layers."
+          },
+          {
+            "type": "bullet",
+            "text": "RBAC with server-side authorization; hiding buttons is not sufficient."
+          },
+          {
+            "type": "bullet",
+            "text": "TLS in transit, managed secrets, secure tokens and rate limiting."
+          },
+          {
+            "type": "bullet",
+            "text": "GDPR consent, data access/export, deletion workflow and retention configuration."
+          },
+          {
+            "type": "bullet",
+            "text": "Audit logs for approvals, invoice submission, status changes, communication and scheduling."
+          },
+          {
+            "type": "bullet",
+            "text": "Idempotent booking and invoice submission operations."
+          },
+          {
+            "type": "bullet",
+            "text": "Backups, structured logs, monitoring and recoverability."
+          },
+          {
+            "type": "bullet",
+            "text": "No production API secrets in frontend code."
+          }
+        ]
+      },
+      {
+        "title": "24. MVP Planning",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Phase",
+              "Scope"
+            ],
+            "rows": [
+              [
+                "Month 1 - Foundation",
+                "Multi-tenancy, auth/RBAC, i18n, customer/vehicle registry, France/Switzerland data model, service catalog, workshop resources, tax/currency model and audit foundations."
+              ],
+              [
+                "Month 2 - Booking & Workshop Operations",
+                "Central scheduling engine, calendar, staff booking, public booking portal, SMS/email link flow, closures/blocks, appointments, work orders, diagnosis and quality workflow."
+              ],
+              [
+                "Month 3 - Commercial & Connector Architecture",
+                "Quotes, customer approval, pricing/tax services, invoice engine, EUR/CHF handling, communications, e-invoicing connector interface, reports and SaaS administration."
+              ],
+              [
+                "Month 4 - Live Pilot & Stabilization",
+                "Real workshop validation, booking/resource edge cases, France/Swiss scenarios, provider sandbox integration if selected/available, security/performance hardening and production-readiness fixes."
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "25. Pending Decisions / Validation",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Item",
+              "Status"
+            ],
+            "rows": [
+              [
+                "French approved e-invoicing platform",
+                "Pending provider/client/accountant selection."
+              ],
+              [
+                "Exact France/Switzerland tax rules",
+                "Must be validated by accountant/compliance advisor."
+              ],
+              [
+                "Swiss QR-bill module",
+                "Optional; confirm bank/QR-IBAN/payment requirement."
+              ],
+              [
+                "Production SMS provider",
+                "Pending."
+              ],
+              [
+                "Production email provider",
+                "Pending."
+              ],
+              [
+                "WhatsApp Business account/provider",
+                "Pending."
+              ],
+              [
+                "Production AI model/provider configuration",
+                "Pending; keep model selection configurable."
+              ],
+              [
+                "Accountant export format/integration",
+                "Pending."
+              ],
+              [
+                "Direct OBD-II hardware integration",
+                "Not assumed; confirm if required."
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "26. Verified Corrections Applied to the Source JSON",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Source assumption",
+              "Corrected treatment in this PRD"
+            ],
+            "rows": [
+              [
+                "Simple FR 20% vs CH 8.1% by customer country",
+                "Removed. Tax depends on transaction/place of supply/customer status and validated rules."
+              ],
+              [
+                "Swiss QR-bill automatically for Swiss customer",
+                "Changed to optional/conditional feature requiring compatible Swiss banking/QR-IBAN setup."
+              ],
+              [
+                "27-digit QR reference described as BVR",
+                "Use modern QR-bill terminology; 27-digit QR reference requires QR-IBAN."
+              ],
+              [
+                "Pennylane endpoint/path hard-coded",
+                "Removed. Provider is pending; connector is provider-neutral and endpoints are implemented from current provider documentation."
+              ],
+              [
+                "DGFiP 'clearance seal' / per-invoice clearance",
+                "Removed. Track official/provider lifecycle statuses instead."
+              ],
+              [
+                "Chorus Pro mixed with normal B2B PA flow",
+                "Separated: Chorus Pro for public-sector invoicing; approved platform for reform B2B/e-reporting flows."
+              ],
+              [
+                "12ms AI/scheduling guarantee",
+                "Removed as unverified. Performance targets should be measured and defined separately."
+              ],
+              [
+                "15-minute buffer globally mandatory",
+                "Changed to configurable per tenant/service."
+              ],
+              [
+                "Separate PostgreSQL schema per tenant",
+                "Replaced with tenant-aware relational model + RLS/service authorization; separate schemas are optional, not required."
+              ],
+              [
+                "Vendors/models/cost assumptions",
+                "Removed from client requirements document because they are time-sensitive and were not required here."
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "27. Verification Sources",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "French tax administration (impots.gouv.fr): current list and role of Plateformes Agréées; French e-invoicing/e-reporting guidance; Chorus Pro public-sector scope."
+          },
+          {
+            "type": "bullet",
+            "text": "French Ministry of Economy (economie.gouv.fr): French e-invoicing reform guidance and Chorus Pro public-sector role."
+          },
+          {
+            "type": "bullet",
+            "text": "European Commission Taxation & Customs Union: VAT place-of-supply rules, including work on movable tangible property and B2B service rules."
+          },
+          {
+            "type": "bullet",
+            "text": "Swiss Federal Tax Administration (ESTV): current Swiss VAT rates (standard rate 8.1%)."
+          },
+          {
+            "type": "bullet",
+            "text": "SIX Swiss Payment Standards: QR-bill, QR-IBAN and 27-digit QR reference requirements."
+          },
+          {
+            "type": "bullet",
+            "text": "OpenAI official documentation/product materials: structured outputs and function/tool calling capabilities."
+          },
+          {
+            "type": "bullet",
+            "text": "Provider API documentation must be rechecked at implementation time because endpoints and capabilities can change."
+          }
+        ]
       }
-    ],
-    "supported_languages": [
-      { "code": "en", "label": "English", "locale": "en-US / en-GB", "target_audience": "International & Global Fleet Operators" },
-      { "code": "fr", "label": "Français", "locale": "fr-FR", "target_audience": "France Domestic Garages (TVA 20.0%)" },
-      { "code": "fr-CH", "label": "Français (CH)", "locale": "fr-CH", "target_audience": "Suisse Romande / Geneva / Vaud (TVA 8.1%)" },
-      { "code": "de-CH", "label": "Deutsch (CH)", "locale": "de-CH", "target_audience": "Deutschschweiz / Zurich / Basel (MWST 8.1%)" }
     ]
   },
-
-  "core_architectural_principles": [
-    {
-      "id": "ARCH-01",
-      "name": "ONE Central Availability & Scheduling Engine",
-      "description": "A single availability pipeline shared across garage desktop admin, mechanic bay tablets, public web booking wizards, and AutoAI receptionists. Enforces mechanic skill certifications, physical lift weight ratings, and mandatory 15-minute bay sanitization buffers with 0 double bookings."
-    },
-    {
-      "id": "ARCH-02",
-      "name": "Internal Invoicing vs Pluggable PDP E-Reporting Connector",
-      "description": "AtelierOS internally handles parts + labor calculation, deterministic VAT assignment, PDF generation, Factur-X XML packaging, and Swiss QR-Bill rendering. External regulatory dispatch to the DGFiP network is routed via pluggable PDP connectors (Pennylane / Chorus Pro) so garage staff never leave the application."
-    },
-    {
-      "id": "ARCH-03",
-      "name": "Cross-Border Dynamic Tax Engine (France & Switzerland)",
-      "description": "Customer profiles support France, Switzerland, and international clients with deterministic tax calculations based on physical repair location, customer residency, and B2B/B2C status with native dual currency (EUR € / CHF CHF)."
-    },
-    {
-      "id": "ARCH-04",
-      "name": "Customer Web Booking Without WhatsApp Dependency",
-      "description": "Provides a universal 60-second browser booking wizard accessible via SMS or email link that directly queries the central calendar engine."
-    },
-    {
-      "id": "ARCH-05",
-      "name": "Bounded AI with Typed JSON Function Calling",
-      "description": "AutoAI receptionist operates strictly through typed JSON tool calls (check_availability, compute_quote, lookup_obd, hold_slot) tied directly to the central engine without a separate calendar."
-    },
-    {
-      "id": "ARCH-06",
-      "name": "Strict Multi-Tenant Row Level Security (RLS)",
-      "description": "Guarantees zero cross-tenant data bleed. Every database record, appointment, customer profile, and vehicle record is isolated per garage tenant ID in PostgreSQL via Supabase RLS."
-    }
-  ],
-
-  "user_roles_and_isolated_workspaces": [
-    {
-      "role": "GUEST",
-      "role_code": "LOGGED_OUT",
-      "description": "Public prospective clients and vehicle owners",
-      "accessible_views": ["Landing Page Showcase", "60-Second Web Booking Wizard", "Magic Link Quote Approval Portal", "Real-Time Vehicle Repair Tracking Timeline"]
-    },
-    {
-      "role": "GARAGE_ADMIN",
-      "role_code": "GARAGE_ADMIN",
-      "description": "Garage owner, workshop manager, or front-desk service advisor",
-      "accessible_views": ["Central Agenda Calendar (Day/Week/Bay)", "10-Stage Work Order Board", "Customer & Fleet Registry", "Vehicle Database", "Quotation Manager", "Invoicing & E-Invoicing Hub", "Brevo/WhatsApp Communications Dispatcher", "Garage Settings & Tax Rates"]
-    },
-    {
-      "role": "MECHANIC",
-      "role_code": "MECHANIC",
-      "description": "Workshop technician operating at the vehicle repair bay",
-      "accessible_views": ["Rugged 48px Touch Tablet Station", "Active Bay Workstation", "Stopwatch Labor Timer", "OBD-II DTC Diagnostic Fault Library", "Photo Damage Capture Attachment", "Digital Safety & Quality Checklist"]
-    },
-    {
-      "role": "CUSTOMER",
-      "role_code": "CUSTOMER",
-      "description": "Authenticated vehicle owner (e.g. Sophie Laurent)",
-      "accessible_views": ["My Registered Vehicles", "Upcoming Bookings", "Instant Magic Link Quote Review with Digital Sign-Off", "Live Repair Status Progress", "Factur-X & Swiss QR-Bill PDF Invoices"]
-    },
-    {
-      "role": "SUPER_ADMIN",
-      "role_code": "SUPER_ADMIN",
-      "description": "SaaS Platform Owner / MARS Association System Administrator",
-      "accessible_views": ["Multi-Tenant Garage Directory", "Subscription Tier Management (Starter €89 / Pro €189 / AI €299)", "Platform MRR Telemetry", "System Health & E-Invoice Compliance Metrics", "New Garage Onboarding Provisioner"]
-    }
-  ],
-
-  "detailed_architecture_flows": {
-    "flow_1_central_scheduling": {
-      "flow_name": "Unified Slot Booking & Bay Constraint Resolution Flow",
-      "execution_steps": [
-        "1. Intake trigger initiated (Web Booking, Front Desk Admin, or AutoAI Receptionist)",
-        "2. Service type identified (e.g. Front Brake Pads & Discs replacement -> required skill: BRAKES, required duration: 90 min)",
-        "3. Central Engine executes 12ms Constraint Solver:",
-        "   a. Filter active mechanics having skill 'BRAKES' and working on chosen date",
-        "   b. Filter available bays supporting vehicle lift specifications (e.g. TWO_POST_LIFT)",
-        "   c. Validate no existing overlapping work orders",
-        "   d. Enforce mandatory 15-minute buffer between consecutive bookings",
-        "4. Slot temporarily reserved (10-minute hold with countdown timer)",
-        "5. Customer contact captured & GDPR consent logged",
-        "6. Slot committed -> Work Order WO-2026-xxxx created in Stage 2 (APPOINTMENT)",
-        "7. Real-time calendar synchronized via Supabase WebSocket broadcast to all connected tablets & desktop screens"
-      ]
-    },
-
-    "flow_2_mechanic_tablet_and_diagnostic": {
-      "flow_name": "Bay Tablet Inspection, OBD-II Scan & Stopwatch Labor Tracking Flow",
-      "execution_steps": [
-        "1. Mechanic logs into Bay Tablet (Rugged 48px UI mode)",
-        "2. Selects assigned Work Order -> Moves stage from APPOINTMENT to DIAGNOSIS",
-        "3. Connects OBD-II scanner -> Enters fault code (e.g. P0300 - Random/Multiple Cylinder Misfire Detected)",
-        "4. AtelierOS OBD library returns: Severity CRITICAL, Affected System IGNITION/FUEL, Suggested Checks: Spark plugs, ignition coils, fuel injectors",
-        "5. Mechanic takes photos of worn components -> Attached directly to Work Order",
-        "6. Mechanic starts Labor Stopwatch -> Real-time seconds tracked in background",
-        "7. Mechanic completes diagnostic checklist -> Clicks 'Generate Quote Draft' -> Moves stage to Stage 4 (QUOTE)"
-      ]
-    },
-
-    "flow_3_magic_link_quote_approval": {
-      "flow_name": "Zero-Friction Customer Quote Sign-Off Flow (< 3 Minutes)",
-      "execution_steps": [
-        "1. Garage Admin reviews itemized parts (€250) + labor (€250) + VAT (€100) = Total €600",
-        "2. Admin clicks 'Send Magic Approval Link'",
-        "3. Brevo Email API + WhatsApp/SMS Gateway dispatches secure tokenized link: https://app.atelier-os.com/approve?token=sec_98f4a1...",
-        "4. Work Order transitions to Stage 5 (AWAITING_APPROVAL)",
-        "5. Customer opens link on smartphone without logging in",
-        "6. Customer inspects itemized parts, labor breakdown, and attached OBD/damage photos",
-        "7. Customer draws or types digital authorization signature & clicks 'Approve Quotation'",
-        "8. Webhook callback instantly updates AtelierOS:",
-        "   a. Work Order transitions to Stage 6 (APPROVED)",
-        "   b. Bay Tablet alerts technician with green notification pulse to commence repair",
-        "   c. Timestamped audit log recorded for legal compliance"
-      ]
-    },
-
-    "flow_4_e_invoicing_and_pdp_transmission": {
-      "flow_name": "French DGFiP E-Invoicing & Swiss QR-Bill Pipeline Flow",
-      "execution_steps": [
-        "1. Technician finishes repair, passes 5-point quality checklist, moves to Stage 9 (READY)",
-        "2. Customer picks up vehicle -> Work Order transitions to Stage 10 (DELIVERED / INVOICED)",
-        "3. AtelierOS Invoicing Engine automatically generates Invoice FAC-FR-2026-0058:",
-        "   a. Evaluates Deterministic Tax Rules (France Domestic: 20.0% TVA / Switzerland: 8.1% MWST)",
-        "   b. Compiles CrossIndustryInvoice XML payload compliant with urn:factur-x.eu:1p0:basic (CII/UBL 2.1)",
-        "   c. Compiles Swiss QR-Bill payment part if Swiss customer (27-digit structured reference + QR-IBAN)",
-        "   d. Generates visual hybrid PDF invoice",
-        "4. Garage Admin clicks 'Transmit to E-Invoicing'",
-        "5. Pluggable EInvoiceConnector routes payload to configured provider (Pennylane PDP API v2 / Chorus Pro PISTE):",
-        "   a. POST /api/v2/customer_invoices with XML + PDF data",
-        "   b. Provider returns SUBMITTED with external reference: FR-DEMO-2026-0085",
-        "   c. Invoice status transitions: DRAFT -> VALIDATED -> SUBMITTED -> IN_PROCESSING -> ACCEPTED",
-        "6. Webhook received from Pennylane -> AtelierOS marks invoice as ACCEPTED with DGFiP compliance seal"
-      ]
-    },
-
-    "flow_5_auto_ai_function_calling": {
-      "flow_name": "AutoAI Natural Language Receptionist & Bounded Execution Flow",
-      "execution_steps": [
-        "1. Customer describes symptom: 'My Peugeot 3008 squeaks loudly when braking at low speeds'",
-        "2. AutoAI interprets symptom through OpenAI GPT-4o-mini",
-        "3. Model triggers internal bounded function check_workshop_availability(service='BRAKE_INSPECTION', date_range=['2026-08-19', '2026-08-21'])",
-        "4. Central Engine returns 3 available conflict-free slots on 2-Post Lift with Master Brake Tech",
-        "5. AutoAI presents humanized booking options in customer's preferred language (FR/EN/DE)",
-        "6. Customer selects preferred slot -> Model calls hold_booking_slot(slot_id, customer_phone)",
-        "7. AutoAI creates draft work order in Central Agenda and dispatches SMS confirmation link"
-      ]
-    }
-  },
-
-  "comprehensive_user_flows_and_scenarios": [
-    {
-      "id": "UF-01",
-      "actor": "Public Customer (No WhatsApp)",
-      "scenario": "Customer Self-Service Online Booking via Website or SMS Link",
-      "trigger": "Customer visits garage website or clicks SMS link received from garage",
-      "step_by_step_journey": [
-        "1. Opens responsive 60-second booking page on mobile browser",
-        "2. Enters License Plate (e.g. AB-123-CD for France or GE 452 891 for Switzerland)",
-        "3. Selects desired service category (e.g. Oil Change & Safety Inspection)",
-        "4. Selects available date & time slot from live central calendar",
-        "5. Receives 10-minute temporary slot hold with active countdown timer",
-        "6. Enters full name, phone number, and checks GDPR consent",
-        "7. Clicks 'Confirm Booking' -> Instantly receives booking reference code and confirmation SMS/Email"
-      ]
-    },
-    {
-      "id": "UF-02",
-      "actor": "Public Customer",
-      "scenario": "Reviewing & Approving Quotation via Magic Link in < 3 Minutes",
-      "trigger": "Receives SMS/Email notification: 'Your repair quotation DEV-2026-0089 is ready for review'",
-      "step_by_step_journey": [
-        "1. Clicks magic approval link -> Opens quote portal instantly without entering passwords",
-        "2. Reviews vehicle information, OBD diagnosis summary, and attached photos of worn brake pads",
-        "3. Inspects itemized parts (€140), labor (€110), and 20.0% TVA (€50) -> Total €300",
-        "4. Signs name on digital signature box and clicks 'Authorize Repairs'",
-        "5. Screen shows confirmation -> Workshop tablet immediately lights up green to commence work"
-      ]
-    },
-    {
-      "id": "UF-03",
-      "actor": "Bay Technician (Mechanic)",
-      "scenario": "Rugged Tablet Diagnosis, OBD Fault Code Scan & Stopwatch Labor Tracking",
-      "trigger": "Vehicle drives onto Lift Bay 1",
-      "step_by_step_journey": [
-        "1. Technician taps assigned Work Order on grease-resistant 48px touch screen",
-        "2. Taps 'Start Labor Stopwatch' -> System begins tracking active repair minutes",
-        "3. Plugs in OBD scanner -> Taps OBD Lookup -> Enters 'P0300'",
-        "4. Reviews fault description and suggested ignition coil / plug verification steps",
-        "5. Snaps photo of cracked ignition coil -> Uploads directly to work order",
-        "6. Completes 5-point digital checklist (Brakes, Fluids, Tires, Battery, Lights)",
-        "7. Taps 'Pause Stopwatch' -> Submits diagnostic findings for quote generation"
-      ]
-    },
-    {
-      "id": "UF-04",
-      "actor": "Swiss Cross-Border Customer (Müller AG, Geneva)",
-      "scenario": "Cross-Border Repair with Swiss QR-Bill (CHF 8.1% MWST)",
-      "trigger": "Repairs completed on Swiss-registered BMW X5",
-      "step_by_step_journey": [
-        "1. Garage Admin generates invoice -> System detects Swiss address & IDE UID",
-        "2. Tax engine assigns 8.1% MWST and formats in CHF (CHF)",
-        "3. System compiles structured Swiss QR-Bill (BVR) with 27-digit payment reference and QR-IBAN",
-        "4. Admin prints or emails invoice PDF containing the official Swiss payment slip",
-        "5. Customer scans Swiss QR code using their Swiss banking mobile app (UBS, Credit Suisse, PostFinance) for instant settlement"
-      ]
-    },
-    {
-      "id": "UF-05",
-      "actor": "Garage Administrator",
-      "scenario": "Transmitting French B2B Invoice via Plateforme Agréée (Pennylane PA)",
-      "trigger": "Commercial fleet repair finalized for French corporate client",
-      "step_by_step_journey": [
-        "1. Admin navigates to Invoices Hub -> Clicks 'Transmit to E-Invoicing'",
-        "2. Selects 'Plateforme Agréée (PA) — Pennylane'",
-        "3. System packages Factur-X XML data payload and dispatches to Pennylane API v2",
-        "4. Pennylane returns external tax tracking reference (FR-DEMO-2026-0085)",
-        "5. Invoice status changes to SUBMITTED -> Automatically updates to ACCEPTED upon DGFiP clearance",
-        "6. Customer and accounting records marked fully compliant"
-      ]
-    },
-    {
-      "id": "UF-06",
-      "actor": "Garage Administrator",
-      "scenario": "Transmitting French Public Sector (B2G) Invoice via Chorus Pro (PPF)",
-      "trigger": "Municipal vehicle (Police / Town Hall) repair completed",
-      "step_by_step_journey": [
-        "1. Admin selects Work Order -> Generates invoice with French Public Sector Service Code",
-        "2. Clicks 'Transmit to E-Invoicing' -> Selects 'Chorus Pro (B2G)'",
-        "3. System validates mandatory SIRET and Chorus Pro Service Routing Code",
-        "4. Dispatches UBL 2.1 payload to French state Chorus Pro PISTE API at €0.00 cost",
-        "5. State portal confirms receipt and returns official submission ID"
-      ]
-    },
-    {
-      "id": "UF-07",
-      "actor": "Public Customer",
-      "scenario": "Natural Language Symptom Intake via AutoAI Receptionist",
-      "trigger": "Customer opens chat assistant: 'My car squeaks when braking at low speed'",
-      "step_by_step_journey": [
-        "1. AutoAI interprets symptom as brake system inspection requirement",
-        "2. AutoAI calls internal function check_workshop_availability(service='BRAKES')",
-        "3. Central Engine queries active brake technicians and 2-Post Lifts",
-        "4. AutoAI responds in French/English with 3 real available slots",
-        "5. Customer selects preferred slot -> AutoAI calls hold_booking_slot() with 10-min hold",
-        "6. Draft work order created in Central Agenda and SMS confirmation sent to customer"
-      ]
-    },
-    {
-      "id": "UF-08",
-      "actor": "SaaS Super Admin (MARS Association)",
-      "scenario": "Onboarding a New Garage Tenant with Isolated Database Workspace",
-      "trigger": "New workshop subscribes to AtelierOS Pro Workshop Plan",
-      "step_by_step_journey": [
-        "1. Super Admin logs into SaaS Management Workspace",
-        "2. Taps '+ Onboard New Garage' -> Enters garage name, country (FR/CH), SIRET/UID, and currency",
-        "3. System provisions isolated PostgreSQL tenant schema with strict Row Level Security (RLS)",
-        "4. Default bays (2-Post Lift, 4-Post Lift), mechanic accounts, and tax rates (20% FR / 8.1% CH) seeded",
-        "5. Garage Admin credentials dispatched with secure activation link"
-      ]
-    }
-  ],
-
-  "customer_and_vehicle_domain_models": {
-    "customer_entity": {
-      "fields": {
-        "id": "UUID (Primary Key)",
-        "tenant_id": "UUID (Foreign Key with RLS Tenant Isolation)",
-        "customer_type": "ENUM ('INDIVIDUAL', 'BUSINESS')",
-        "first_name": "String",
-        "last_name": "String",
-        "company_name": "String (Optional, for business fleets)",
-        "email": "String",
-        "phone": "String (e.g. +33 6 12 34 56 78 or +41 79 123 45 67)",
-        "country": "ENUM ('FR', 'CH', 'OTHER_EU', 'INTERNATIONAL')",
-        "tax_identity": {
-          "siret": "String (14 digits, France)",
-          "siren": "String (9 digits, France)",
-          "vat_number": "String (EU VAT e.g. FR32123456789)",
-          "uid": "String (Swiss Business UID e.g. CHE-123.456.789)",
-          "chorus_service_code": "String (France Public Sector routing)"
-        },
-        "address": {
-          "street": "String",
-          "city": "String",
-          "postal_code": "String",
-          "country": "String",
-          "region_or_canton": "String (e.g. Île-de-France or Canton de Genève)"
-        },
-        "preferred_currency": "ENUM ('EUR', 'CHF')",
-        "preferred_language": "ENUM ('en', 'fr', 'fr-CH', 'de-CH')",
-        "gdpr_consent": {
-          "consented_at": "ISO-8601 Timestamp",
-          "sms_consent": "Boolean",
-          "email_consent": "Boolean",
-          "whatsapp_consent": "Boolean"
-        }
+  "french": {
+    "sections": [
+      {
+        "title": "1. Synthèse des exigences client",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "Le client souhaite un SaaS multi-tenant évolutif destiné aux ateliers automobiles et déployable dans plusieurs garages. La plateforme doit gérer l'ensemble du cycle opérationnel : prise de contact, réservation, diagnostic, devis, validation client, réparation, contrôle qualité, restitution, facturation, transmission réglementaire et communications après intervention."
+          },
+          {
+            "type": "bullet",
+            "text": "Gestion stricte des rôles : propriétaire/manager, mécanicien, administration/réception, client et super-administrateur SaaS."
+          },
+          {
+            "type": "bullet",
+            "text": "Registre clients et multi-véhicules avec VIN, kilométrage, documents, historique d'entretien, devis, factures et préférences de communication."
+          },
+          {
+            "type": "bullet",
+            "text": "Un seul moteur central de planification partagé par l'équipe, la réservation web client et la réservation assistée par IA."
+          },
+          {
+            "type": "bullet",
+            "text": "Prise en compte des compétences mécaniciens, horaires, ponts/baies, durée des services, fermetures, jours fériés et créneaux bloqués."
+          },
+          {
+            "type": "bullet",
+            "text": "Machine à états pour contrôler le cycle complet des ordres de réparation."
+          },
+          {
+            "type": "bullet",
+            "text": "Calculs déterministes pour main-d'œuvre, pièces, consommables, marges, remises, TVA/taxes, devis et factures."
+          },
+          {
+            "type": "bullet",
+            "text": "Architecture France + Suisse : profils clients, devises, adresses, téléphones, identifiants fiscaux et routage réglementaire."
+          },
+          {
+            "type": "bullet",
+            "text": "Facturation électronique française via un connecteur remplaçable vers une Plateforme Agréée ; Chorus Pro réservé au secteur public français."
+          },
+          {
+            "type": "bullet",
+            "text": "Page de réservation client sans dépendance à WhatsApp, accessible via site web, SMS ou e-mail."
+          },
+          {
+            "type": "bullet",
+            "text": "Les assistants IA appellent uniquement des fonctions/API autorisées et ne disposent ni d'un calendrier séparé, ni d'un accès direct en écriture à la base, ni du droit d'inventer des prix."
+          },
+          {
+            "type": "bullet",
+            "text": "Interface française par défaut avec i18n dès le départ ; anglais disponible."
+          },
+          {
+            "type": "bullet",
+            "text": "Hébergement de production approprié en UE, processus RGPD, journaux d'audit et isolation stricte des tenants."
+          }
+        ]
+      },
+      {
+        "title": "2. Rôles et espaces",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Rôle",
+              "Accès et responsabilités principales"
+            ],
+            "rows": [
+              [
+                "Propriétaire / Manager",
+                "Pilotage complet de l'atelier : planning, clients, véhicules, ordres de réparation, devis, factures, équipe, tarifs, paramètres, rapports et intégrations."
+              ],
+              [
+                "Mécanicien",
+                "Ordres affectés, diagnostic, recherche codes OBD/DTC, pièces/main-d'œuvre, avancement, photos/documents, chronomètre et contrôle qualité."
+              ],
+              [
+                "Administration / Réception",
+                "Clients, véhicules, réservation, agenda, documents, devis, factures, communications et coordination client."
+              ],
+              [
+                "Client",
+                "Réservation sécurisée, sélection véhicule/service, approbation/refus du devis, suivi autorisé de réservation et informations de service/facturation."
+              ],
+              [
+                "Super Admin SaaS",
+                "Onboarding des garages, cycle de vie des tenants, droits par offre, santé opérationnelle et état des intégrations sans contourner la confidentialité des garages."
+              ]
+            ]
+          },
+          {
+            "type": "section_label",
+            "text": "FLUX PRINCIPAL"
+          }
+        ]
+      },
+      {
+        "title": "3. Cycle complet de l'atelier",
+        "content": [
+          {
+            "type": "flow",
+            "steps": [
+              "Demande",
+              "Rendez-vous",
+              "Diagnostic",
+              "Devis",
+              "Approbation"
+            ]
+          },
+          {
+            "type": "flow",
+            "steps": [
+              "En cours",
+              "Contrôle qualité",
+              "Prêt",
+              "Restitué",
+              "Facture"
+            ]
+          },
+          {
+            "type": "flow",
+            "steps": [
+              "Validation",
+              "Connecteur e-facture / e-reporting",
+              "Plateforme externe",
+              "Statut retour",
+              "Dossiers mis à jour"
+            ]
+          },
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Règle de machine à états : Les statuts sont des transitions contrôlées et non des libellés libres. Les droits et règles métier doivent empêcher les sauts invalides et conserver une traçabilité complète."
+          }
+        ]
+      },
+      {
+        "title": "4. Registre clients et véhicules",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "Un client peut posséder plusieurs véhicules."
+          },
+          {
+            "type": "bullet",
+            "text": "Type client : Particulier / Entreprise."
+          },
+          {
+            "type": "bullet",
+            "text": "Classification pays : France / Suisse / UE / International."
+          },
+          {
+            "type": "bullet",
+            "text": "Adresses et téléphones adaptés au pays (+33, +41, extensible)."
+          },
+          {
+            "type": "bullet",
+            "text": "Identifiants entreprise/fiscaux stockés sous forme structurée ; prise en charge des identifiants suisses."
+          },
+          {
+            "type": "bullet",
+            "text": "Langue et devise de facturation préférées."
+          },
+          {
+            "type": "bullet",
+            "text": "Consentements RGPD et communications, métadonnées de conservation/suppression."
+          },
+          {
+            "type": "bullet",
+            "text": "Marque/modèle/année, immatriculation, VIN, kilométrage, carburant, transmission, dernier/prochain entretien, historique et documents."
+          },
+          {
+            "type": "bullet",
+            "text": "Liens permanents entre client, véhicule, ordre de réparation, devis, facture, document et communications."
+          },
+          {
+            "type": "section_label",
+            "text": "RÉSERVATION & PLANNING"
+          }
+        ]
+      },
+      {
+        "title": "5. Moteur central de planification",
+        "content": [
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Architecture non négociable : La réservation par l'équipe, la réservation web client et la réservation assistée par IA doivent toutes appeler le même service de planification et utiliser les mêmes rendez-vous. Aucun calendrier IA séparé et aucun calendrier client séparé."
+          },
+          {
+            "type": "flow",
+            "steps": [
+              "Source de réservation",
+              "Règles service",
+              "Moteur de disponibilité",
+              "Blocage temporaire",
+              "Confirmer / Demander"
+            ]
+          },
+          {
+            "type": "subsection",
+            "title": "La disponibilité doit prendre en compte",
+            "content": [
+              {
+                "type": "bullet",
+                "text": "Horaires et site de l'atelier."
+              },
+              {
+                "type": "bullet",
+                "text": "Rendez-vous et ordres de réparation existants."
+              },
+              {
+                "type": "bullet",
+                "text": "Horaires, congés et compétences des mécaniciens."
+              },
+              {
+                "type": "bullet",
+                "text": "Capacités et disponibilité des ponts/baies/ressources."
+              },
+              {
+                "type": "bullet",
+                "text": "Durée estimée du service."
+              },
+              {
+                "type": "bullet",
+                "text": "Temps tampon configurable avant/après, non imposé globalement."
+              },
+              {
+                "type": "bullet",
+                "text": "Créneaux bloqués, maintenance et réservations internes."
+              },
+              {
+                "type": "bullet",
+                "text": "Jours fériés et fermetures exceptionnelles."
+              },
+              {
+                "type": "bullet",
+                "text": "Politique de réservation en ligne propre à chaque service."
+              },
+              {
+                "type": "bullet",
+                "text": "Blocage temporaire d'un créneau et revalidation finale avant confirmation."
+              }
+            ]
+          },
+          {
+            "type": "subsection",
+            "title": "Prévention des conflits",
+            "content": [
+              {
+                "type": "bullet",
+                "text": "Aucun chevauchement pour un même mécanicien."
+              },
+              {
+                "type": "bullet",
+                "text": "Aucun chevauchement pour un même pont/baie."
+              },
+              {
+                "type": "bullet",
+                "text": "Aucune réservation hors horaires, fermeture ou congé."
+              },
+              {
+                "type": "bullet",
+                "text": "La durée complète requise doit être disponible."
+              },
+              {
+                "type": "bullet",
+                "text": "En production, la confirmation doit revérifier transactionnellement la disponibilité pour éviter les doubles réservations."
+              },
+              {
+                "type": "bullet",
+                "text": "Des créneaux alternatifs valides doivent être proposés si le créneau demandé n'est plus disponible."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "6. Catalogue de services et politiques de réservation",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Champ",
+              "Utilité"
+            ],
+            "rows": [
+              [
+                "Nom / catégorie",
+                "Nom visible par le client et l'équipe."
+              ],
+              [
+                "Durée estimée",
+                "Durée par défaut utilisée par le planning."
+              ],
+              [
+                "Compétences requises",
+                "Ex. FREINS, DIAGNOSTIC, MOTEUR."
+              ],
+              [
+                "Type de ressource requis",
+                "Ex. pont 2 colonnes, baie diagnostic, service rapide."
+              ],
+              [
+                "Réservable en ligne",
+                "Autorise ou non l'auto-réservation client."
+              ],
+              [
+                "Politique d'approbation",
+                "AUTO / MANUEL / DÉSACTIVÉ / DIAGNOSTIC-D'ABORD."
+              ],
+              [
+                "Tampons",
+                "Temps de préparation/nettoyage configurables."
+              ],
+              [
+                "Questions d'admission",
+                "Questions obligatoires avant la sélection/confirmation."
+              ]
+            ]
+          },
+          {
+            "type": "section_label",
+            "text": "SELF-SERVICE CLIENT"
+          }
+        ]
+      },
+      {
+        "title": "7. Réservation web client sans dépendance à WhatsApp",
+        "content": [
+          {
+            "type": "flow",
+            "steps": [
+              "Site garage / SMS / E-mail",
+              "Lien réservation",
+              "Véhicule + Service",
+              "Disponibilité réelle",
+              "Choix créneau",
+              "Confirmation"
+            ]
+          },
+          {
+            "type": "bullet",
+            "text": "Page mobile-first accessible depuis le site du garage ou via un lien sécurisé SMS/e-mail."
+          },
+          {
+            "type": "bullet",
+            "text": "Aucun compte WhatsApp nécessaire."
+          },
+          {
+            "type": "bullet",
+            "text": "Le client sélectionne/saisit son véhicule, choisit un service ou décrit le problème et répond aux questions nécessaires."
+          },
+          {
+            "type": "bullet",
+            "text": "Les créneaux disponibles proviennent du moteur central en temps réel."
+          },
+          {
+            "type": "bullet",
+            "text": "Les services éligibles peuvent être confirmés automatiquement ; les autres créent une demande à approuver par l'atelier."
+          },
+          {
+            "type": "bullet",
+            "text": "Le rendez-vous ou la demande est inscrit(e) dans l'agenda central visible par l'équipe."
+          },
+          {
+            "type": "bullet",
+            "text": "Le client reçoit une référence et une confirmation via les canaux configurés."
+          },
+          {
+            "type": "bullet",
+            "text": "En production, les liens tokenisés doivent expirer et être limités en fréquence."
+          },
+          {
+            "type": "bullet",
+            "text": "La confirmation doit être idempotente afin d'éviter les doublons en cas de clic répété."
+          }
+        ]
+      },
+      {
+        "title": "8. Réservation assistée par IA",
+        "content": [
+          {
+            "type": "flow",
+            "steps": [
+              "Description client",
+              "Questions IA",
+              "Classification service",
+              "API planning",
+              "Créneaux adaptés",
+              "Choix client"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Exemple : le client écrit « Ma voiture fait un bruit lorsque je freine ». L'assistant peut poser des questions, classer la demande comme inspection/diagnostic des freins puis interroger le service de planification avec la durée, la compétence et la ressource configurées."
+          },
+          {
+            "type": "bullet",
+            "text": "L'IA est une couche d'orchestration, pas le système d'autorité de l'atelier."
+          },
+          {
+            "type": "bullet",
+            "text": "Utiliser des appels de fonctions structurés vers des API approuvées : check_availability, hold_slot, lookup_service, lookup_diagnostic_code, prepare_quote_draft, etc."
+          },
+          {
+            "type": "bullet",
+            "text": "Aucune écriture directe de l'IA dans la base de données."
+          },
+          {
+            "type": "bullet",
+            "text": "L'IA ne calcule pas seule la disponibilité officielle."
+          },
+          {
+            "type": "bullet",
+            "text": "L'IA n'invente pas les tarifs de pièces ou de main-d'œuvre."
+          },
+          {
+            "type": "bullet",
+            "text": "Les suggestions de diagnostic doivent toujours indiquer qu'une vérification technicien est nécessaire."
+          },
+          {
+            "type": "section_label",
+            "text": "ORDRES DE RÉPARATION & COMMERCIAL"
+          }
+        ]
+      },
+      {
+        "title": "9. Ordres de réparation, diagnostic et qualité",
+        "content": [
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "DEMANDE → RDV → DIAGNOSTIC → DEVIS → ATTENTE APPROBATION → APPROUVÉ → EN COURS → CONTRÔLE QUALITÉ → PRÊT → RESTITUÉ → FACTURÉ"
+              ]
+            ]
+          },
+          {
+            "type": "bullet",
+            "text": "L'ordre contient client, véhicule, kilométrage, rendez-vous, mécanicien, baie, plainte, diagnostic, pièces, main-d'œuvre, documents, notes et chronologie."
+          },
+          {
+            "type": "bullet",
+            "text": "Le mécanicien saisit constats, codes défaut, résultats d'inspection, contrôles recommandés et urgence."
+          },
+          {
+            "type": "bullet",
+            "text": "La recherche OBD/DTC est une fonction d'information et d'assistance ; l'intégration directe à un scanner matériel reste optionnelle sauf demande explicite."
+          },
+          {
+            "type": "bullet",
+            "text": "Un chronomètre peut suivre le temps réel de travail, tandis que la tarification reste contrôlée par les règles approuvées."
+          },
+          {
+            "type": "bullet",
+            "text": "Photos et documents peuvent être joints."
+          },
+          {
+            "type": "bullet",
+            "text": "Le contrôle qualité peut être obligatoire avant le statut véhicule prêt."
+          },
+          {
+            "type": "bullet",
+            "text": "Chaque changement métier important génère un événement d'audit."
+          }
+        ]
+      },
+      {
+        "title": "10. Devis et approbation client",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "Modèles de main-d'œuvre et taux horaires configurables."
+          },
+          {
+            "type": "bullet",
+            "text": "Pièces et consommables avec quantité, prix unitaire, marge et stock."
+          },
+          {
+            "type": "bullet",
+            "text": "Calcul déterministe : sous-total, remise, traitement fiscal, total."
+          },
+          {
+            "type": "bullet",
+            "text": "Génération serveur de PDF/document structuré en production."
+          },
+          {
+            "type": "bullet",
+            "text": "Portail sécurisé par lien magique pour approuver/refuser sans compte client classique."
+          },
+          {
+            "type": "bullet",
+            "text": "La preuve d'approbation conserve token, horodatage, version du devis et audit ; signature optionnelle si réellement requise."
+          },
+          {
+            "type": "bullet",
+            "text": "L'approbation met automatiquement à jour l'ordre de réparation."
+          },
+          {
+            "type": "bullet",
+            "text": "L'IA peut préparer un brouillon avec les modèles/historiques autorisés, mais les prix proviennent toujours des services déterministes."
+          },
+          {
+            "type": "section_label",
+            "text": "FRANCE + SUISSE"
+          }
+        ]
+      },
+      {
+        "title": "11. Architecture multi-pays, devises et fiscalité",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Dimension",
+              "France",
+              "Suisse",
+              "UE / International futur"
+            ],
+            "rows": [
+              [
+                "Code pays",
+                "FR",
+                "CH",
+                "Code ISO"
+              ],
+              [
+                "Devise",
+                "EUR",
+                "CHF ou EUR selon politique atelier",
+                "Devise ISO configurable"
+              ],
+              [
+                "Téléphone",
+                "Adapté France",
+                "Adapté Suisse",
+                "Adapté pays"
+              ],
+              [
+                "Adresse",
+                "Format France",
+                "Format Suisse",
+                "Adapté pays"
+              ],
+              [
+                "Type client",
+                "Particulier / Entreprise",
+                "Particulier / Entreprise",
+                "Particulier / Entreprise"
+              ],
+              [
+                "Identité fiscale",
+                "Identifiants français",
+                "Identifiants entreprise/TVA suisses",
+                "Identifiants pays"
+              ],
+              [
+                "Traitement fiscal",
+                "Décision moteur de règles",
+                "Décision moteur de règles",
+                "Décision moteur de règles"
+              ],
+              [
+                "Routage déclaratif",
+                "Selon transaction",
+                "Selon transaction transfrontalière",
+                "Selon pays/transaction"
+              ]
+            ]
+          },
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Correction essentielle : Ne pas implémenter « client français = 20 % » et « client suisse = 8,1 % » comme simple règle basée sur le pays du client. Le taux normal suisse est bien de 8,1 %, mais la taxation d'une réparation effectuée par un garage français dépend notamment du lieu d'imposition, du statut B2B/B2C et du contexte de la transaction. Les règles doivent être configurables et validées avant la production."
+          }
+        ]
+      },
+      {
+        "title": "12. Moteur fiscal",
+        "content": [
+          {
+            "type": "flow",
+            "steps": [
+              "Vendeur / lieu réparation",
+              "Pays client",
+              "B2B / B2C",
+              "Identité fiscale",
+              "Contexte transaction",
+              "Résultat fiscal"
+            ]
+          },
+          {
+            "type": "bullet",
+            "text": "TaxService centralisé ; aucune TVA dispersée dans l'interface."
+          },
+          {
+            "type": "bullet",
+            "text": "Règles versionnées avec dates d'effet."
+          },
+          {
+            "type": "bullet",
+            "text": "La facture conserve le traitement fiscal réellement appliqué à l'émission."
+          },
+          {
+            "type": "bullet",
+            "text": "Support EUR et CHF dès le départ."
+          },
+          {
+            "type": "bullet",
+            "text": "Stockage du taux de change possible si nécessaire pour la comptabilité/les rapports."
+          },
+          {
+            "type": "bullet",
+            "text": "Les règles de production doivent être fournies ou validées par l'expert-comptable/conseiller conformité du client."
+          }
+        ]
+      },
+      {
+        "title": "13. QR-Facture suisse - Optionnelle / conditionnelle",
+        "content": [
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Note vérifiée : La QR-facture suisse est un moyen de paiement, pas une obligation automatique dès qu'un client est suisse. Une référence QR de 27 chiffres exige un QR-IBAN. Le module ne doit être activé que si l'organisation bancaire du garage le permet et si le client confirme le besoin."
+          },
+          {
+            "type": "bullet",
+            "text": "Les adresses et identifiants suisses sont supportés indépendamment de la QR-facture."
+          },
+          {
+            "type": "bullet",
+            "text": "Si activé, générer les données de paiement selon les Swiss Payment Standards en vigueur."
+          },
+          {
+            "type": "bullet",
+            "text": "Ne pas utiliser BVR/ESR comme terminologie principale moderne ; la QR-facture a remplacé les anciens bulletins de versement."
+          },
+          {
+            "type": "bullet",
+            "text": "Les exigences bancaires doivent être confirmées avec le garage, sa banque et/ou l'expert-comptable."
+          },
+          {
+            "type": "section_label",
+            "text": "FACTURATION ÉLECTRONIQUE FRANÇAISE"
+          }
+        ]
+      },
+      {
+        "title": "14. Génération de facture vs transmission électronique",
+        "content": [
+          {
+            "type": "paragraph",
+            "text": "Le SaaS génère lui-même la facture commerciale. La Plateforme Agréée française est un connecteur externe de transmission/e-reporting réglementaire ; elle ne remplace pas le moteur de facturation interne."
+          },
+          {
+            "type": "flow",
+            "steps": [
+              "Réparation terminée",
+              "Moteur facture",
+              "Validation",
+              "Connecteur e-facture",
+              "PA / Chorus Pro",
+              "Retour statut"
+            ]
+          },
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "Statut fournisseur → Facture → Ordre de réparation → Chronologie client/véhicule → Audit"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "15. Connecteur vers Plateforme Agréée",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "Interface EInvoiceConnector indépendante du fournisseur."
+          },
+          {
+            "type": "bullet",
+            "text": "Authentification fournisseur et secrets uniquement côté serveur."
+          },
+          {
+            "type": "bullet",
+            "text": "Transformation du modèle interne vers le format structuré/API accepté par le fournisseur sélectionné."
+          },
+          {
+            "type": "bullet",
+            "text": "Transmission des e-factures B2B applicables ou des données d'e-reporting nécessaires."
+          },
+          {
+            "type": "bullet",
+            "text": "Réception des statuts par webhook et/ou polling."
+          },
+          {
+            "type": "bullet",
+            "text": "Normalisation des statuts spécifiques fournisseur vers les statuts internes."
+          },
+          {
+            "type": "bullet",
+            "text": "Soumissions idempotentes, retries, gestion des erreurs et logs techniques."
+          },
+          {
+            "type": "bullet",
+            "text": "Stockage des références externes."
+          },
+          {
+            "type": "bullet",
+            "text": "Possibilité d'ajouter une autre Plateforme Agréée sans reconstruire clients, ordres, devis ou moteur de facture."
+          },
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Choix du fournisseur : FOURNISSEUR EN ATTENTE DE SÉLECTION. La plateforme de production devra être choisie après vérification de la liste DGFiP en vigueur, de la documentation API, du sandbox, des webhooks/statuts, de l'e-reporting, de l'interopérabilité et des préférences du garage/expert-comptable. Pennylane peut être évalué comme candidat sans être codé en dur."
+          }
+        ]
+      },
+      {
+        "title": "16. Périmètre Chorus Pro",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Routage",
+              "Utilisation"
+            ],
+            "rows": [
+              [
+                "Plateforme Agréée (PA, ex-PDP)",
+                "Flux B2B français applicables et e-reporting dans le cadre de la réforme."
+              ],
+              [
+                "Chorus Pro",
+                "Facturation du secteur public français (B2G)."
+              ],
+              [
+                "E-reporting B2C / transfrontalier",
+                "Via la Plateforme Agréée sélectionnée lorsque la réglementation l'exige ; ne pas confondre avec la facture B2B domestique."
+              ]
+            ]
+          },
+          {
+            "type": "callout",
+            "accent": "",
+            "text": "Correction importante : Ne pas présenter la réforme comme une « validation/clearance DGFiP » facture par facture ni promettre un « sceau DGFiP ». L'application doit suivre les statuts officiels/fournisseur prévus par le flux."
+          },
+          {
+            "type": "section_label",
+            "text": "COMMUNICATIONS & ADMINISTRATION"
+          }
+        ]
+      },
+      {
+        "title": "17. Communications",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Déclencheur",
+              "Canaux / comportement"
+            ],
+            "rows": [
+              [
+                "Lien de réservation",
+                "SMS / E-mail ; WhatsApp optionnel."
+              ],
+              [
+                "Confirmation/rappel RDV",
+                "E-mail / SMS / WhatsApp selon consentement et configuration."
+              ],
+              [
+                "Devis prêt / rappel",
+                "Lien sécurisé via les canaux configurés."
+              ],
+              [
+                "Véhicule prêt",
+                "Notification client et suivi de livraison du message."
+              ],
+              [
+                "Facture disponible",
+                "E-mail / portail client / canal configuré."
+              ],
+              [
+                "Demande d'avis",
+                "Automatisation post-restitution optionnelle."
+              ]
+            ]
+          },
+          {
+            "type": "bullet",
+            "text": "CommunicationService central et modèles éditables par tenant/langue."
+          },
+          {
+            "type": "bullet",
+            "text": "Journal d'envoi : en attente, envoyé, livré, lu, échec selon possibilités du fournisseur."
+          },
+          {
+            "type": "bullet",
+            "text": "Respect des préférences et consentements client."
+          },
+          {
+            "type": "bullet",
+            "text": "En production, les comptes fournisseurs doivent appartenir au client ; l'application reçoit uniquement les accès nécessaires."
+          }
+        ]
+      },
+      {
+        "title": "18. Administration SaaS et multi-tenancy",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "Isolation stricte par tenant_id sur les données métier et autorisation serveur."
+          },
+          {
+            "type": "bullet",
+            "text": "Row Level Security PostgreSQL recommandée lorsque pertinente ; un schéma/base physique séparé(e) par garage n'est pas requis pour l'architecture de base."
+          },
+          {
+            "type": "bullet",
+            "text": "Stockage, jobs, contraintes uniques et configurations d'intégration tenant-aware."
+          },
+          {
+            "type": "bullet",
+            "text": "Tests automatiques contre les fuites inter-tenant."
+          },
+          {
+            "type": "bullet",
+            "text": "Le super-admin peut onboarder/suspendre des garages et suivre la santé technique sans contourner silencieusement la confidentialité."
+          },
+          {
+            "type": "bullet",
+            "text": "Les noms Starter / Pro / AI peuvent servir de groupes de fonctionnalités ; aucun prix n'est défini dans ce document."
+          }
+        ]
+      },
+      {
+        "title": "19. Architecture de production proposée",
+        "content": [
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "Web / Tablette équipe + Portails clients : Next.js • responsive tablet-first • i18n français par défaut"
+              ],
+              [
+                "Identité + Contexte tenant : Authentification • RBAC • liens magiques • tokens réservation"
+              ],
+              [
+                "Couche Application / API : Clients • Réservation • Planning • Ordres • Devis • Factures"
+              ],
+              [
+                "Services métier : Planning • Pricing • Taxe • Facture • Communications • Audit"
+              ],
+              [
+                "Connecteurs : PA e-facturation • Chorus Pro • E-mail • SMS • WhatsApp • IA • Stockage"
+              ],
+              [
+                "Données : PostgreSQL/Supabase • RLS • hébergement UE • historique d'audit"
+              ]
+            ]
+          },
+          {
+            "type": "section_label",
+            "text": "DONNÉES & API"
+          }
+        ]
+      },
+      {
+        "title": "20. Modèle de données principal",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Domaine",
+              "Entités / enregistrements clés"
+            ],
+            "rows": [
+              [
+                "Tenancy & Accès",
+                "Tenant, Site, Utilisateur, Membership, Rôle, Permission."
+              ],
+              [
+                "Client",
+                "Customer, Address, CustomerTaxIdentity, Consent, SecureToken."
+              ],
+              [
+                "Véhicule",
+                "Vehicle, ServiceHistory, VehicleDocument."
+              ],
+              [
+                "Ressources atelier",
+                "Mechanic, MechanicSkill, MechanicSchedule, Bay/Resource, ResourceCapability, Closure, AvailabilityBlock."
+              ],
+              [
+                "Services & Réservation",
+                "Service, ServiceRequirement, BookingPolicy, IntakeQuestion, BookingRequest, SlotHold, Appointment."
+              ],
+              [
+                "Opérations",
+                "WorkOrder, Diagnosis, WorkOrderStatusHistory, QualityCheck, Attachment."
+              ],
+              [
+                "Commercial",
+                "LaborTemplate, Part, Consumable, Quote, QuoteLine, Approval."
+              ],
+              [
+                "Fiscalité & Devise",
+                "TaxProfile, TaxRule, Currency, ExchangeRate optionnel."
+              ],
+              [
+                "Facturation",
+                "Invoice, InvoiceLine, EInvoiceSubmission, ProviderEvent, ReportingRecord."
+              ],
+              [
+                "Communications",
+                "Message, MessageTemplate, DeliveryEvent."
+              ],
+              [
+                "Plateforme",
+                "Notification, AuditLog, PlanEntitlement, IntegrationConfig."
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "21. Frontières des modules / API",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Module",
+              "Responsabilités"
+            ],
+            "rows": [
+              [
+                "BookingService",
+                "Sessions publiques, tokens, politique, demandes, blocage créneau et confirmation."
+              ],
+              [
+                "SchedulingService",
+                "Disponibilité, conflits, ressources, créneaux alternatifs et validation finale."
+              ],
+              [
+                "CustomerService",
+                "Client, pays, profil fiscal et consentements."
+              ],
+              [
+                "VehicleService",
+                "Registre et historique véhicule."
+              ],
+              [
+                "WorkOrderService",
+                "Cycle réparation et transitions contrôlées."
+              ],
+              [
+                "PricingService",
+                "Main-d'œuvre, pièces, consommables, remises et calculs commerciaux."
+              ],
+              [
+                "TaxService",
+                "Décision fiscale selon pays/client/transaction."
+              ],
+              [
+                "QuoteService",
+                "Création, versions, approbation/refus."
+              ],
+              [
+                "InvoiceService",
+                "Création, validation, instantané immuable et documents."
+              ],
+              [
+                "EInvoiceConnector",
+                "Abstraction indépendante du fournisseur."
+              ],
+              [
+                "CommunicationService",
+                "E-mail/SMS/WhatsApp et journal d'envoi."
+              ],
+              [
+                "AI Orchestrator",
+                "Appels structurés vers API autorisées uniquement."
+              ],
+              [
+                "AuditService",
+                "Historique immuable des événements métier."
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "22. Exemples de flux API",
+        "content": [
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "Recherche créneau → Booking API → Scheduling Service → Compétences + Ponts + Horaires + RDV → Créneaux valides"
+              ]
+            ]
+          },
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "Admission IA → Appel d'outil structuré → API Planning / Service → Créneaux valides → Choix client → Booking Service"
+              ]
+            ]
+          },
+          {
+            "type": "banner_or_flow",
+            "rows": [
+              [
+                "Réparation terminée → Invoice Service → Tax Service → Validation → EInvoiceConnector → Fournisseur → Statut → Mise à jour"
+              ]
+            ]
+          },
+          {
+            "type": "section_label",
+            "text": "SÉCURITÉ, RGPD & LIVRAISON"
+          }
+        ]
+      },
+      {
+        "title": "23. Sécurité, RGPD et fiabilité",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "Hébergement de production approprié en région UE pour les données personnelles concernées."
+          },
+          {
+            "type": "bullet",
+            "text": "Isolation stricte au niveau base de données et services."
+          },
+          {
+            "type": "bullet",
+            "text": "RBAC et autorisation côté serveur ; cacher un bouton ne suffit pas."
+          },
+          {
+            "type": "bullet",
+            "text": "TLS, gestion des secrets, tokens sécurisés et rate limiting."
+          },
+          {
+            "type": "bullet",
+            "text": "Consentement RGPD, accès/export, suppression et politique de conservation."
+          },
+          {
+            "type": "bullet",
+            "text": "Audit des approbations, soumissions facture, statuts, communications et réservations."
+          },
+          {
+            "type": "bullet",
+            "text": "Réservations et soumissions facture idempotentes."
+          },
+          {
+            "type": "bullet",
+            "text": "Sauvegardes, logs structurés, monitoring et restauration."
+          },
+          {
+            "type": "bullet",
+            "text": "Aucun secret/API de production exposé dans le frontend."
+          }
+        ]
+      },
+      {
+        "title": "24. Planification MVP",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Phase",
+              "Périmètre"
+            ],
+            "rows": [
+              [
+                "Mois 1 - Fondations",
+                "Multi-tenancy, auth/RBAC, i18n, clients/véhicules, modèle France/Suisse, catalogue services, ressources atelier, modèle fiscal/devise et audit."
+              ],
+              [
+                "Mois 2 - Réservation & Opérations",
+                "Moteur central, agenda, réservation équipe, portail client, liens SMS/e-mail, fermetures/blocages, rendez-vous, ordres, diagnostic et qualité."
+              ],
+              [
+                "Mois 3 - Commercial & Connecteurs",
+                "Devis, approbation, services pricing/tax, moteur facture, EUR/CHF, communications, interface e-invoicing, rapports et administration SaaS."
+              ],
+              [
+                "Mois 4 - Pilote & Stabilisation",
+                "Validation atelier réel, cas limites planning, scénarios France/Suisse, sandbox fournisseur si choisi/disponible, sécurité, performance et corrections."
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "25. Décisions / validations en attente",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Élément",
+              "Statut"
+            ],
+            "rows": [
+              [
+                "Plateforme Agréée française",
+                "Sélection client/fournisseur/expert-comptable en attente."
+              ],
+              [
+                "Règles fiscales France/Suisse exactes",
+                "À valider par l'expert-comptable/conseiller conformité."
+              ],
+              [
+                "Module QR-facture suisse",
+                "Optionnel ; confirmer besoin bancaire/QR-IBAN."
+              ],
+              [
+                "Fournisseur SMS production",
+                "En attente."
+              ],
+              [
+                "Fournisseur e-mail production",
+                "En attente."
+              ],
+              [
+                "Compte/fournisseur WhatsApp Business",
+                "En attente."
+              ],
+              [
+                "Configuration modèle/fournisseur IA",
+                "En attente ; choix du modèle configurable."
+              ],
+              [
+                "Export/intégration comptable",
+                "En attente."
+              ],
+              [
+                "Intégration scanner OBD-II matériel",
+                "Non supposée ; confirmer si requise."
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "26. Corrections vérifiées appliquées au JSON source",
+        "content": [
+          {
+            "type": "table",
+            "headers": [
+              "Hypothèse du JSON",
+              "Traitement corrigé dans ce PRD"
+            ],
+            "rows": [
+              [
+                "FR 20% vs CH 8,1% selon le pays client",
+                "Supprimé. La taxation dépend du contexte, du lieu d'imposition et du statut du client."
+              ],
+              [
+                "QR-facture automatique pour tout client suisse",
+                "Rendue optionnelle/conditionnelle et dépendante d'un QR-IBAN/configuration bancaire compatible."
+              ],
+              [
+                "Référence 27 chiffres décrite comme BVR",
+                "Terminologie QR-facture moderne ; référence QR 27 chiffres avec QR-IBAN."
+              ],
+              [
+                "Endpoint Pennylane codé en dur",
+                "Supprimé. Fournisseur en attente, connecteur indépendant ; endpoint repris de la doc au moment de l'intégration."
+              ],
+              [
+                "Sceau / clearance DGFiP par facture",
+                "Supprimé. Suivi des statuts officiels/fournisseur."
+              ],
+              [
+                "Chorus Pro mélangé avec PA B2B",
+                "Séparé : Chorus Pro = secteur public ; PA = réforme B2B/e-reporting."
+              ],
+              [
+                "Garantie 12 ms IA/planning",
+                "Supprimée car non vérifiée ; objectifs de performance à définir/mesurer."
+              ],
+              [
+                "Buffer 15 min obligatoire global",
+                "Rendu configurable par garage/service."
+              ],
+              [
+                "Schéma PostgreSQL séparé par tenant",
+                "Remplacé par modèle tenant-aware + RLS/autorisation ; schémas séparés non obligatoires."
+              ],
+              [
+                "Hypothèses de prix/fournisseurs/modèles",
+                "Retirées du document client car variables et hors périmètre demandé ici."
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "27. Sources de vérification",
+        "content": [
+          {
+            "type": "bullet",
+            "text": "Administration fiscale française (impots.gouv.fr) : liste/rôle des Plateformes Agréées, e-invoicing/e-reporting et périmètre Chorus Pro."
+          },
+          {
+            "type": "bullet",
+            "text": "Ministère français de l'Économie (economie.gouv.fr) : réforme de la facturation électronique et rôle de Chorus Pro."
+          },
+          {
+            "type": "bullet",
+            "text": "Commission européenne - Taxation & Customs Union : règles TVA relatives au lieu d'imposition des services, notamment travaux sur biens meubles corporels et services B2B."
+          },
+          {
+            "type": "bullet",
+            "text": "Administration fédérale des contributions suisse (ESTV) : taux TVA suisse en vigueur (taux normal 8,1 %)."
+          },
+          {
+            "type": "bullet",
+            "text": "SIX Swiss Payment Standards : QR-facture, QR-IBAN et référence QR à 27 chiffres."
+          },
+          {
+            "type": "bullet",
+            "text": "Documentation officielle OpenAI : Structured Outputs et function/tool calling."
+          },
+          {
+            "type": "bullet",
+            "text": "La documentation API du fournisseur choisi doit être revérifiée au moment de l'intégration car les endpoints et capacités évoluent."
+          }
+        ]
       }
-    },
-
-    "vehicle_entity": {
-      "fields": {
-        "id": "UUID (Primary Key)",
-        "tenant_id": "UUID (RLS Isolation)",
-        "customer_id": "UUID (Foreign Key -> Customer)",
-        "license_plate": "String (e.g. 'AB-123-CD' or 'GE 452 891')",
-        "vin": "String (17-character ISO standard)",
-        "make": "String (e.g. Peugeot, BMW, Renault, Volkswagen)",
-        "model": "String (e.g. 3008, X5, Clio, Golf)",
-        "year": "Integer",
-        "fuel_type": "ENUM ('PETROL', 'DIESEL', 'ELECTRIC', 'HYBRID', 'LPG')",
-        "transmission": "ENUM ('MANUAL', 'AUTOMATIC')",
-        "mileage": "Integer (kilometers)",
-        "last_service_date": "ISO Date"
-      }
-    },
-
-    "work_order_entity": {
-      "fields": {
-        "id": "UUID (Primary Key)",
-        "order_number": "String (e.g. WO-2026-0042)",
-        "tenant_id": "UUID (RLS Isolation)",
-        "customer_id": "UUID",
-        "vehicle_id": "UUID",
-        "mechanic_id": "UUID",
-        "bay_id": "UUID",
-        "stage": "ENUM ('REQUEST', 'APPOINTMENT', 'DIAGNOSIS', 'QUOTE', 'AWAITING_APPROVAL', 'APPROVED', 'IN_PROGRESS', 'QUALITY_CHECK', 'READY', 'DELIVERED', 'INVOICED')",
-        "symptoms": "Array of Strings",
-        "diagnosis_notes": "String",
-        "obd_codes": "Array of Objects ({ code, description, severity, suggestedCheck })",
-        "photos": "Array of Secure Storage URLs",
-        "checklist": "Array of Objects ({ id, title, status: PASS|FAIL|NA })",
-        "parts_used": "Array of Objects ({ partId, name, quantity, unitPrice, total })",
-        "labor_time_recorded_min": "Integer (tracked via live stopwatch)",
-        "quote_id": "UUID (Optional)",
-        "invoice_id": "UUID (Optional)"
-      }
-    }
-  },
-
-  "third_party_api_matrix_and_cost_breakdown": {
-    "disclaimer": "All figures below are estimated baseline charges. Actual costs will vary based on garage volume, messaging frequency, and vendor plan selections.",
-    
-    "services": [
-      {
-        "service_name": "Email Automation & Transactional PDF Delivery",
-        "vendor": "Brevo (formerly Sendinblue)",
-        "purpose": "Transactional dispatch of booking confirmations, magic quote approval links, Factur-X PDF invoices, and 24h appointment reminders.",
-        "integration_type": "REST API v3 / SMTP Relay",
-        "mvp_pilot_cost": "€0.00 / month (Free tier includes 300 emails/day = ~9,000 emails/month, completely sufficient for 1 garage pilot)",
-        "production_cost_10_garages": "€19.00 / month (Starter Plan up to 20,000 emails/month, covers 10 active workshops)",
-        "cost_variance_factors": "Email volume spikes, dedicated IP add-on if requested."
-      },
-      {
-        "service_name": "Instant Messaging & WhatsApp Business Notifications",
-        "vendor": "WhatsApp Business Cloud API (Meta) & Brevo SMS / Twilio",
-        "purpose": "Direct WhatsApp & SMS dispatch for instant magic link quote review (< 3 min turnaround) and vehicle pick-up readiness alerts.",
-        "integration_type": "Meta Graph API v19.0 + Brevo SMS API",
-        "mvp_pilot_cost": "€5.00 / month (Meta grants 1,000 free service conversations/month per business account; SMS pay-as-you-go ~€0.045/SMS in France)",
-        "production_cost_10_garages": "€25.00 - €40.00 / month (Pooled messaging pool across 10 garages based on ~600 SMS/WhatsApp messages/month)",
-        "cost_variance_factors": "Customer response rate, international SMS rates (Switzerland ~0.08 CHF/SMS vs France ~€0.045/SMS)."
-      },
-      {
-        "service_name": "AutoAI Assistant & Diagnostic Reasoning Engine",
-        "vendor": "OpenAI API",
-        "purpose": "Natural language symptom intake, OBD-II DTC diagnostic fault explanation, and bounded JSON tool calling.",
-        "integration_type": "OpenAI Chat Completions API with tools / tool_choice: auto",
-        "recommended_model": "gpt-4o-mini (for ultra-fast 12ms receptionist intake) + gpt-4o (for deep diagnostic troubleshooting)",
-        "mvp_pilot_cost": "€2.50 / month ($0.15/1M input tokens, $0.60/1M output tokens; estimated ~1.5M tokens/month for single garage pilot)",
-        "production_cost_10_garages": "€15.00 - €25.00 / month (Shared API token pool across 10 garages processing ~500 customer AI chats/month)",
-        "cost_variance_factors": "Number of customer symptom interactions and complexity of diagnostic queries."
-      },
-      {
-        "service_name": "Relational Database, Realtime WebSockets, Storage & Auth",
-        "vendor": "Supabase (Managed PostgreSQL 16)",
-        "purpose": "PostgreSQL relational data store, multi-tenant Row Level Security (RLS) policies, Realtime WebSocket subscriptions for live bay boards, and secure storage for vehicle damage photos & Factur-X XML.",
-        "integration_type": "Supabase JS Client SDK (@supabase/supabase-js) + PostgreSQL RLS",
-        "mvp_pilot_cost": "€0.00 / month (Free tier: 500MB database, 1GB file storage, 50,000 monthly active users)",
-        "production_cost_10_garages": "€23.00 / month ($25/mo Pro Tier: 8GB database, 100GB storage, automatic daily backups, 7-day point-in-time recovery)",
-        "cost_variance_factors": "High-resolution damage photo storage volume (> 100GB requires $0.021/GB add-on)."
-      },
-      {
-        "service_name": "Edge Hosting, Serverless Compute & Global CDN",
-        "vendor": "Vercel",
-        "purpose": "Global edge deployment, automated CI/CD from GitHub repository, custom domain SSL/TLS management, serverless function API routing.",
-        "integration_type": "Vercel Git Integration",
-        "mvp_pilot_cost": "€0.00 / month (Hobby Tier: unlimited deployments, 100GB bandwidth, fast edge global CDN)",
-        "production_cost_10_garages": "€18.50 / month ($20/mo Pro Tier per team developer: enhanced concurrency, 1TB bandwidth, 99.99% uptime SLA)",
-        "cost_variance_factors": "Number of team seats in Vercel dashboard."
-      },
-      {
-        "service_name": "French Approved E-Invoicing Platform (Plateforme Agréée PA/PDP)",
-        "vendor": "Pennylane (Approved French PA) / Sage PA / Avalara",
-        "purpose": "Regulatory B2B electronic invoice transmission and B2C/cross-border e-reporting to DGFiP network.",
-        "integration_type": "Pennylane Company REST API v2",
-        "mvp_pilot_cost": "€0.00 / month from AtelierOS (Simulator active in demo; garage manages PA account directly)",
-        "production_cost_10_garages": "€0.00 software surcharge from AtelierOS (Garage pays their own PA provider subscription directly, typically €49 - €99/mo including their full accounting)",
-        "cost_variance_factors": "Client's chosen PA vendor contract."
-      },
-      {
-        "service_name": "French Public Sector E-Invoicing Platform (Chorus Pro / PPF)",
-        "vendor": "Chorus Pro (AIFE / DGFiP)",
-        "purpose": "Mandatory e-invoicing for French public sector entities (Municipalities, Police, Hospitals).",
-        "integration_type": "PISTE API (UBL 2.1 / Factur-X)",
-        "mvp_pilot_cost": "€0.00 / month (100% Free state-funded API platform)",
-        "production_cost_10_garages": "€0.00 / month (100% Free state-funded API platform)",
-        "cost_variance_factors": "Zero cost (Government funded)."
-      }
-    ],
-
-    "consolidated_cost_summary": {
-      "mvp_single_garage_pilot": {
-        "monthly_total_estimated_eur": "€7.50 / month",
-        "breakdown": "Vercel (€0) + Supabase (€0) + Brevo (€0) + WhatsApp/SMS (€5) + OpenAI (€2.50) + Chorus Pro (€0)"
-      },
-      "production_10_garages_scale": {
-        "monthly_total_estimated_eur": "€100.50 / month (~€10.05 / garage / month)",
-        "breakdown": "Vercel Pro (€18.50) + Supabase Pro (€23) + Brevo Starter (€19) + WhatsApp/SMS Pool (€25) + OpenAI Pool (€15)"
-      }
-    }
-  },
-
-  "mvp_implementation_roadmap": {
-    "phase_1_current_completed": {
-      "phase_name": "Phase 1: Core Engine, Multi-Tenant Workspaces & Cross-Border MVP",
-      "status": "COMPLETED & VERIFIED",
-      "deliverables": [
-        "ONE Central Availability & Scheduling Engine with 12ms Bay Constraint Solver",
-        "10-Stage Work Order Board with stopwatch labor tracking and OBD-II lookup",
-        "Rugged 48px Touch Tablet Station for Bay Mechanics",
-        "Magic Link Quote Approval Portal with Digital Signature capture (< 3 min turnaround)",
-        "Customer Web Booking Wizard (60-sec self-serve with 10-min slot hold)",
-        "Deterministic Multi-Country Invoicing Engine (France 20.0% TVA & Switzerland 8.1% MWST, EUR & CHF)",
-        "Factur-X (CII/UBL 2.1) structured XML generator and Swiss QR-Bill (BVR) generator",
-        "Provider-neutral E-Invoicing PDP connector simulator (SUBMITTED -> ACCEPTED)",
-        "AutoAI Workshop Assistant with 3D floating ribbon logo and bounded tool calling",
-        "100% Reactive Multi-Language System across all sections (EN, FR, FR-CH, DE-CH)",
-        "Multi-Tenant RBAC Workspaces with 6 isolated test roles (0 cross-tenant bleed)"
-      ]
-    },
-
-    "phase_2_production_integrations": {
-      "phase_name": "Phase 2: Live API Key Hookup & Third-Party Provisioning",
-      "status": "READY_FOR_CREDENTIALS",
-      "deliverables": [
-        "Ingest client Pennylane PA API sandbox token & verify end-to-end DGFiP submission",
-        "Configure Brevo SMTP / API v3 keys for automated transactional email dispatches",
-        "Configure Meta WhatsApp Cloud API credentials & approved message templates",
-        "Deploy production Supabase PostgreSQL instance with Row Level Security policies",
-        "Set up Vercel production custom domain (e.g. app.atelier-os.com) with SSL"
-      ]
-    },
-
-    "phase_3_scaling_and_pilot_rollout": {
-      "phase_name": "Phase 3: Multi-Garage Pilot & Fleet Expansion",
-      "status": "PLANNED",
-      "deliverables": [
-        "Onboard first 3 pilot workshops in France and Geneva border region",
-        "Conduct live bay testing with grease-resistant tablet stations",
-        "Audit Chorus Pro and Pennylane e-invoicing compliance metrics with garage accountant",
-        "Launch SaaS Super Admin billing automation for MARS Association"
-      ]
-    }
-  },
-
-  "client_feedback_invitation": {
-    "english": "Please review this master specification and let us know if you would like any adjustments, if anything needs modification or refinement, or if your garage accountant has specific preferences regarding the Plateforme Agréée (PA) provider selection. We are ready to adjust any technical detail upon your confirmation!",
-    "french": "Veuillez examiner cette spécification et nous faire part de vos éventuelles remarques, modifications ou préférences spécifiques (notamment concernant le choix de la Plateforme Agréée PA pour votre comptabilité). Nous sommes à votre entière disposition pour ajuster les moindres détails techniques !"
+    ]
   }
 }

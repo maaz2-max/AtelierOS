@@ -434,6 +434,33 @@ html, body {
   color: var(--color-text-muted);
 }
 
+/* Floating AI Action Widget (FAB) */
+.floating-ai-fab {
+  cursor: pointer;
+  user-select: none;
+}
+.floating-ai-fab:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 14px 32px rgba(124, 58, 237, 0.5), 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+}
+.floating-ai-fab:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .floating-ai-fab {
+    bottom: 16px !important;
+    right: 16px !important;
+    width: 52px !important;
+    height: 52px !important;
+  }
+  .floating-ai-fab img {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}
+
+
 
   </style>
 </head>

@@ -318,30 +318,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             }}
           >
             <CalendarIcon size={16} color="#0071E3" />
-            <span>Customer Web Booking</span>
-          </button>
-
-          <button
-            onClick={onOpenAi}
-            style={{
-              padding: '0 20px',
-              height: '46px',
-              borderRadius: '9999px',
-              border: '1px solid #DDD6FE',
-              background: '#F5F3FF',
-              boxShadow: '0 2px 8px rgba(124, 58, 237, 0.08)',
-              color: '#7C3AED',
-              fontSize: '15px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
-            }}
-          >
-            <Sparkles size={16} color="#7C3AED" />
-            <span>AutoAI Receptionist</span>
           </button>
         </div>
 

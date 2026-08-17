@@ -361,6 +361,51 @@ export const App: React.FC = () => {
         onNavigate={handleNavigate}
       />
 
+      {/* Floating AutoAI Assistant Action Widget */}
+      <button
+        onClick={() => setIsAiOpen(true)}
+        aria-label="Open AutoAI Assistant"
+        className="floating-ai-fab"
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          zIndex: 1200,
+          width: '58px',
+          height: '58px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)',
+          border: '2px solid rgba(255, 255, 255, 0.9)',
+          boxShadow: '0 8px 24px rgba(124, 58, 237, 0.4), 0 2px 6px rgba(0,0,0,0.1)',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0',
+          transition: 'transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease',
+          outline: 'none'
+        }}
+        title="AutoAI Assistant"
+      >
+        <img 
+          src="/assets/ai_logo.png" 
+          alt="AutoAI" 
+          style={{ width: '38px', height: '38px', objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }} 
+        />
+        {/* Soft Online Pulse Badge */}
+        <span style={{
+          position: 'absolute',
+          top: '-2px',
+          right: '-2px',
+          width: '14px',
+          height: '14px',
+          borderRadius: '50%',
+          background: '#10B981',
+          border: '2px solid #FFFFFF',
+          boxShadow: '0 0 8px rgba(16, 185, 129, 0.8)'
+        }}></span>
+      </button>
+
       {/* Reset Confirmation Dialog */}
       <ConfirmationModal
         isOpen={confirmResetOpen}

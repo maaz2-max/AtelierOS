@@ -214,27 +214,6 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Right Action Controls (Desktop + Mobile Trigger) */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {/* AutoAI Trigger */}
-            <button
-              onClick={onOpenAiAssistant}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                padding: '6px 10px',
-                background: 'var(--color-ai-soft)',
-                border: '1px solid var(--color-ai-border)',
-                color: 'var(--color-ai)',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '12px',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}
-            >
-              <Bot size={14} />
-              <span className="desktop-only">AutoAI</span>
-            </button>
-
             {/* Log In Button */}
             <button
               onClick={onOpenLogin}

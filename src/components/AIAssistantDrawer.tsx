@@ -122,16 +122,17 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e5e5ea', paddingBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{
-              width: '36px',
-              height: '36px',
+              width: '38px',
+              height: '38px',
               borderRadius: '10px',
-              background: 'linear-gradient(135deg, #0071e3 0%, #bf5af2 100%)',
+              background: '#F5F3FF',
+              border: '1px solid #DDD6FE',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#ffffff'
+              overflow: 'hidden'
             }}>
-              <Sparkles size={18} />
+              <img src="/assets/ai_logo.png" alt="AutoAI" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
             </div>
             <div>
               <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#1d1d1f' }}>{tai.title}</h2>

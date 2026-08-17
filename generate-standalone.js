@@ -257,32 +257,33 @@ ${iconsSetup}
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="AtelierOS">
-  <meta name="theme-color" content="#f5f5f7">
-  <title>AtelierOS — The Workshop Operating System (France &amp; Switzerland)</title>
-  <meta name="description" content="Tablet-first, multi-tenant automotive workshop SaaS. Under development by MARS Association.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230071e3' stroke-width='2'><path d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'/></svg>">
+  <meta name="theme-color" content="#0F172A">
+  <title>AtelierOS — Smarter Workshops. Better Cars.</title>
+  <meta name="description" content="The operating system for the modern automobile workshop. Multi-tenant SaaS for France & Switzerland.">
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
 ${css}
   </style>
 </head>
-<body class="scrollbar-none">
+<body>
   <div id="root">
     <div style="max-width:1200px;margin:60px auto;padding:24px;display:flex;flex-direction:column;gap:20px;">
-      <div class="skeleton-shimmer" style="height:48px;width:280px;border-radius:12px;"></div>
-      <div class="skeleton-shimmer" style="height:240px;border-radius:20px;"></div>
+      <div style="height:48px;width:280px;background:#e2e8f0;border-radius:8px;"></div>
+      <div style="height:240px;background:#e2e8f0;border-radius:10px;"></div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-        <div class="skeleton-shimmer" style="height:140px;border-radius:16px;"></div>
-        <div class="skeleton-shimmer" style="height:140px;border-radius:16px;"></div>
-        <div class="skeleton-shimmer" style="height:140px;border-radius:16px;"></div>
+        <div style="height:140px;background:#e2e8f0;border-radius:10px;"></div>
+        <div style="height:140px;background:#e2e8f0;border-radius:10px;"></div>
+        <div style="height:140px;background:#e2e8f0;border-radius:10px;"></div>
       </div>
     </div>
   </div>
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="/dist/app.compiled.js?v=3.0.0"></script>
+  <script src="/dist/app.compiled.js?v=3.5.1" onerror="this.onerror=null;this.src='dist/app.compiled.js?v=3.5.1';"></script>
 </body>
 </html>`;
 

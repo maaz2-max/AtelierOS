@@ -1,0 +1,22 @@
+{
+  "name": "atelier-os",
+  "version": "3.5.1",
+  "description": "AtelierOS — The Automotive Workshop Operating System (France & Switzerland)",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node generate-standalone.js",
+    "test": "node test-rbac.js && node test-langs.js"
+  },
+  "keywords": [
+    "automotive",
+    "workshop",
+    "saas",
+    "react",
+    "factur-x",
+    "swiss-qr-bill"
+  ],
+  "author": "AtelierOS",
+  "license": "UNLICENSED"
+}

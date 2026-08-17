@@ -1,4 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" fill="none">
+const fs = require('fs');
+const path = require('path');
+
+const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" fill="none">
   <defs>
     <linearGradient id="aiHexGrad" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#9333EA" />
@@ -70,4 +73,16 @@
 
   <!-- Lower Intake Grill -->
   <path d="M84 134 L116 134 L112 138 L88 138 Z" fill="#0F172A" />
-</svg>
+</svg>`;
+
+const assetsDir = path.join(__dirname, '..', 'assets');
+const publicAssetsDir = path.join(__dirname, '..', 'public', 'assets');
+
+fs.writeFileSync(path.join(assetsDir, 'ai_logo.svg'), svgContent, 'utf-8');
+fs.writeFileSync(path.join(publicAssetsDir, 'ai_logo.svg'), svgContent, 'utf-8');
+
+// Also write as ai_logo.png fallback using data-uri embed wrapper or direct SVG
+fs.writeFileSync(path.join(assetsDir, 'ai_logo.png'), svgContent, 'utf-8');
+fs.writeFileSync(path.join(publicAssetsDir, 'ai_logo.png'), svgContent, 'utf-8');
+
+console.log('✓ Transparent Vector AI Logo successfully generated!');

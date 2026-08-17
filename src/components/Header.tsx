@@ -1,48 +1,52 @@
 // ==========================================================================
-// AtelierOS - Apple Frosted Acrylic Navigation Header & System Bar
-// Role-Based Navigation & Access Isolation (Guest, Manager, Mechanic, Customer, SuperAdmin)
+// AtelierOS — Enterprise Application Shell & Navigation
+// Slim Sidebar (Linear/Vercel Aesthetic) + Command Top Bar + Public Nav
 // ==========================================================================
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  Wrench, 
+  LayoutDashboard,
   Calendar as CalendarIcon, 
   ClipboardList, 
-  Tablet, 
   Users, 
   Car, 
   FileCheck2, 
   Receipt, 
-  Globe2, 
-  Sparkles, 
+  MessageSquare, 
+  Bot, 
   ShieldCheck, 
-  RotateCcw, 
+  Tablet, 
+  ExternalLink, 
+  Clock, 
+  Search, 
+  Plus, 
+  LogOut, 
+  Sun, 
+  Moon, 
+  Command, 
   ChevronDown, 
-  MessageSquare,
-  Building2,
-  ExternalLink,
-  User,
-  LogOut,
-  Lock,
-  CheckCircle2,
-  Clock
+  Check, 
+  Building2, 
+  Sparkles,
+  HelpCircle
 } from 'lucide-react';
-import { StorageService } from '../services/StorageService';
-import { Tenant, SupportedLanguage, AuthUser } from '../types';
+import { ViewMode, SupportedLanguage, Tenant, AuthUser } from '../types';
 import { translations } from '../i18n/translations';
+import { StorageService } from '../services/StorageService';
 
 interface HeaderProps {
-  currentView: string;
-  onNavigate: (view: string) => void;
+  currentView: ViewMode;
+  onNavigate: (view: ViewMode) => void;
   activeTenant: Tenant;
   onTenantChange: (tenant: Tenant) => void;
-  onOpenAiAssistant: () => void;
-  onResetDemo: () => void;
   currentLanguage: SupportedLanguage;
   onLanguageChange: (lang: SupportedLanguage) => void;
-  currentUser: AuthUser | null;
+  onOpenAiAssistant: () => void;
+  onResetDemo: () => void;
+  currentUser?: AuthUser | null;
   onOpenLogin: () => void;
   onLogout: () => void;
+  onOpenCommandPalette?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -50,182 +54,570 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigate,
   activeTenant,
   onTenantChange,
-  onOpenAiAssistant,
-  onResetDemo,
   currentLanguage,
   onLanguageChange,
+  onOpenAiAssistant,
+  onResetDemo,
   currentUser,
   onOpenLogin,
-  onLogout
+  onLogout,
+  onOpenCommandPalette
 }) => {
   const t = (translations[currentLanguage] || translations.en) as any;
-  const tenants = StorageService.getTenants();
+
   const [tenantDropdownOpen, setTenantDropdownOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [quickCreateOpen, setQuickCreateOpen] = useState(false);
 
-  // Role-Isolated Navigation Items Filter
-  let navItems: Array<{ id: string; label: string; icon: any; badge?: string; highlight?: boolean }> = [];
+  const tenants = StorageService.getTenants();
 
-  if (!currentUser) {
-    // 1. Public / Guest Mode (Before Login)
-    navItems = [
-      { id: 'landing', label: t.nav.landing || 'Overview', icon: Globe2 },
-      { id: 'booking-portal', label: 'Online Web Booking', icon: ExternalLink, highlight: true },
-      { id: 'tracking-portal', label: 'Live Repair Tracker', icon: Clock },
-      { id: 'approval-portal', label: 'Quote Approval Link', icon: FileCheck2 }
-    ];
-  } else if (currentUser.role === 'GARAGE_ADMIN') {
-    // 2. Workshop Manager / Garage Admin (Luca Sigon / Henri Meier)
-    navItems = [
-      { id: 'calendar', label: t.nav.calendar || 'Calendar', icon: CalendarIcon },
-      { id: 'work-orders', label: t.nav.workOrders || 'Work Orders', icon: ClipboardList },
-      { id: 'customers', label: t.nav.customers || 'Customers', icon: Users },
-      { id: 'vehicles', label: t.nav.vehicles || 'Vehicles', icon: Car },
-      { id: 'quotes', label: t.nav.quotes || 'Quotes', icon: FileCheck2 },
-      { id: 'invoices', label: t.nav.invoices || 'Invoices', icon: Receipt },
-      { id: 'comms-hub', label: t.nav.communications || 'Communications', icon: MessageSquare }
-    ];
-  } else if (currentUser.role === 'MECHANIC') {
-    // 3. Mechanic / Technician Station (Marc Dupont)
-    navItems = [
-      { id: 'mechanic-bay', label: 'Mechanic Tablet Bay Mode', icon: Tablet, badge: 'iPad', highlight: true },
-      { id: 'work-orders', label: 'Assigned Work Orders', icon: ClipboardList }
-    ];
-  } else if (currentUser.role === 'CUSTOMER') {
-    // 4. Customer / Vehicle Owner Portal (Sophie Laurent)
-    navItems = [
-      { id: 'customer-portal', label: 'My Garage & Repairs', icon: Car, highlight: true },
-      { id: 'booking-portal', label: 'Book New Service', icon: ExternalLink },
-      { id: 'tracking-portal', label: 'Live Vehicle Status', icon: Clock }
-    ];
-  } else if (currentUser.role === 'SUPER_ADMIN') {
-    // 5. SaaS Super Admin (Alexandre Mars - MARS Association)
-    navItems = [
-      { id: 'super-admin', label: t.nav.superAdmin || 'SaaS Super Admin', icon: ShieldCheck, highlight: true },
-      { id: 'landing', label: 'Public Showcase', icon: Globe2 }
-    ];
-  }
-
-  const getRoleBadgeColor = (role?: string) => {
-    switch (role) {
-      case 'GARAGE_ADMIN': return { bg: '#e1f0ff', text: '#0071e3', label: 'Manager' };
-      case 'MECHANIC': return { bg: '#eaf8ed', text: '#248a3d', label: 'Mechanic' };
-      case 'CUSTOMER': return { bg: '#fff2e0', text: '#c46e00', label: 'Customer' };
-      case 'SUPER_ADMIN': return { bg: '#eeedff', text: '#5856d6', label: 'Super Admin' };
-      default: return { bg: '#f5f5f7', text: '#86868b', label: 'Guest' };
+  const toggleTheme = () => {
+    const nextTheme = !isDarkMode;
+    setIsDarkMode(nextTheme);
+    if (nextTheme) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('atelieros_theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('atelieros_theme', 'light');
     }
   };
 
-  const roleInfo = getRoleBadgeColor(currentUser?.role);
+  useEffect(() => {
+    const saved = localStorage.getItem('atelieros_theme');
+    if (saved === 'dark') {
+      setIsDarkMode(true);
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  }, []);
 
-  return (
-    <header style={{
-      position: 'sticky',
-      top: 0,
-      zIndex: 1000,
-      background: 'rgba(255, 255, 255, 0.92)',
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
-      borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
-      padding: '0 16px'
-    }}>
-      {/* Top Bar: Brand, Tenant Switcher, Language, AI & Auth Profile */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+  // Keyboard shortcut listener for Ctrl+K / Cmd+K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        if (onOpenCommandPalette) onOpenCommandPalette();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onOpenCommandPalette]);
+
+  // ========================================================================
+  // PUBLIC / UN-AUTHENTICATED HEADER BAR
+  // ========================================================================
+  if (!currentUser) {
+    return (
+      <header style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
+        background: 'var(--color-surface)',
+        borderBottom: '1px solid var(--color-border)',
         height: '56px',
-        maxWidth: '1600px',
-        margin: '0 auto',
-        gap: '12px'
+        padding: '0 24px'
       }}>
-        {/* Brand & Attribution Badge */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '100%',
+          maxWidth: '1400px',
+          margin: '0 auto'
+        }}>
+          {/* Brand Logo */}
           <div 
-            onClick={() => {
-              if (currentUser?.role === 'CUSTOMER') onNavigate('customer-portal');
-              else if (currentUser?.role === 'MECHANIC') onNavigate('mechanic-bay');
-              else if (currentUser?.role === 'SUPER_ADMIN') onNavigate('super-admin');
-              else onNavigate('landing');
-            }}
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '10px', 
-              cursor: 'pointer',
-              textDecoration: 'none' 
-            }}
+            onClick={() => onNavigate('landing')} 
+            style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
           >
             <img 
               src="/assets/logo.png" 
-              alt="AtelierOS Official Logo" 
-              style={{ 
-                height: '32px', 
-                width: 'auto',
-                display: 'block',
-                objectFit: 'contain'
-              }} 
+              alt="AtelierOS" 
+              style={{ height: '30px', width: 'auto', display: 'block', objectFit: 'contain' }} 
+            />
+          </div>
+
+          {/* Public Navigation Links */}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button
+              onClick={() => onNavigate('landing')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                background: currentView === 'landing' ? 'var(--color-surface-hover)' : 'transparent',
+                color: currentView === 'landing' ? 'var(--brand-blue)' : 'var(--color-text-secondary)',
+                fontSize: '13px',
+                fontWeight: currentView === 'landing' ? '600' : '500',
+                cursor: 'pointer'
+              }}
+            >
+              Overview
+            </button>
+
+            <button
+              onClick={() => onNavigate('booking-portal')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                background: currentView === 'booking-portal' ? 'var(--color-surface-hover)' : 'transparent',
+                color: currentView === 'booking-portal' ? 'var(--brand-blue)' : 'var(--color-text-secondary)',
+                fontSize: '13px',
+                fontWeight: currentView === 'booking-portal' ? '600' : '500',
+                cursor: 'pointer'
+              }}
+            >
+              Web Booking
+            </button>
+
+            <button
+              onClick={() => onNavigate('tracking-portal')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                background: currentView === 'tracking-portal' ? 'var(--color-surface-hover)' : 'transparent',
+                color: currentView === 'tracking-portal' ? 'var(--brand-blue)' : 'var(--color-text-secondary)',
+                fontSize: '13px',
+                fontWeight: currentView === 'tracking-portal' ? '600' : '500',
+                cursor: 'pointer'
+              }}
+            >
+              Live Status
+            </button>
+
+            <button
+              onClick={() => onNavigate('approval-portal')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                background: currentView === 'approval-portal' ? 'var(--color-surface-hover)' : 'transparent',
+                color: currentView === 'approval-portal' ? 'var(--brand-blue)' : 'var(--color-text-secondary)',
+                fontSize: '13px',
+                fontWeight: currentView === 'approval-portal' ? '600' : '500',
+                cursor: 'pointer'
+              }}
+            >
+              Quote Approval
+            </button>
+          </nav>
+
+          {/* Right Action Controls */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* Language Selector */}
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '5px 10px',
+                  background: 'var(--color-surface-secondary)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: 'var(--color-text-secondary)',
+                  cursor: 'pointer'
+                }}
+              >
+                <span>{currentLanguage.toUpperCase()}</span>
+                <ChevronDown size={12} />
+              </button>
+
+              {langDropdownOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '4px',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '4px',
+                  boxShadow: 'var(--shadow-dropdown)',
+                  zIndex: 1100,
+                  minWidth: '120px'
+                }}>
+                  {[
+                    { code: 'en', label: 'English' },
+                    { code: 'fr', label: 'Français (FR)' },
+                    { code: 'fr-CH', label: 'Français (CH)' },
+                    { code: 'de-CH', label: 'Deutsch (CH)' }
+                  ].map(l => (
+                    <div
+                      key={l.code}
+                      onClick={() => {
+                        onLanguageChange(l.code as SupportedLanguage);
+                        setLangDropdownOpen(false);
+                      }}
+                      style={{
+                        padding: '6px 10px',
+                        borderRadius: 'var(--radius-xs)',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        background: currentLanguage === l.code ? 'var(--brand-blue-soft)' : 'transparent',
+                        color: currentLanguage === l.code ? 'var(--brand-blue)' : 'var(--color-text-primary)',
+                        fontWeight: currentLanguage === l.code ? '600' : '400'
+                      }}
+                    >
+                      {l.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* AutoAI Trigger */}
+            <button
+              onClick={onOpenAiAssistant}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 12px',
+                background: 'var(--color-ai-soft)',
+                border: '1px solid var(--color-ai-border)',
+                color: 'var(--color-ai)',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '12px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+            >
+              <Bot size={14} />
+              <span>AutoAI</span>
+            </button>
+
+            {/* Log In Button */}
+            <button
+              onClick={onOpenLogin}
+              style={{
+                padding: '6px 16px',
+                background: 'var(--brand-blue)',
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '13px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'background-color 0.15s ease'
+              }}
+            >
+              Log In
+            </button>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
+  // ========================================================================
+  // AUTHENTICATED SLIM SIDEBAR + TOP BAR NAVIGATION
+  // ========================================================================
+  const isManager = currentUser.role === 'GARAGE_ADMIN';
+  const isMechanic = currentUser.role === 'MECHANIC';
+  const isCustomer = currentUser.role === 'CUSTOMER';
+  const isSuperAdmin = currentUser.role === 'SUPER_ADMIN';
+
+  const navGroups = isManager ? [
+    {
+      label: 'WORKSHOP',
+      items: [
+        { id: 'calendar', label: 'Staff Calendar', icon: CalendarIcon },
+        { id: 'work-orders', label: 'Work Orders', icon: ClipboardList }
+      ]
+    },
+    {
+      label: 'CRM & FLEET',
+      items: [
+        { id: 'customers', label: 'Customers', icon: Users },
+        { id: 'vehicles', label: 'Vehicles', icon: Car }
+      ]
+    },
+    {
+      label: 'COMMERCIAL',
+      items: [
+        { id: 'quotes', label: 'Quotes & Estimates', icon: FileCheck2 },
+        { id: 'invoices', label: 'Invoices & Factur-X', icon: Receipt }
+      ]
+    },
+    {
+      label: 'OPERATIONS',
+      items: [
+        { id: 'comms-hub', label: 'Communications', icon: MessageSquare }
+      ]
+    }
+  ] : isMechanic ? [
+    {
+      label: 'STATION',
+      items: [
+        { id: 'mechanic-bay', label: 'Tablet Bay Mode', icon: Tablet },
+        { id: 'work-orders', label: 'Assigned Orders', icon: ClipboardList }
+      ]
+    }
+  ] : isCustomer ? [
+    {
+      label: 'MY GARAGE',
+      items: [
+        { id: 'customer-portal', label: 'My Vehicles & Repairs', icon: Car },
+        { id: 'booking-portal', label: 'Book Service', icon: ExternalLink },
+        { id: 'tracking-portal', label: 'Live Vehicle Status', icon: Clock }
+      ]
+    }
+  ] : [
+    {
+      label: 'GOVERNANCE',
+      items: [
+        { id: 'super-admin', label: 'SaaS Platform Admin', icon: ShieldCheck },
+        { id: 'landing', label: 'Public Showcase', icon: ExternalLink }
+      ]
+    }
+  ];
+
+  return (
+    <>
+      {/* Top Application Bar */}
+      <div style={{
+        marginLeft: '240px',
+        height: '48px',
+        background: 'var(--color-surface)',
+        borderBottom: '1px solid var(--color-border)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 20px',
+        position: 'sticky',
+        top: 0,
+        zIndex: 900
+      }}>
+        {/* Breadcrumb / Search trigger */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ fontSize: '13px', fontWeight: '500', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>{activeTenant.name}</span>
+            <span>/</span>
+            <span style={{ color: 'var(--color-text-primary)', fontWeight: '600' }}>
+              {currentView.replace('-', ' ').toUpperCase()}
+            </span>
+          </div>
+
+          {/* Command Search Bar (Ctrl+K) */}
+          <button
+            onClick={onOpenCommandPalette}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '4px 12px',
+              background: 'var(--color-surface-secondary)',
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-sm)',
+              color: 'var(--color-text-muted)',
+              fontSize: '12px',
+              cursor: 'pointer',
+              minWidth: '220px'
+            }}
+          >
+            <Search size={13} />
+            <span>Search orders, plates, VIN...</span>
+            <span style={{ 
+              marginLeft: 'auto', 
+              fontSize: '10px', 
+              background: 'var(--color-surface)', 
+              padding: '1px 5px', 
+              borderRadius: '3px', 
+              border: '1px solid var(--color-border)', 
+              fontFamily: 'var(--font-mono)' 
+            }}>
+              ⌘K
+            </span>
+          </button>
+        </div>
+
+        {/* Right Action Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Quick Create Dropdown (Manager) */}
+          {isManager && (
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setQuickCreateOpen(!quickCreateOpen)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '5px 10px',
+                  background: 'var(--brand-blue)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                <Plus size={13} />
+                <span>New</span>
+                <ChevronDown size={12} />
+              </button>
+
+              {quickCreateOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '4px',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '4px',
+                  boxShadow: 'var(--shadow-dropdown)',
+                  zIndex: 1100,
+                  minWidth: '160px'
+                }}>
+                  <div 
+                    onClick={() => { onNavigate('calendar'); setQuickCreateOpen(false); }}
+                    style={{ padding: '6px 10px', fontSize: '12px', cursor: 'pointer', borderRadius: '4px', color: 'var(--color-text-primary)' }}
+                  >
+                    + New Appointment
+                  </div>
+                  <div 
+                    onClick={() => { onNavigate('work-orders'); setQuickCreateOpen(false); }}
+                    style={{ padding: '6px 10px', fontSize: '12px', cursor: 'pointer', borderRadius: '4px', color: 'var(--color-text-primary)' }}
+                  >
+                    + New Work Order
+                  </div>
+                  <div 
+                    onClick={() => { onNavigate('quotes'); setQuickCreateOpen(false); }}
+                    style={{ padding: '6px 10px', fontSize: '12px', cursor: 'pointer', borderRadius: '4px', color: 'var(--color-text-primary)' }}
+                  >
+                    + New Quote
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* AutoAI Quick Trigger */}
+          <button
+            onClick={onOpenAiAssistant}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '5px 10px',
+              background: 'var(--color-ai-soft)',
+              border: '1px solid var(--color-ai-border)',
+              color: 'var(--color-ai)',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: '12px',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            <Bot size={13} />
+            <span>AI Assistant</span>
+          </button>
+
+          {/* Language Switcher */}
+          <button
+            onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+            style={{
+              padding: '4px 8px',
+              background: 'transparent',
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: '11px',
+              fontWeight: '600',
+              color: 'var(--color-text-secondary)',
+              cursor: 'pointer'
+            }}
+          >
+            {currentLanguage.toUpperCase()}
+          </button>
+        </div>
+      </div>
+
+      {/* Slim Desktop Sidebar (Fixed Left, 240px) */}
+      <aside style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        width: '240px',
+        background: 'var(--color-sidebar)',
+        borderRight: '1px solid var(--color-border)',
+        display: 'flex',
+        flexDirection: 'column',
+        zIndex: 1000
+      }}>
+        {/* Brand Header */}
+        <div style={{ padding: '16px 18px', borderBottom: '1px solid var(--color-border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <img 
+              src="/assets/logo.png" 
+              alt="AtelierOS" 
+              style={{ height: '26px', width: 'auto', display: 'block', objectFit: 'contain' }} 
             />
           </div>
         </div>
 
-        {/* Action Controls & Authentication Profile */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {/* Tenant Selector (Visible to Admin / Mechanic or Guest preview) */}
-          {(!currentUser || currentUser.role === 'GARAGE_ADMIN' || currentUser.role === 'SUPER_ADMIN') && (
+        {/* Workshop Switcher (Manager Only) */}
+        {isManager && (
+          <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--color-border)' }}>
             <div style={{ position: 'relative' }}>
               <button
                 onClick={() => setTenantDropdownOpen(!tenantDropdownOpen)}
                 style={{
+                  width: '100%',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  background: '#f5f5f7',
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
-                  borderRadius: '16px',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  color: '#1d1d1f',
-                  cursor: 'pointer',
-                  transition: 'background 0.15s ease'
+                  justifyContent: 'space-between',
+                  padding: '6px 10px',
+                  background: 'var(--color-surface-secondary)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: 'var(--color-text-primary)',
+                  cursor: 'pointer'
                 }}
               >
-                <Building2 size={14} color="#0071e3" />
-                <span style={{ maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {activeTenant.name}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+                  <Building2 size={14} color="var(--brand-blue)" />
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {activeTenant.name}
+                  </span>
+                </div>
                 <span style={{
                   fontSize: '10px',
                   background: activeTenant.country === 'FR' ? '#0071e3' : '#d9383a',
                   color: '#fff',
                   padding: '1px 5px',
-                  borderRadius: '4px',
+                  borderRadius: '3px',
                   fontWeight: '700'
                 }}>
                   {activeTenant.country}
                 </span>
-                <ChevronDown size={12} color="#86868b" />
               </button>
 
               {tenantDropdownOpen && (
                 <div style={{
                   position: 'absolute',
                   top: '100%',
+                  left: 0,
                   right: 0,
-                  marginTop: '6px',
-                  background: '#ffffff',
-                  borderRadius: '14px',
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
-                  padding: '6px',
-                  minWidth: '240px',
+                  marginTop: '4px',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '4px',
+                  boxShadow: 'var(--shadow-dropdown)',
                   zIndex: 1100
                 }}>
-                  <div style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '600', color: '#86868b', textTransform: 'uppercase' }}>
-                    Switch Active Garage
-                  </div>
                   {tenants.map(t => (
                     <div
                       key={t.id}
@@ -234,365 +626,141 @@ export const Header: React.FC<HeaderProps> = ({
                         setTenantDropdownOpen(false);
                       }}
                       style={{
-                        padding: '8px 10px',
-                        borderRadius: '8px',
+                        padding: '6px 8px',
+                        borderRadius: 'var(--radius-xs)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        background: t.id === activeTenant.id ? '#f5f5f7' : 'transparent',
-                        fontSize: '13px',
-                        fontWeight: t.id === activeTenant.id ? '600' : '400'
+                        fontSize: '12px',
+                        background: t.id === activeTenant.id ? 'var(--brand-blue-soft)' : 'transparent',
+                        color: t.id === activeTenant.id ? 'var(--brand-blue)' : 'var(--color-text-primary)'
                       }}
                     >
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span>{t.name}</span>
-                        <span style={{ fontSize: '11px', color: '#86868b' }}>{t.address.city} ({t.currency})</span>
-                      </div>
-                      <span style={{
-                        fontSize: '10px',
-                        background: t.country === 'FR' ? '#0071e3' : '#d9383a',
-                        color: '#fff',
-                        padding: '1px 5px',
-                        borderRadius: '4px',
-                        fontWeight: '700'
-                      }}>
-                        {t.country}
-                      </span>
+                      <span>{t.name}</span>
+                      <span style={{ fontSize: '10px', color: 'var(--color-text-muted)' }}>{t.country} ({t.currency})</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Language Switcher */}
-          <div style={{ position: 'relative' }}>
-            <button
-              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-              style={{
+        {/* Navigation Group Items */}
+        <div style={{ flex: 1, padding: '14px 10px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {navGroups.map((grp, gIdx) => (
+            <div key={gIdx}>
+              <div style={{
+                fontSize: '10px',
+                fontWeight: '700',
+                letterSpacing: '0.06em',
+                color: 'var(--color-text-muted)',
+                padding: '0 8px 6px'
+              }}>
+                {grp.label}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                {grp.items.map(item => {
+                  const Icon = item.icon;
+                  const isActive = currentView === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => onNavigate(item.id as ViewMode)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        padding: '7px 10px',
+                        borderRadius: 'var(--radius-sm)',
+                        border: 'none',
+                        background: isActive ? 'var(--brand-blue-soft)' : 'transparent',
+                        color: isActive ? 'var(--brand-blue)' : 'var(--color-text-secondary)',
+                        fontSize: '13px',
+                        fontWeight: isActive ? '600' : '500',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'all 0.12s ease'
+                      }}
+                    >
+                      <Icon size={16} color={isActive ? 'var(--brand-blue)' : 'var(--color-text-muted)'} />
+                      <span style={{ flex: 1 }}>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom User & Theme Footer */}
+        <div style={{ padding: '12px 14px', borderTop: '1px solid var(--color-border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+              <div style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                background: 'var(--brand-navy)',
+                color: '#fff',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px',
-                padding: '6px 10px',
-                background: '#f5f5f7',
-                border: '1px solid rgba(0, 0, 0, 0.08)',
-                borderRadius: '16px',
-                fontSize: '12px',
-                fontWeight: '500',
-                color: '#1d1d1f',
-                cursor: 'pointer'
+                justifyContent: 'center',
+                fontSize: '11px',
+                fontWeight: '700'
+              }}>
+                {currentUser.name.charAt(0)}
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {currentUser.name}
+                </div>
+                <div style={{ fontSize: '10px', color: 'var(--color-text-muted)' }}>
+                  {currentUser.roleLabel}
+                </div>
+              </div>
+            </div>
+
+            {/* Dark/Light Toggle */}
+            <button
+              onClick={toggleTheme}
+              title="Toggle Light/Dark Theme"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--color-text-muted)',
+                cursor: 'pointer',
+                padding: '4px'
               }}
             >
-              <Globe2 size={13} color="#86868b" />
-              <span>{currentLanguage.toUpperCase()}</span>
-              <ChevronDown size={11} color="#86868b" />
+              {isDarkMode ? <Sun size={14} /> : <Moon size={14} />}
             </button>
-
-            {langDropdownOpen && (
-              <div style={{
-                position: 'absolute',
-                top: '100%',
-                right: 0,
-                marginTop: '6px',
-                background: '#ffffff',
-                borderRadius: '12px',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
-                border: '1px solid rgba(0, 0, 0, 0.08)',
-                padding: '4px',
-                minWidth: '150px',
-                zIndex: 1100
-              }}>
-                {[
-                  { code: 'en', label: 'English (US)' },
-                  { code: 'fr', label: 'Français (FR)' },
-                  { code: 'fr-CH', label: 'Français (CH)' },
-                  { code: 'de-CH', label: 'Deutsch (CH)' }
-                ].map(l => (
-                  <div
-                    key={l.code}
-                    onClick={() => {
-                      onLanguageChange(l.code as SupportedLanguage);
-                      setLangDropdownOpen(false);
-                    }}
-                    style={{
-                      padding: '6px 10px',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '12px',
-                      background: currentLanguage === l.code ? '#f5f5f7' : 'transparent',
-                      fontWeight: currentLanguage === l.code ? '600' : '400'
-                    }}
-                  >
-                    {l.label}
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
 
-          {/* AutoAI Assistant Button */}
           <button
-            onClick={onOpenAiAssistant}
+            onClick={onLogout}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              background: 'linear-gradient(135deg, #0071e3 0%, #5856d6 50%, #af52de 100%)',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '16px',
-              fontSize: '13px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              boxShadow: '0 2px 10px rgba(88, 86, 214, 0.35)',
-              transition: 'transform 0.15s ease'
-            }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-              <circle cx="12" cy="12" r="3" fill="currentColor"/>
-            </svg>
-            <span style={{ display: 'inline', letterSpacing: '-0.01em' }}>AutoAI</span>
-          </button>
-
-          {/* Reset Demo Data Button */}
-          <button
-            onClick={onResetDemo}
-            title="Reset to clean initial state"
-            style={{
+              width: '100%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '32px',
-              height: '32px',
-              background: '#f5f5f7',
-              border: '1px solid rgba(0, 0, 0, 0.08)',
-              borderRadius: '50%',
-              color: '#86868b',
+              gap: '6px',
+              padding: '6px',
+              background: 'transparent',
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: '11px',
+              fontWeight: '500',
+              color: 'var(--color-text-secondary)',
               cursor: 'pointer'
             }}
           >
-            <RotateCcw size={13} />
+            <LogOut size={12} />
+            <span>Sign Out</span>
           </button>
-
-          {/* Authentication State Button / User Badge */}
-          {!currentUser ? (
-            <button
-              onClick={onOpenLogin}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '7px 16px',
-                background: '#1d1d1f',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '16px',
-                fontSize: '13px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                transition: 'transform 0.15s ease'
-              }}
-            >
-              <Lock size={13} color="#fff" />
-              <span>Log In</span>
-            </button>
-          ) : (
-            <div style={{ position: 'relative' }}>
-              <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '4px 10px 4px 6px',
-                  background: '#ffffff',
-                  border: '1px solid rgba(0,0,0,0.12)',
-                  borderRadius: '20px',
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
-                }}
-              >
-                <img
-                  src={currentUser.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop'}
-                  alt={currentUser.name}
-                  style={{ width: '26px', height: '26px', borderRadius: '50%', objectFit: 'cover' }}
-                />
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: '12px', fontWeight: '600', color: '#1d1d1f', lineHeight: 1.1 }}>
-                    {currentUser.name}
-                  </span>
-                  <span style={{ 
-                    fontSize: '9px', 
-                    fontWeight: '700', 
-                    color: roleInfo.text,
-                    background: roleInfo.bg,
-                    padding: '0 4px',
-                    borderRadius: '4px',
-                    lineHeight: 1.3
-                  }}>
-                    {roleInfo.label}
-                  </span>
-                </div>
-                <ChevronDown size={11} color="#86868b" />
-              </button>
-
-              {userMenuOpen && (
-                <div style={{
-                  position: 'absolute',
-                  top: '100%',
-                  right: 0,
-                  marginTop: '8px',
-                  background: '#ffffff',
-                  borderRadius: '16px',
-                  boxShadow: '0 12px 35px rgba(0, 0, 0, 0.18)',
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
-                  padding: '8px',
-                  minWidth: '220px',
-                  zIndex: 1100
-                }}>
-                  <div style={{ padding: '8px 12px', borderBottom: '1px solid #f2f2f7', marginBottom: '6px' }}>
-                    <div style={{ fontSize: '13px', fontWeight: '700', color: '#1d1d1f' }}>{currentUser.name}</div>
-                    <div style={{ fontSize: '11px', color: '#86868b' }}>{currentUser.email}</div>
-                    <div style={{ fontSize: '11px', color: roleInfo.text, fontWeight: '600', marginTop: '2px' }}>
-                      {currentUser.roleLabel}
-                    </div>
-                  </div>
-
-                  <div 
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      onOpenLogin();
-                    }}
-                    style={{
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontSize: '13px',
-                      color: '#0071e3',
-                      fontWeight: '500',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    <Users size={14} />
-                    <span>Switch Role / User</span>
-                  </div>
-
-                  <div 
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      onLogout();
-                    }}
-                    style={{
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontSize: '13px',
-                      color: '#d9383a',
-                      fontWeight: '500',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    <LogOut size={14} />
-                    <span>Sign Out</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
         </div>
-      </div>
-
-      {/* Role-Filtered Navigation Tabs Bar */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '4px',
-        overflowX: 'auto',
-        maxWidth: '1600px',
-        margin: '0 auto',
-        padding: '6px 0',
-        scrollbarWidth: 'none'
-      }}>
-        {navItems.map(item => {
-          const isActive = currentView === item.id;
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.id}
-              onClick={() => onNavigate(item.id)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '7px 14px',
-                borderRadius: '20px',
-                border: 'none',
-                background: isActive 
-                  ? '#1d1d1f' 
-                  : item.highlight 
-                  ? '#eaf4ff' 
-                  : 'transparent',
-                color: isActive 
-                  ? '#ffffff' 
-                  : item.highlight 
-                  ? '#0071e3' 
-                  : '#515154',
-                fontSize: '13px',
-                fontWeight: isActive ? '600' : '500',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <Icon size={15} color={isActive ? '#ffffff' : item.highlight ? '#0071e3' : '#86868b'} />
-              <span>{item.label}</span>
-              {item.badge && (
-                <span style={{
-                  fontSize: '9px',
-                  background: isActive ? 'rgba(255,255,255,0.25)' : '#0071e3',
-                  color: '#fff',
-                  padding: '1px 5px',
-                  borderRadius: '6px',
-                  fontWeight: '700'
-                }}>
-                  {item.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
-
-        {/* Quick hint for Guest mode */}
-        {!currentUser && (
-          <div 
-            onClick={onOpenLogin}
-            style={{ 
-              marginLeft: 'auto', 
-              fontSize: '12px', 
-              color: '#0071e3', 
-              fontWeight: '500', 
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '4px 10px',
-              borderRadius: '12px',
-              background: '#f5f5f7'
-            }}
-          >
-            <Lock size={12} />
-            <span>Sign in to unlock staff/customer tabs</span>
-          </div>
-        )}
-      </div>
-    </header>
+      </aside>
+    </>
   );
 };

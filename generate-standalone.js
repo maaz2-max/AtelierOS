@@ -111,7 +111,15 @@ const iconSvgMap = {
   Lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   LogOut: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
   MapPin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
-  Save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>'
+  Save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>',
+  HelpCircle: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/>',
+  Sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+  Moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  Sliders: '<line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="1" x2="7" y1="14" y2="14"/><line x1="9" x2="15" y1="8" y2="8"/><line x1="17" x2="23" y1="16" y2="16"/>',
+  LayoutDashboard: '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
+  Inbox: '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+  Bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  Command: '<path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3z"/>'
 };
 
 async function build() {
@@ -157,7 +165,7 @@ const _Icons = new Proxy(_iconSvgMap, {
   }
 });
 
-const { Activity, AlertCircle, AlertTriangle, ArrowLeft, ArrowRight, Bot, Building2, Calculator, Calendar, CalendarIcon, Camera, Car, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, ClipboardList, Clock, Code, Copy, Cpu, CreditCard, DollarSign, Edit3, ExternalLink, Eye, FileCheck2, FileText, Filter, Fuel, Gauge, Globe2, Layers, Lock, LogOut, Mail, MapPin, MessageSquare, PenTool, Phone, Plus, Printer, QrCode, Receipt, RotateCcw, Save, Search, Send, Server, ShieldCheck, Smartphone, Sparkles, Tablet, Timer, Trash2, User, UserPlus, Users, Wrench, X, XCircle, Zap, Info } = _Icons;
+const { Activity, AlertCircle, AlertTriangle, ArrowLeft, ArrowRight, Bell, Bot, Building2, Calculator, Calendar, CalendarIcon, Camera, Car, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, ClipboardList, Clock, Code, Command, Copy, Cpu, CreditCard, DollarSign, Edit3, ExternalLink, Eye, FileCheck2, FileText, Filter, Fuel, Gauge, Globe2, HelpCircle, Inbox, Info, Layers, LayoutDashboard, Lock, LogOut, Mail, MapPin, MessageSquare, Moon, PenTool, Phone, Plus, Printer, QrCode, Receipt, RotateCcw, Save, Search, Send, Server, ShieldCheck, Sliders, Smartphone, Sparkles, Sun, Tablet, Timer, Trash2, User, UserPlus, Users, Wrench, X, XCircle, Zap } = _Icons;
 `;
 
     const files = [
@@ -192,6 +200,7 @@ const { Activity, AlertCircle, AlertTriangle, ArrowLeft, ArrowRight, Bot, Buildi
       'components/CommunicationsHub.tsx',
       'components/SuperAdminDashboard.tsx',
       'components/AIAssistantDrawer.tsx',
+      'components/CommandPaletteModal.tsx',
       'App.tsx'
     ];
 

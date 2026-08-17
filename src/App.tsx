@@ -25,6 +25,7 @@ import { AIAssistantDrawer } from './components/AIAssistantDrawer';
 import { LegalModal } from './components/LegalModals';
 import { ConfirmationModal } from './components/ConfirmationModal';
 import { LoginModal } from './components/LoginModal';
+import { CommandPaletteModal } from './components/CommandPaletteModal';
 
 export const App: React.FC = () => {
   // Initialize storage
@@ -51,6 +52,7 @@ export const App: React.FC = () => {
   // Modals
   const [isAiOpen, setIsAiOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isCmdPaletteOpen, setIsCmdPaletteOpen] = useState(false);
   const [legalModalType, setLegalModalType] = useState<'PRIVACY' | 'TERMS' | 'EINVOICE_INFO' | null>(null);
   const [confirmResetOpen, setConfirmResetOpen] = useState(false);
 
@@ -143,10 +145,15 @@ export const App: React.FC = () => {
         currentUser={currentUser}
         onOpenLogin={() => setIsLoginOpen(true)}
         onLogout={handleLogout}
+        onOpenCommandPalette={() => setIsCmdPaletteOpen(true)}
       />
 
       {/* Main View Router */}
-      <main style={{ flex: 1 }}>
+      <main style={{ 
+        flex: 1, 
+        marginLeft: (currentUser && !['landing', 'booking-portal', 'tracking-portal', 'approval-portal'].includes(currentView)) ? '240px' : '0',
+        transition: 'margin-left 0.15s ease'
+      }}>
         {/* Public / Landing Showcase */}
         {currentView === 'landing' && (
           <LandingPage
@@ -345,6 +352,13 @@ export const App: React.FC = () => {
         type={legalModalType}
         onClose={() => setLegalModalType(null)}
         currentLanguage={currentLanguage}
+      />
+
+      {/* Global Command Palette (Ctrl+K / ⌘K) */}
+      <CommandPaletteModal
+        isOpen={isCmdPaletteOpen}
+        onClose={() => setIsCmdPaletteOpen(false)}
+        onNavigate={handleNavigate}
       />
 
       {/* Reset Confirmation Dialog */}

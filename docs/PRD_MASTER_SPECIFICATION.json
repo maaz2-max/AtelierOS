@@ -1,262 +1,334 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "project": {
+  "document_metadata": {
+    "title": "AtelierOS — Master Product Requirements Document (PRD) & Architecture Blueprint",
+    "version": "4.3.0-ENTERPRISE",
+    "last_updated": "2026-08-18",
+    "author": "Antigravity AI Engineering Team (for MARS Association & Workshop Partners)",
+    "status": "APPROVED_MVP_IN_PRODUCTION_PREVIEW",
+    "disclaimer_note": "IMPORTANT COST & USAGE NOTICE: All financial figures, API token charges, hosting tiers, and third-party subscription fees listed in this document are conservative baseline estimates based on current standard vendor pricing. Actual operational costs may vary depending on real-time repair order volume, database storage growth, peak SMS/WhatsApp messaging traffic, selected French PDP provider contracts, and specific client customization requirements."
+  },
+
+  "project_overview": {
     "name": "AtelierOS",
-    "version": "4.2.0",
-    "tagline": "The High-Precision Operating System for Modern Automotive Workshops",
-    "target_regions": [
+    "tagline": "The High-Precision Operating System for Modern Automotive Workshops. France 🇫🇷 & Switzerland 🇨🇭.",
+    "core_mission": "Eliminate administrative drag and eliminate workshop double-bookings by providing a unified availability engine, grease-resistant 48px mechanic tablet stations, instant magic-link quote approvals, and automated French PDP / Swiss QR cross-border billing without leaving the SaaS.",
+    "target_markets": [
       {
-        "country": "France",
+        "region": "France (Domestic & Border Garages)",
         "country_code": "FR",
-        "currency": "EUR",
-        "standard_vat_rate": 20.0,
-        "tax_identity_fields": ["SIRET (14 digits)", "SIREN (9 digits)", "Numéro TVA Intracommunautaire", "Chorus Pro Service Code"],
-        "e_invoicing_standard": "Factur-X (CII / UBL 2.1) via Approved PDP (Pennylane) & Chorus Pro (PPF)",
-        "regulatory_framework": "DGFiP 2026/2027 E-Invoicing Reform, RGPD"
+        "currency": "EUR (€)",
+        "standard_vat": 20.0,
+        "reduced_vat_rates": [10.0, 5.5],
+        "fiscal_identifiers": ["14-digit SIRET", "9-digit SIREN", "Numéro TVA Intracommunautaire (FRxx)", "Chorus Pro Service Code"],
+        "e_invoicing_mandate": "Factur-X / UBL 2.1 via DGFiP Approved Platforms (Pennylane PDP / Chorus Pro PPF)",
+        "compliance_standards": "DGFiP 2026/2027 E-Invoicing Reform, RGPD, ISO 27001 Local Storage"
       },
       {
-        "country": "Switzerland",
+        "region": "Switzerland (Romandie & Swiss Cantons)",
         "country_code": "CH",
-        "currency": "CHF",
-        "standard_vat_rate": 8.1,
-        "tax_identity_fields": ["IDE / UID (CHE-xxx.xxx.xxx)", "Numéro TVA Suisse (MWST)"],
-        "e_invoicing_standard": "Swiss QR-Bill (Structured BVR with 27-digit reference + QR-IBAN)",
-        "regulatory_framework": "Federal Tax Administration (ESTV), Swiss nLPD (Data Protection)"
+        "currency": "CHF (CHF)",
+        "standard_vat": 8.1,
+        "reduced_vat_rates": [3.8, 2.6],
+        "fiscal_identifiers": ["IDE / UID (CHE-xxx.xxx.xxx)", "Numéro TVA Suisse (MWST)"],
+        "e_invoicing_mandate": "Swiss QR-Bill (Structured BVR with 27-digit reference + QR-IBAN)",
+        "compliance_standards": "Federal Tax Administration (ESTV), Swiss nLPD (New Federal Act on Data Protection)"
       }
     ],
-    "supported_locales": [
-      { "code": "en", "name": "English", "region": "Global / UK" },
-      { "code": "fr", "name": "Français", "region": "France (TVA 20.0%)" },
-      { "code": "fr-CH", "name": "Français (CH)", "region": "Suisse Romande (TVA 8.1%)" },
-      { "code": "de-CH", "name": "Deutsch (CH)", "region": "Deutschschweiz (MWST 8.1%)" }
+    "supported_languages": [
+      { "code": "en", "label": "English", "locale": "en-US / en-GB", "purpose": "International & Global Fleets" },
+      { "code": "fr", "label": "Français", "locale": "fr-FR", "purpose": "France Domestic Garages (TVA 20.0%)" },
+      { "code": "fr-CH", "label": "Français (CH)", "locale": "fr-CH", "purpose": "Suisse Romande / Geneva / Vaud (TVA 8.1%)" },
+      { "code": "de-CH", "label": "Deutsch (CH)", "locale": "de-CH", "purpose": "Deutschschweiz / Zurich / Basel (MWST 8.1%)" }
     ]
   },
 
   "core_architectural_principles": [
     {
-      "principle": "ONE Central Engine",
-      "description": "A unified availability and scheduling pipeline shared across garage desktop admin, mechanic tablet stations, customer web booking, and AutoAI receptionists, guaranteeing 0 double bookings and 0 bay conflicts."
+      "id": "ARCH-01",
+      "principle": "ONE Central Availability Pipeline",
+      "detail": "A single deterministic availability scheduler shared simultaneously by garage desktop staff, mechanic bay tablets, public web booking wizards, and AutoAI receptionists. Enforces mechanic skill certifications, physical lift weight ratings, and mandatory 15-minute bay sanitization buffers with 0 double bookings."
     },
     {
-      "principle": "Internal Invoicing vs Pluggable PDP Transmission",
-      "description": "AtelierOS is the internal invoicing engine (calculating parts, labor, deterministic multi-country VAT, PDF and Factur-X generation). External transmission to the French tax administration is handled via a provider-neutral pluggable connector (Pennylane PDP, Chorus Pro) so staff never leave the application."
+      "id": "ARCH-02",
+      "principle": "Internal Invoicing vs Pluggable PDP E-Reporting Connector",
+      "detail": "AtelierOS internally handles parts + labor calculation, deterministic VAT assignment, PDF generation, Factur-X XML packaging, and Swiss QR-Bill rendering. External dispatch to the DGFiP network is routed via pluggable PDP connectors (Pennylane / Chorus Pro) so garage staff never leave the application."
     },
     {
-      "principle": "Multi-Country & Multi-Currency from Day 1",
-      "description": "Dynamic customer profiling supporting French, Swiss, and cross-border customers with deterministic tax rate calculations and native dual-currency (EUR € / CHF CHF) invoicing."
+      "id": "ARCH-03",
+      "principle": "Cross-Border Dynamic Tax Engine",
+      "detail": "Data models are designed from day one with multi-country customer profiles (France, Switzerland, Other EU, International). Tax rates are calculated deterministically via rules based on physical repair location, customer residency, and B2B/B2C status."
     },
     {
-      "principle": "Strict Multi-Tenant RBAC Isolation",
-      "description": "Complete data separation across garage tenants using Supabase Row Level Security (RLS) with zero cross-tenant leakage."
+      "id": "ARCH-04",
+      "principle": "Strict Multi-Tenant Row Level Security (RLS)",
+      "detail": "Zero cross-tenant data bleed. Every database query, appointment lookup, and customer record is strictly isolated per garage tenant ID in PostgreSQL via Supabase RLS."
     },
     {
-      "principle": "Bounded AI with Strict Function Calling",
-      "description": "OpenAI LLM integration operates exclusively through strictly typed JSON tool calling (checking real garage availability, quoting estimate matrix, looking up OBD-II codes) without hallucinations."
+      "id": "ARCH-05",
+      "principle": "Bounded AI with Typed JSON Function Calling",
+      "detail": "OpenAI LLM receptionist is strictly bound to execute deterministic internal APIs (check_availability, compute_quote, lookup_obd, hold_slot) preventing hallucinations."
     }
   ],
 
-  "user_roles_and_workspaces": [
+  "user_roles_and_isolated_workspaces": [
     {
       "role": "GUEST",
-      "label": "Guest / Public User",
-      "access": ["Landing Page", "Public Web Booking Portal", "Quote Approval Portal", "Live Repair Status Tracking"]
+      "role_code": "LOGGED_OUT",
+      "description": "Public prospective clients and vehicle owners",
+      "accessible_views": ["Landing Page Showcase", "60-Second Web Booking Wizard", "Magic Link Quote Approval Portal", "Real-Time Vehicle Repair Tracking Timeline"]
     },
     {
       "role": "GARAGE_ADMIN",
-      "label": "Garage Workshop Manager / Owner",
-      "access": ["Central Agenda Calendar", "10-Stage Work Order Board", "Customer & Fleet Registry", "Vehicle Database", "Quote Manager", "Invoice & E-Invoicing Hub", "SMS/Email Dispatch Logs", "Garage Settings & Tax Configuration"]
+      "role_code": "GARAGE_ADMIN",
+      "description": "Garage owner, workshop manager, or front-desk service advisor",
+      "accessible_views": ["Central Agenda Calendar (Day/Week/Bay)", "10-Stage Work Order Board", "Customer & Fleet Registry", "Vehicle Database", "Quotation Manager", "Invoicing & E-Invoicing Hub", "Brevo/WhatsApp Communications Dispatcher", "Garage Settings & Tax Rates"]
     },
     {
       "role": "MECHANIC",
-      "label": "Workshop Technician (Tablet Mode)",
-      "access": ["Rugged 48px Touch UI", "Active Bay Workstation", "Stopwatch Labor Tracker", "OBD-II Fault Code Lookup", "Photo Damage Uploader", "Quality Checklist Sign-Off"]
+      "role_code": "MECHANIC",
+      "description": "Workshop technician operating at the vehicle repair bay",
+      "accessible_views": ["Rugged 48px Touch Tablet Station", "Active Bay Workstation", "Stopwatch Labor Timer", "OBD-II DTC Diagnostic Fault Library", "Photo Damage Capture Attachment", "Digital Safety & Quality Checklist"]
     },
     {
       "role": "CUSTOMER",
-      "label": "Vehicle Owner (Customer Portal)",
-      "access": ["Service Booking Wizard", "Magic Link Quote Inspection & Digital Signature", "Real-Time Vehicle Repair Timeline", "Invoice & QR-Bill PDF Downloads"]
+      "role_code": "CUSTOMER",
+      "description": "Authenticated vehicle owner (e.g. Sophie Laurent)",
+      "accessible_views": ["My Registered Vehicles", "Upcoming Bookings", "Instant Magic Link Quote Review with Digital Sign-Off", "Live Repair Status Progress", "Factur-X & Swiss QR-Bill PDF Invoices"]
     },
     {
       "role": "SUPER_ADMIN",
-      "label": "SaaS Platform Super Administrator (MARS)",
-      "access": ["Multi-Tenant Garage Directory", "Subscription Plan Management (Starter/Pro/AI)", "Platform MRR Analytics", "System Health & E-Invoice Telemetry", "New Tenant Onboarding Wizard"]
+      "role_code": "SUPER_ADMIN",
+      "description": "SaaS Platform Owner / MARS Association System Administrator",
+      "accessible_views": ["Multi-Tenant Garage Directory", "Subscription Tier Management (Starter €89 / Pro €189 / AI €299)", "Platform MRR Telemetry", "System Health & E-Invoice Compliance Metrics", "New Garage Onboarding Provisioner"]
     }
   ],
 
-  "functional_subsystems": {
-    "scheduling_engine": {
-      "name": "Central Scheduling & Bay Constraint Engine",
-      "description": "Deterministic resource scheduler enforcing mechanic skill matrix, bay lift weight specs, and automatic 15-minute cleaning/reset buffers.",
-      "features": [
-        "12ms constraint solver algorithm",
-        "Bay types: 2-Post Lift, 4-Post Alignment Lift, Diagnostics Bay, Fast-Lube Bay",
-        "Mechanic skill verification (Brakes, Engine, Diagnostics, EV/Hybrid, Transmission, Tires, AC)",
-        "Temporary 10-minute slot holding for customer web bookings",
-        "Automated conflict prevention and real-time alternative slot suggestions"
+  "architecture_flows": {
+    "central_scheduling_flow": {
+      "flow_name": "Unified Slot Booking & Bay Constraint Resolution",
+      "steps": [
+        "1. Intake trigger initiated (via Web Booking, Front Desk Admin, or AutoAI Receptionist)",
+        "2. Service type identified (e.g. Front Brake Pads & Discs replacement -> required skill: BRAKES, required duration: 90 min)",
+        "3. Central Engine executes 12ms Constraint Solver:",
+        "   a. Filter active mechanics having skill 'BRAKES' and working on chosen date",
+        "   b. Filter available bays supporting vehicle lift specifications (e.g. TWO_POST_LIFT)",
+        "   c. Validate no existing overlapping work orders",
+        "   d. Enforce mandatory 15-minute buffer between consecutive bookings",
+        "4. Slot temporarily reserved (10-minute hold with countdown timer)",
+        "5. Customer contact captured & GDPR consent logged",
+        "6. Slot committed -> Work Order WO-2026-xxxx created in Stage 2 (APPOINTMENT)",
+        "7. Real-time calendar synchronized via Supabase WebSocket broadcast to all connected tablets & desktop screens"
       ]
     },
 
-    "work_order_pipeline": {
-      "name": "10-Stage Visual Work Order Kanban",
-      "stages": [
-        "1. REQUEST (Demande)",
-        "2. APPOINTMENT (Rendez-vous)",
-        "3. DIAGNOSIS (Diagnostic)",
-        "4. QUOTE (Devis)",
-        "5. AWAITING_APPROVAL (En Attente Accord Client)",
-        "6. APPROVED (Accord Validé)",
-        "7. IN_PROGRESS (En Cours Atelier)",
-        "8. QUALITY_CHECK (Contrôle Qualité)",
-        "9. READY (Véhicule Prêt)",
-        "10. DELIVERED / INVOICED (Restitué & Facturé)"
-      ],
-      "mechanic_tablet_features": [
-        "48px minimum touch target size for grease-resistant operation",
-        "Stopwatch labor tracking with 1-click start/pause/complete",
-        "Direct OBD-II DTC database lookup with severity rating and suggested repair steps",
-        "Visual damage attachment photo capture",
-        "Digital safety checklist (Brakes, Tires, Fluids, Lights, Battery)"
+    "mechanic_tablet_and_diagnostic_flow": {
+      "flow_name": "Bay Tablet Inspection, OBD-II Scan & Stopwatch Labor Tracking",
+      "steps": [
+        "1. Mechanic logs into Bay Tablet (Rugged 48px UI mode)",
+        "2. Selects assigned Work Order -> Moves stage from APPOINTMENT to DIAGNOSIS",
+        "3. Connects OBD-II scanner -> Enters fault code (e.g. P0300 - Random/Multiple Cylinder Misfire Detected)",
+        "4. AtelierOS OBD library returns: Severity CRITICAL, Affected System IGNITION/FUEL, Suggested Checks: Spark plugs, ignition coils, fuel injectors",
+        "5. Mechanic takes photos of worn components -> Attached directly to Work Order",
+        "6. Mechanic starts Labor Stopwatch -> Real-time seconds tracked in background",
+        "7. Mechanic completes diagnostic checklist -> Clicks 'Generate Quote Draft' -> Moves stage to Stage 4 (QUOTE)"
       ]
     },
 
-    "quote_and_approval_portal": {
-      "name": "Magic Link Quotation & Digital Approval Portal",
-      "description": "Zero-friction customer quote review dispatched via SMS/WhatsApp/Email.",
-      "features": [
-        "Instant magic-link access with cryptographic token authentication",
-        "Itemized parts and labor breakdown with VAT transparency",
-        "Digital canvas and typed authorization signature capture",
-        "Real-time status callback notifying workshop supervisor in < 3 minutes",
-        "Automatic transition from Stage 5 (AWAITING_APPROVAL) to Stage 6 (APPROVED)"
+    "magic_link_quote_approval_flow": {
+      "flow_name": "Zero-Friction Customer Quote Sign-Off (< 3 Minutes)",
+      "steps": [
+        "1. Garage Admin reviews itemized parts (€250) + labor (€250) + VAT (€100) = Total €600",
+        "2. Admin clicks 'Send Magic Approval Link'",
+        "3. Brevo Email API + WhatsApp/SMS Gateway dispatches secure tokenized link: https://app.atelier-os.com/approve?token=sec_98f4a1...",
+        "4. Work Order transitions to Stage 5 (AWAITING_APPROVAL)",
+        "5. Customer opens link on smartphone without logging in",
+        "6. Customer inspects itemized parts, labor breakdown, and attached OBD/damage photos",
+        "7. Customer draws or types digital authorization signature & clicks 'Approve Quotation'",
+        "8. Webhook callback instantly updates AtelierOS:",
+        "   a. Work Order transitions to Stage 6 (APPROVED)",
+        "   b. Bay Tablet alerts technician with green notification pulse to commence repair",
+        "   c. Timestamped audit log recorded for legal compliance"
       ]
     },
 
-    "invoicing_and_cross_border_billing": {
-      "name": "Invoicing Engine & Pluggable PDP/PPF E-Invoicing Connector",
-      "description": "Deterministic cross-border billing engine for France & Switzerland with pluggable electronic transmission.",
-      "deterministic_tax_rules": [
-        { "scenario": "French Garage + French Customer", "vat_rate": "20.0% TVA", "currency": "EUR", "e_invoice": "Factur-X via Pennylane PDP" },
-        { "scenario": "Swiss Garage + Swiss Customer", "vat_rate": "8.1% MWST", "currency": "CHF", "e_invoice": "Swiss QR-Bill with 27-digit Ref" },
-        { "scenario": "French Garage + Swiss Cross-Border Customer", "vat_rate": "20.0% TVA (Territorial)", "currency": "EUR or CHF", "e_invoice": "Factur-X + Swiss QR-Bill" },
-        { "scenario": "B2B Intra-EU Transaction", "vat_rate": "0% Reverse Charge", "currency": "EUR", "e_invoice": "Factur-X with Article 283-1 mention" }
-      ],
-      "e_invoice_lifecycle": [
-        "DRAFT (Brouillon)",
-        "VALIDATED (Validée par l'Atelier)",
-        "SUBMITTED (Transmise à la PDP / Chorus Pro)",
-        "IN_PROCESSING (En Cours d'Acheminement DGFiP)",
-        "ACCEPTED (Conforme & Délivrée au Destinataire)",
-        "REJECTED (Rejetée avec Code d'Erreur Réglementaire)"
-      ],
-      "pluggable_connectors": [
-        { "provider": "Pennylane PDP", "role": "Primary French B2B Approved Platform", "api": "REST API v2 (POST /customer_invoices)", "auth": "Bearer Token / OAuth 2.0" },
-        { "provider": "Chorus Pro", "role": "French Public Sector (B2G)", "api": "PISTE API (UBL 2.1 / Factur-X)", "auth": "OAuth2 Client Credentials" },
-        { "provider": "Swiss QR Generator", "role": "Switzerland Banking Standard", "api": "Embedded Swiss QR-Bill Engine", "spec": "ISO 20022 / SIX QR-Bill" }
+    "e_invoicing_and_pdp_transmission_flow": {
+      "flow_name": "French DGFiP E-Invoicing & Swiss QR-Bill Pipeline",
+      "steps": [
+        "1. Technician finishes repair, passes 5-point quality checklist, moves to Stage 9 (READY)",
+        "2. Customer picks up vehicle -> Work Order transitions to Stage 10 (DELIVERED / INVOICED)",
+        "3. AtelierOS Invoicing Engine automatically generates Invoice FAC-FR-2026-0058:",
+        "   a. Evaluates Deterministic Tax Rules (France Domestic: 20.0% TVA / Switzerland: 8.1% MWST)",
+        "   b. Compiles CrossIndustryInvoice XML payload compliant with urn:factur-x.eu:1p0:basic (CII/UBL 2.1)",
+        "   c. Compiles Swiss QR-Bill payment part if Swiss customer (27-digit structured reference + QR-IBAN)",
+        "   d. Generates visual hybrid PDF invoice",
+        "4. Garage Admin clicks 'Transmit to E-Invoicing'",
+        "5. Pluggable EInvoiceConnector routes payload to configured provider (Pennylane PDP API v2 / Chorus Pro PISTE):",
+        "   a. POST /api/v2/customer_invoices with XML + PDF data",
+        "   b. Provider returns SUBMITTED with external reference: FR-DEMO-2026-0085",
+        "   c. Invoice status transitions: DRAFT -> VALIDATED -> SUBMITTED -> IN_PROCESSING -> ACCEPTED",
+        "6. Webhook received from Pennylane -> AtelierOS marks invoice as ACCEPTED with DGFiP compliance seal"
       ]
     },
 
-    "auto_ai_assistant": {
-      "name": "AutoAI Workshop Receptionist & Technical Intake",
-      "engine": "OpenAI GPT-4o / GPT-4o-mini with Strict JSON Function Calling",
-      "supported_tools": [
-        { "name": "check_workshop_availability", "description": "Queries central engine for available mechanic bays on given dates" },
-        { "name": "calculate_quote_estimate", "description": "Computes parts and labor estimates based on service type and vehicle model" },
-        { "name": "lookup_obd_dtc_fault", "description": "Retrieves DTC error code diagnostic explanations and suggested workshop procedures" },
-        { "name": "hold_booking_slot", "description": "Places a 10-minute hold on a selected workshop slot" }
-      ],
-      "features": [
-        "Natural language symptom comprehension in French, German, and English",
-        "Direct intake dispatch creating customer work order drafts",
-        "Transparent execution log showing simulated API payload calls",
-        "Floating 3D ribbon icon with zero background container"
+    "auto_ai_function_calling_flow": {
+      "flow_name": "AutoAI Natural Language Receptionist & Bounded Execution",
+      "steps": [
+        "1. Customer describes symptom: 'My Peugeot 3008 squeaks loudly when braking at low speeds'",
+        "2. AutoAI interprets symptom through OpenAI GPT-4o-mini",
+        "3. Model triggers internal bounded function check_workshop_availability(service='BRAKE_INSPECTION', date_range=['2026-08-19', '2026-08-21'])",
+        "4. Central Engine returns 3 available conflict-free slots on 2-Post Lift with Master Brake Tech",
+        "5. AutoAI presents humanized booking options in customer's preferred language (FR/EN/DE)",
+        "6. Customer selects preferred slot -> Model calls hold_booking_slot(slot_id, customer_phone)",
+        "7. AutoAI creates draft work order in Central Agenda and dispatches SMS confirmation link"
       ]
     }
   },
 
-  "third_party_services_and_api_matrix": {
-    "email_automation": {
-      "provider": "Brevo (formerly Sendinblue)",
-      "purpose": "Transactional emails (Booking confirmations, Magic link quote approvals, Factur-X PDF invoices, 24h appointment reminders)",
-      "integration_method": "Brevo REST API v3 / SMTP Relay",
-      "estimated_monthly_charges": {
-        "tier": "Free / Starter Plan",
-        "cost_eur": "€0 (Up to 300 emails/day) or €19/month (Starter up to 20,000 emails/month)",
-        "notes": "Generous free tier completely covers single garage pilot. €19/mo supports multi-garage scaling."
-      }
+  "user_flows_and_scenarios": [
+    {
+      "id": "UF-01",
+      "scenario": "Customer Self-Service Online Booking",
+      "user": "Public Customer",
+      "trigger": "Visits garage booking page via Google Maps / QR Code",
+      "flow": "Selects Service -> Enters License Plate (AB-123-CD) -> Selects Date & Time Slot -> Receives 10-min slot hold -> Enters phone & GDPR consent -> Confirmed in 60 seconds with instant SMS receipt"
     },
-
-    "whatsapp_and_sms_notifications": {
-      "provider": "WhatsApp Business Cloud API (Meta) & Brevo SMS / Twilio",
-      "purpose": "Direct SMS & WhatsApp message delivery for instant quote approvals and vehicle ready pick-up notifications",
-      "integration_method": "Meta Graph API (Cloud API v19.0) & Brevo SMS API",
-      "estimated_monthly_charges": {
-        "whatsapp_cost": "First 1,000 service conversations/month FREE per Meta Business account. Thereafter ~€0.035 per utility message in France.",
-        "sms_cost": "Pay-as-you-go ~€0.045 per SMS in France, ~0.08 CHF in Switzerland.",
-        "estimated_total_eur": "€5 - €25 / month per active garage based on volume."
-      }
+    {
+      "id": "UF-02",
+      "scenario": "Mechanic Rapid Intake & OBD-II Fault Capture",
+      "user": "Bay Technician (Marc Dupont)",
+      "trigger": "Vehicle drives onto Lift Bay 1",
+      "flow": "Opens Tablet -> Selects Work Order -> Enters OBD Code P0300 -> Reviews diagnostic checklist -> Takes photo of worn ignition coils -> Starts labor stopwatch timer -> Submits diagnostic findings for quote generation"
     },
-
-    "ai_engine": {
-      "provider": "OpenAI API",
-      "purpose": "AutoAI workshop receptionist, natural language symptom intake, OBD-II diagnostic suggestions, and structured function calling",
-      "model_recommended": "gpt-4o-mini (for fast 12ms intake) + gpt-4o (for complex diagnostic interpretation)",
-      "integration_method": "OpenAI Chat Completions API with tools / tool_choice: auto",
-      "estimated_monthly_charges": {
-        "pricing_model": "$0.15 / 1M input tokens, $0.60 / 1M output tokens (gpt-4o-mini)",
-        "estimated_usage": "Approx. 50,000 tokens/day per garage (~1.5M tokens/month)",
-        "estimated_total_eur": "€1.50 - €5.00 / month per garage"
-      }
+    {
+      "id": "UF-03",
+      "scenario": "Cross-Border Swiss Customer Invoicing (CHF QR-Bill)",
+      "user": "Swiss Customer (Müller AG, Geneva)",
+      "trigger": "Repairs completed on Swiss-registered BMW X5",
+      "flow": "Garage Admin generates invoice in CHF -> Tax engine detects Swiss residency -> Applies 8.1% MWST -> Generates structured 27-digit Swiss QR-Bill (BVR) -> Customer pays instantly via Swiss banking mobile app scan"
     },
+    {
+      "id": "UF-04",
+      "scenario": "French B2B E-Invoicing Transmission via Pennylane PDP",
+      "user": "Garage Administrator",
+      "trigger": "Fleet vehicle invoice finalized for French corporate client",
+      "flow": "Admin clicks 'Transmit to E-Invoicing' -> Selects Pennylane PDP -> System sends Factur-X XML payload -> External reference FR-DEMO-2026-0085 returned -> Status tracks live to ACCEPTED"
+    }
+  ],
 
-    "database_and_backend": {
-      "provider": "Supabase (PostgreSQL 16)",
-      "purpose": "Relational data storage, Row Level Security (RLS) multi-tenant isolation, Realtime WebSocket subscriptions for live bay boards, Auth, and Storage for vehicle damage photos & Factur-X XML",
-      "integration_method": "Supabase JS SDK (@supabase/supabase-js) + PostgreSQL RLS policies",
-      "estimated_monthly_charges": {
-        "tier": "Free Tier (Up to 500MB DB, 1GB File Storage, 50,000 MAU) or Pro Tier ($25/month / €23/month)",
-        "notes": "Free tier covers MVP and single garage pilot. Pro tier (€23/mo) includes automatic daily backups, 8GB DB, and point-in-time recovery for production."
+  "third_party_api_matrix_and_cost_breakdown": {
+    "disclaimer": "All figures below are estimated baseline charges. Actual costs will vary based on garage volume, messaging frequency, and vendor plan selections.",
+    
+    "services": [
+      {
+        "service_name": "Email Automation & Transactional PDF Delivery",
+        "vendor": "Brevo (formerly Sendinblue)",
+        "purpose": "Transactional dispatch of booking confirmations, magic quote approval links, Factur-X PDF invoices, and 24h appointment reminders.",
+        "integration_type": "REST API v3 / SMTP Relay",
+        "mvp_pilot_cost": "€0.00 / month (Free tier includes 300 emails/day = ~9,000 emails/month, completely sufficient for 1 garage pilot)",
+        "production_cost_10_garages": "€19.00 / month (Starter Plan up to 20,000 emails/month, covers 10 active workshops)",
+        "cost_variance_factors": "Email volume spikes, dedicated IP add-on if requested."
+      },
+      {
+        "service_name": "Instant Messaging & WhatsApp Business Notifications",
+        "vendor": "WhatsApp Business Cloud API (Meta) & Brevo SMS / Twilio",
+        "purpose": "Direct WhatsApp & SMS dispatch for instant magic link quote review (< 3 min turnaround) and vehicle pick-up readiness alerts.",
+        "integration_type": "Meta Graph API v19.0 + Brevo SMS API",
+        "mvp_pilot_cost": "€5.00 / month (Meta grants 1,000 free service conversations/month per business account; SMS pay-as-you-go ~€0.045/SMS in France)",
+        "production_cost_10_garages": "€25.00 - €40.00 / month (Pooled messaging pool across 10 garages based on ~600 SMS/WhatsApp messages/month)",
+        "cost_variance_factors": "Customer response rate, international SMS rates (Switzerland ~0.08 CHF/SMS vs France ~€0.045/SMS)."
+      },
+      {
+        "service_name": "AutoAI Assistant & Diagnostic Reasoning Engine",
+        "vendor": "OpenAI API",
+        "purpose": "Natural language symptom intake, OBD-II DTC diagnostic fault explanation, and bounded JSON tool calling.",
+        "integration_type": "OpenAI Chat Completions API with tools / tool_choice: auto",
+        "recommended_model": "gpt-4o-mini (for ultra-fast 12ms receptionist intake) + gpt-4o (for deep diagnostic troubleshooting)",
+        "mvp_pilot_cost": "€2.50 / month ($0.15/1M input tokens, $0.60/1M output tokens; estimated ~1.5M tokens/month for single garage pilot)",
+        "production_cost_10_garages": "€15.00 - €25.00 / month (Shared API token pool across 10 garages processing ~500 customer AI chats/month)",
+        "cost_variance_factors": "Number of customer symptom interactions and complexity of diagnostic queries."
+      },
+      {
+        "service_name": "Relational Database, Realtime WebSockets, Storage & Auth",
+        "vendor": "Supabase (Managed PostgreSQL 16)",
+        "purpose": "PostgreSQL relational data store, multi-tenant Row Level Security (RLS) policies, Realtime WebSocket subscriptions for live bay boards, and secure storage for vehicle damage photos & Factur-X XML.",
+        "integration_type": "Supabase JS Client SDK (@supabase/supabase-js) + PostgreSQL RLS",
+        "mvp_pilot_cost": "€0.00 / month (Free tier: 500MB database, 1GB file storage, 50,000 monthly active users)",
+        "production_cost_10_garages": "€23.00 / month ($25/mo Pro Tier: 8GB database, 100GB storage, automatic daily backups, 7-day point-in-time recovery)",
+        "cost_variance_factors": "High-resolution damage photo storage volume (> 100GB requires $0.021/GB add-on)."
+      },
+      {
+        "service_name": "Edge Hosting, Serverless Compute & Global CDN",
+        "vendor": "Vercel",
+        "purpose": "Global edge deployment, automated CI/CD from GitHub repository, custom domain SSL/TLS management, serverless function API routing.",
+        "integration_type": "Vercel Git Integration",
+        "mvp_pilot_cost": "€0.00 / month (Hobby Tier: unlimited deployments, 100GB bandwidth, fast edge global CDN)",
+        "production_cost_10_garages": "€18.50 / month ($20/mo Pro Tier per team developer: enhanced concurrency, 1TB bandwidth, 99.99% uptime SLA)",
+        "cost_variance_factors": "Number of team seats in Vercel dashboard."
+      },
+      {
+        "service_name": "French Approved E-Invoicing Platform (PDP) & Chorus Pro (PPF)",
+        "vendor": "Pennylane (Officially Approved French PDP) / Chorus Pro (B2G)",
+        "purpose": "Regulatory e-invoice transmission and tax reporting to the French DGFiP network.",
+        "integration_type": "Pennylane Company REST API v2 / Chorus Pro PISTE OAuth2",
+        "mvp_pilot_cost": "€0.00 / month (Chorus Pro B2G API is 100% free state-funded; Pennylane PDP simulator active in demo)",
+        "production_cost_10_garages": "€0.00 additional software fee from AtelierOS (Garage pays for their own Pennylane PDP accounting subscription directly, typically €49 - €99/mo including their accounting)",
+        "cost_variance_factors": "Client's chosen PDP vendor contract."
       }
-    },
+    ],
 
-    "frontend_and_edge_hosting": {
-      "provider": "Vercel",
-      "purpose": "Serverless edge hosting, global CDN, automatic CI/CD deployment from GitHub repository, SSL/TLS, and custom domain routing",
-      "integration_method": "Vercel Git Integration (Next.js / Vite build pipeline)",
-      "estimated_monthly_charges": {
-        "tier": "Hobby Tier: €0/month (Commercial non-enterprise) or Pro Tier: $20/month (~€18.50/month per team member)",
-        "notes": "Hobby tier provides unlimited deployments with 100GB bandwidth. Pro tier recommended for custom SLA and multi-developer team."
-      }
-    },
-
-    "approved_french_e_invoicing_platform": {
-      "provider": "Pennylane (Officially Approved French PDP) / Chorus Pro (B2G)",
-      "purpose": "Regulatory e-invoicing transmission to the DGFiP and French PDP interoperability network",
-      "integration_method": "Pennylane Company API v2 / Chorus Pro PISTE OAuth2",
-      "estimated_monthly_charges": {
-        "pennylane_plan": "Pennylane API partner pricing or client's existing Pennylane garage accounting subscription (typically €49 - €99/mo including accounting)",
-        "chorus_pro_cost": "100% Free (French state-funded B2G platform via PISTE)",
-        "notes": "The garage pays for their own PDP subscription directly; AtelierOS connects via our pluggable connector at zero additional software surcharge."
+    "consolidated_cost_summary": {
+      "mvp_single_garage_pilot": {
+        "monthly_total_estimated_eur": "€7.50 / month",
+        "breakdown": "Vercel (€0) + Supabase (€0) + Brevo (€0) + WhatsApp/SMS (€5) + OpenAI (€2.50) + Chorus Pro (€0)"
+      },
+      "production_10_garages_scale": {
+        "monthly_total_estimated_eur": "€100.50 / month (~€10.05 / garage / month)",
+        "breakdown": "Vercel Pro (€18.50) + Supabase Pro (€23) + Brevo Starter (€19) + WhatsApp/SMS Pool (€25) + OpenAI Pool (€15)"
       }
     }
   },
 
-  "consolidated_infrastructure_cost_summary": {
-    "mvp_pilot_stage": {
-      "hosting_vercel": "€0.00 / month (Hobby Tier)",
-      "database_supabase": "€0.00 / month (Free Tier)",
-      "email_brevo": "€0.00 / month (Free 300 emails/day)",
-      "sms_whatsapp": "€5.00 / month (Pay-as-you-go)",
-      "ai_openai": "€2.50 / month (GPT-4o-mini)",
-      "e_invoicing_chorus_pro": "€0.00 / month (Free State API)",
-      "total_estimated_monthly_cost": "€7.50 / month (Approx. $8.00)"
+  "mvp_implementation_roadmap": {
+    "phase_1_current_completed": {
+      "phase_name": "Phase 1: Core Engine, Multi-Tenant Workspaces & Cross-Border MVP",
+      "status": "COMPLETED & VERIFIED",
+      "deliverables": [
+        "ONE Central Availability & Scheduling Engine with 12ms Bay Constraint Solver",
+        "10-Stage Work Order Board with stopwatch labor tracking and OBD-II lookup",
+        "Rugged 48px Touch Tablet Station for Bay Mechanics",
+        "Magic Link Quote Approval Portal with Digital Signature capture (< 3 min turnaround)",
+        "Customer Web Booking Wizard (60-sec self-serve with 10-min slot hold)",
+        "Deterministic Multi-Country Invoicing Engine (France 20.0% TVA & Switzerland 8.1% MWST, EUR & CHF)",
+        "Factur-X (CII/UBL 2.1) structured XML generator and Swiss QR-Bill (BVR) generator",
+        "Provider-neutral E-Invoicing PDP connector simulator (SUBMITTED -> ACCEPTED)",
+        "AutoAI Workshop Assistant with 3D floating ribbon logo and bounded tool calling",
+        "100% Reactive Multi-Language System across all sections (EN, FR, FR-CH, DE-CH)",
+        "Multi-Tenant RBAC Workspaces with 6 isolated test roles (0 cross-tenant bleed)"
+      ]
     },
-    "production_multi_garage_stage": {
-      "hosting_vercel_pro": "€18.50 / month",
-      "database_supabase_pro": "€23.00 / month",
-      "email_brevo_starter": "€19.00 / month",
-      "sms_whatsapp_pool": "€25.00 / month",
-      "ai_openai_pool": "€15.00 / month",
-      "total_estimated_monthly_cost": "€100.50 / month for up to 10 active garage tenants (~€10/garage/mo)"
+
+    "phase_2_production_integrations": {
+      "phase_name": "Phase 2: Live API Key Hookup & Third-Party Provisioning",
+      "status": "READY_FOR_CREDENTIALS",
+      "deliverables": [
+        "Ingest client Pennylane PDP API sandbox token & verify end-to-end DGFiP submission",
+        "Configure Brevo SMTP / API v3 keys for automated transactional email dispatches",
+        "Configure Meta WhatsApp Cloud API credentials & approved message templates",
+        "Deploy production Supabase PostgreSQL instance with Row Level Security policies",
+        "Set up Vercel production custom domain (e.g. app.atelier-os.com) with SSL"
+      ]
+    },
+
+    "phase_3_scaling_and_pilot_rollout": {
+      "phase_name": "Phase 3: Multi-Garage Pilot & Fleet Expansion",
+      "status": "PLANNED",
+      "deliverables": [
+        "Onboard first 3 pilot workshops in France and Geneva border region",
+        "Conduct live bay testing with grease-resistant tablet stations",
+        "Audit Chorus Pro and Pennylane e-invoicing compliance metrics with garage accountant",
+        "Launch SaaS Super Admin billing automation for MARS Association"
+      ]
     }
   }
 }

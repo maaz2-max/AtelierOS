@@ -298,6 +298,53 @@ html, body {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-modal);
   width: 100%;
+  max-width: 620px;
+  box-shadow: var(--shadow-modal);
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints: Mobile, Fold, Tablet, Laptop, Desktop
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+  .mobile-nav-toggle {
+    display: flex !important;
+  }
+  
+  /* Mobile padding & touch targets */
+  .saas-card {
+    padding: 16px !important;
+  }
+
+  /* Full width grid columns on small screens */
+  .responsive-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* Fold Phones (e.g. Galaxy Z Fold outer screen 280px - 360px) */
+@media (max-width: 360px) {
+  html {
+    font-size: 13px;
+  }
+  h1 {
+    font-size: 24px !important;
+  }
+}
+
   maxWidth: 620px;
   box-shadow: var(--shadow-modal);
   overflow: hidden;

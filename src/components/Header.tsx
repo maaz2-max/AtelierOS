@@ -104,6 +104,13 @@ export const Header: React.FC<HeaderProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onOpenCommandPalette]);
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile menu on view change or resize
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [currentView]);
+
   // ========================================================================
   // PUBLIC / UN-AUTHENTICATED HEADER BAR
   // ========================================================================
@@ -116,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({
         background: 'var(--color-surface)',
         borderBottom: '1px solid var(--color-border)',
         height: '56px',
-        padding: '0 24px'
+        padding: '0 16px'
       }}>
         <div style={{
           display: 'flex',
@@ -134,12 +141,12 @@ export const Header: React.FC<HeaderProps> = ({
             <img 
               src="/assets/logo.png" 
               alt="AtelierOS" 
-              style={{ height: '30px', width: 'auto', display: 'block', objectFit: 'contain' }} 
+              style={{ height: '28px', width: 'auto', display: 'block', objectFit: 'contain' }} 
             />
           </div>
 
-          {/* Public Navigation Links */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Desktop Navigation Links (Hidden on Mobile) */}
+          <nav className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <button
               onClick={() => onNavigate('landing')}
               style={{
@@ -205,81 +212,16 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </nav>
 
-          {/* Right Action Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* Language Selector */}
-            <div style={{ position: 'relative' }}>
-              <button
-                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  padding: '5px 10px',
-                  background: 'var(--color-surface-secondary)',
-                  border: '1px solid var(--color-border)',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '12px',
-                  fontWeight: '500',
-                  color: 'var(--color-text-secondary)',
-                  cursor: 'pointer'
-                }}
-              >
-                <span>{currentLanguage.toUpperCase()}</span>
-                <ChevronDown size={12} />
-              </button>
-
-              {langDropdownOpen && (
-                <div style={{
-                  position: 'absolute',
-                  top: '100%',
-                  right: 0,
-                  marginTop: '4px',
-                  background: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)',
-                  borderRadius: 'var(--radius-sm)',
-                  padding: '4px',
-                  boxShadow: 'var(--shadow-dropdown)',
-                  zIndex: 1100,
-                  minWidth: '120px'
-                }}>
-                  {[
-                    { code: 'en', label: 'English' },
-                    { code: 'fr', label: 'Français (FR)' },
-                    { code: 'fr-CH', label: 'Français (CH)' },
-                    { code: 'de-CH', label: 'Deutsch (CH)' }
-                  ].map(l => (
-                    <div
-                      key={l.code}
-                      onClick={() => {
-                        onLanguageChange(l.code as SupportedLanguage);
-                        setLangDropdownOpen(false);
-                      }}
-                      style={{
-                        padding: '6px 10px',
-                        borderRadius: 'var(--radius-xs)',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        background: currentLanguage === l.code ? 'var(--brand-blue-soft)' : 'transparent',
-                        color: currentLanguage === l.code ? 'var(--brand-blue)' : 'var(--color-text-primary)',
-                        fontWeight: currentLanguage === l.code ? '600' : '400'
-                      }}
-                    >
-                      {l.label}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
+          {/* Right Action Controls (Desktop + Mobile Trigger) */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {/* AutoAI Trigger */}
             <button
               onClick={onOpenAiAssistant}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                padding: '6px 12px',
+                gap: '5px',
+                padding: '6px 10px',
                 background: 'var(--color-ai-soft)',
                 border: '1px solid var(--color-ai-border)',
                 color: 'var(--color-ai)',
@@ -290,28 +232,159 @@ export const Header: React.FC<HeaderProps> = ({
               }}
             >
               <Bot size={14} />
-              <span>AutoAI</span>
+              <span className="desktop-only">AutoAI</span>
             </button>
 
             {/* Log In Button */}
             <button
               onClick={onOpenLogin}
               style={{
-                padding: '6px 16px',
+                padding: '6px 14px',
                 background: 'var(--brand-blue)',
                 color: '#FFFFFF',
                 border: 'none',
                 borderRadius: 'var(--radius-sm)',
-                fontSize: '13px',
+                fontSize: '12px',
                 fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'background-color 0.15s ease'
+                cursor: 'pointer'
               }}
             >
               Log In
             </button>
+
+            {/* Mobile Hamburger Menu Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="mobile-nav-toggle"
+              style={{
+                display: 'none',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '6px',
+                background: 'var(--color-surface-secondary)',
+                border: '1px solid var(--color-border)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--color-text-primary)',
+                cursor: 'pointer'
+              }}
+              title="Toggle Menu"
+            >
+              {mobileMenuOpen ? <X size={18} /> : <span style={{ fontSize: '18px', lineHeight: 1 }}>☰</span>}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Dropdown Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div style={{
+            position: 'absolute',
+            top: '56px',
+            left: 0,
+            right: 0,
+            background: 'var(--color-surface)',
+            borderBottom: '1px solid var(--color-border)',
+            padding: '16px',
+            boxShadow: 'var(--shadow-dropdown)',
+            zIndex: 1100,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px'
+          }}>
+            <button
+              onClick={() => { onNavigate('landing'); setMobileMenuOpen(false); }}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                background: currentView === 'landing' ? 'var(--brand-blue-soft)' : 'var(--color-surface-secondary)',
+                color: currentView === 'landing' ? 'var(--brand-blue)' : 'var(--color-text-primary)',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+            >
+              Overview
+            </button>
+
+            <button
+              onClick={() => { onNavigate('booking-portal'); setMobileMenuOpen(false); }}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                background: currentView === 'booking-portal' ? 'var(--brand-blue-soft)' : 'var(--color-surface-secondary)',
+                color: currentView === 'booking-portal' ? 'var(--brand-blue)' : 'var(--color-text-primary)',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+            >
+              Customer Web Booking
+            </button>
+
+            <button
+              onClick={() => { onNavigate('tracking-portal'); setMobileMenuOpen(false); }}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                background: currentView === 'tracking-portal' ? 'var(--brand-blue-soft)' : 'var(--color-surface-secondary)',
+                color: currentView === 'tracking-portal' ? 'var(--brand-blue)' : 'var(--color-text-primary)',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+            >
+              Live Vehicle Tracker
+            </button>
+
+            <button
+              onClick={() => { onNavigate('approval-portal'); setMobileMenuOpen(false); }}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                background: currentView === 'approval-portal' ? 'var(--brand-blue-soft)' : 'var(--color-surface-secondary)',
+                color: currentView === 'approval-portal' ? 'var(--brand-blue)' : 'var(--color-text-primary)',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+            >
+              Quote Approval Portal
+            </button>
+
+            <div style={{ display: 'flex', gap: '8px', marginTop: '8px', paddingTop: '12px', borderTop: '1px solid var(--color-border)' }}>
+              {['en', 'fr', 'fr-CH', 'de-CH'].map(l => (
+                <button
+                  key={l}
+                  onClick={() => { onLanguageChange(l as SupportedLanguage); setMobileMenuOpen(false); }}
+                  style={{
+                    flex: 1,
+                    padding: '8px',
+                    borderRadius: 'var(--radius-sm)',
+                    border: currentLanguage === l ? '1px solid var(--brand-blue)' : '1px solid var(--color-border)',
+                    background: currentLanguage === l ? 'var(--brand-blue-soft)' : 'var(--color-surface)',
+                    color: currentLanguage === l ? 'var(--brand-blue)' : 'var(--color-text-secondary)',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {l.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </header>
     );
   }

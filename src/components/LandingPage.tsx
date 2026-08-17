@@ -47,6 +47,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   currentLanguage
 }) => {
   const t = (translations[currentLanguage] || translations.en) as any;
+  const isFr = currentLanguage.startsWith('fr');
+  const isDe = currentLanguage.startsWith('de');
 
   // Interactive ROI Calculator State
   const [mechanicsCount, setMechanicsCount] = useState(4);
@@ -73,7 +75,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: t.landing?.feat1Title || "Central Scheduling Engine",
       subtitle: t.landing?.feat1Desc || "Single availability pipeline for staff, web bookings, and AI.",
       icon: CalendarIcon,
-      metrics: "100% Conflict-Free",
+      metrics: isFr ? "100% Sans Conflit" : isDe ? "100% Konfliktfrei" : "100% Conflict-Free",
       color: "#0071e3",
       accent: "#EBF5FF"
     },
@@ -81,7 +83,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: t.landing?.feat2Title || "Mechanic Tablet Bay Mode",
       subtitle: t.landing?.feat2Desc || "Large 48px touch targets for rugged workshop stations.",
       icon: Tablet,
-      metrics: "3.5x Faster Checklists",
+      metrics: isFr ? "3.5x Plus Rapide" : isDe ? "3.5x Schneller" : "3.5x Faster Checklists",
       color: "#10b981",
       accent: "#ECFDF5"
     },
@@ -89,7 +91,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: t.landing?.feat3Title || "Cross-Border FR & CH Invoicing",
       subtitle: t.landing?.feat3Desc || "Deterministic tax compliance, Chorus Pro & Swiss QR-Bills.",
       icon: Receipt,
-      metrics: "EUR 20% & CHF 8.1%",
+      metrics: isFr ? "TVA 20% & 8.1%" : isDe ? "MWST 20% & 8.1%" : "EUR 20% & CHF 8.1%",
       color: "#f76b15",
       accent: "#FFF4ED"
     },
@@ -97,7 +99,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: t.landing?.feat4Title || "Magic Link Quote Approvals",
       subtitle: t.landing?.feat4Desc || "Customers inspect parts & digitally sign in seconds.",
       icon: FileCheck2,
-      metrics: "< 3 Min Turnaround",
+      metrics: isFr ? "< 3 Min Validation" : isDe ? "< 3 Min Freigabe" : "< 3 Min Turnaround",
       color: "#7c3aed",
       accent: "#F5F3FF"
     }
@@ -186,10 +188,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           textAlign: 'right',
           lineHeight: '1.9'
         }}>
-          <div>// ATELIER OS · LIVE ENGINE</div>
-          <div style={{ color: '#F76B15', fontWeight: '600' }}>4 BAYS ACTIVE · 0 CONFLICTS</div>
+          <div>// ATELIER OS · {isFr ? "MOTEUR CENTRAL" : isDe ? "ZENTRALES SYSTEM" : "LIVE ENGINE"}</div>
+          <div style={{ color: '#F76B15', fontWeight: '600' }}>{isFr ? "4 PONTS ACTIFS · 0 CONFLIT" : isDe ? "4 BÜHNEN AKTIV · 0 KONFLIKTE" : "4 BAYS ACTIVE · 0 CONFLICTS"}</div>
           <div>20.0% FACTUR-X &amp; 8.1% QR-BILL</div>
-          <div>LEARNING NEVER FORGETS</div>
+          <div>{isFr ? "APPRENTISSAGE CONTINU" : isDe ? "KONTINUIERLICHES LERNEN" : "LEARNING NEVER FORGETS"}</div>
         </aside>
 
         <aside className="desktop-only octo-telemetry" style={{
@@ -199,10 +201,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           textAlign: 'left',
           lineHeight: '1.9'
         }}>
-          <div>// AUTO INTEL · RUNTIME</div>
-          <div>12MS BAY CONSTRAINT SOLVER</div>
-          <div>3-SEC MAGIC QUOTE SIGN-OFF</div>
-          <div style={{ color: '#10B981', fontWeight: '600' }}>CHORUS PRO CERTIFIED ✓</div>
+          <div>// AUTO INTEL · {isFr ? "EXÉCUTION" : isDe ? "LAUFZEIT" : "RUNTIME"}</div>
+          <div>{isFr ? "RÉSOLUTEUR EN 12MS" : isDe ? "12MS ECHTZEIT-SOLVER" : "12MS BAY CONSTRAINT SOLVER"}</div>
+          <div>{isFr ? "VALIDATION DEVIS EN 3 SEC" : isDe ? "3-SEK OFFEN-SIGNATUR" : "3-SEC MAGIC QUOTE SIGN-OFF"}</div>
+          <div style={{ color: '#10B981', fontWeight: '600' }}>{isFr ? "CERTIFIÉ CHORUS PRO ✓" : isDe ? "CHORUS PRO ZERTIFIZIERT ✓" : "CHORUS PRO CERTIFIED ✓"}</div>
         </aside>
 
         {/* Superellipse Pill Badge */}
@@ -376,12 +378,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <Flame size={18} />
               </div>
               <div>
-                <div style={{ fontSize: '15px', fontWeight: '700', color: '#101010' }}>ONE Central Engine</div>
-                <div className="octo-telemetry" style={{ color: '#F76B15' }}>SHARED BY STAFF, WEB &amp; AI</div>
+                <div style={{ fontSize: '15px', fontWeight: '700', color: '#101010' }}>{isFr ? "1 Moteur Central Unique" : isDe ? "1 Zentrales System" : "ONE Central Engine"}</div>
+                <div className="octo-telemetry" style={{ color: '#F76B15' }}>{isFr ? "PARTAGÉ GARAGE, WEB & IA" : isDe ? "GETEILT VON TEAM, WEB & KI" : "SHARED BY STAFF, WEB & AI"}</div>
               </div>
             </div>
             <div style={{ fontSize: '13px', color: '#64748B', lineHeight: 1.5 }}>
-              Single availability pipeline enforcing mechanic skill matrices, bay lift specs, and 15m cleaning buffers.
+              {isFr ? "Pipeline de disponibilité unique appliquant compétences mécaniciens, types de ponts et temps de battement 15m." : isDe ? "Einzelne Verfügbarkeits-Pipeline für Mechaniker-Skills, Hebebühnen und 15m Puffer." : "Single availability pipeline enforcing mechanic skill matrices, bay lift specs, and 15m cleaning buffers."}
             </div>
           </div>
 
@@ -392,12 +394,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <ShieldCheck size={18} />
               </div>
               <div>
-                <div style={{ fontSize: '15px', fontWeight: '700', color: '#101010' }}>Cross-Border Invoicing</div>
-                <div className="octo-telemetry" style={{ color: '#0071E3' }}>EUR 20.0% • CHF 8.1% QR-BILL</div>
+                <div style={{ fontSize: '15px', fontWeight: '700', color: '#101010' }}>{isFr ? "Facturation Transfrontalière" : isDe ? "Grenzüberschreitende Fakturierung" : "Cross-Border Invoicing"}</div>
+                <div className="octo-telemetry" style={{ color: '#0071E3' }}>{isFr ? "TVA 20.0% & QR-FACTURE 8.1%" : isDe ? "MWST 20.0% & QR-RECHNUNG 8.1%" : "EUR 20.0% • CHF 8.1% QR-BILL"}</div>
               </div>
             </div>
             <div style={{ fontSize: '13px', color: '#64748B', lineHeight: 1.5 }}>
-              Deterministic tax calculation with certified Chorus Pro Factur-X XML and Swiss structured QR-Bills.
+              {isFr ? "Calcul fiscal déterministe avec Factur-X XML certifié Chorus Pro et QR-Factures suisses structurées." : isDe ? "Deterministische Steuerberechnung mit zertifiziertem Chorus Pro Factur-X und Schweizer QR-Rechnungen." : "Deterministic tax calculation with certified Chorus Pro Factur-X XML and Swiss structured QR-Bills."}
             </div>
           </div>
 
@@ -408,12 +410,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <Tablet size={18} />
               </div>
               <div>
-                <div style={{ fontSize: '15px', fontWeight: '700', color: '#101010' }}>Mechanic Tablet Station</div>
-                <div className="octo-telemetry" style={{ color: '#10B981' }}>GREASE-RESISTANT 48PX UI</div>
+                <div style={{ fontSize: '15px', fontWeight: '700', color: '#101010' }}>{isFr ? "Mode Tablette Atelier" : isDe ? "Mechaniker Tablet-Station" : "Mechanic Tablet Station"}</div>
+                <div className="octo-telemetry" style={{ color: '#10B981' }}>{isFr ? "INTERFACE TACTILE 48PX" : isDe ? "ROBUSTE 48PX OBERFLÄCHE" : "GREASE-RESISTANT 48PX UI"}</div>
               </div>
             </div>
             <div style={{ fontSize: '13px', color: '#64748B', lineHeight: 1.5 }}>
-              Live stopwatch labor tracking, instant OBD-II fault lookup, and direct photo damage attachments.
+              {isFr ? "Chronomètre de main d'œuvre en direct, diagnostic OBD-II instantané et pièces jointes photos." : isDe ? "Echtzeit-Zeiterfassung, OBD-II Fehlercodes und Fotodokumentation." : "Live stopwatch labor tracking, instant OBD-II fault lookup, and direct photo damage attachments."}
             </div>
           </div>
         </div>
@@ -431,13 +433,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       }}>
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <span className="octo-telemetry" style={{ color: '#F76B15', display: 'block', marginBottom: '8px' }}>
-            IN PRACTICE • MEASURED ACCELERATION
+            {isFr ? "EN PRATIQUE • ACCÉLÉRATION MESURÉE" : isDe ? "IN DER PRAXIS • GEMESSENE BESCHLEUNIGUNG" : "IN PRACTICE • MEASURED ACCELERATION"}
           </span>
           <h2 style={{ fontSize: 'clamp(28px, 4.8vw, 46px)', fontWeight: '800', letterSpacing: '-0.03em', margin: '0 0 12px', color: '#101010' }}>
-            Measured Performance. Built-in Compliance.
+            {isFr ? "Performance Mesurée. Conformité Intégrée." : isDe ? "Gemessene Leistung. Integrierte Compliance." : "Measured Performance. Built-in Compliance."}
           </h2>
           <p style={{ fontSize: 'clamp(14px, 2.5vw, 17px)', color: '#64748B', maxWidth: '680px', margin: '0 auto' }}>
-            See how the AtelierOS automotive intelligence coordinates workshop operations, with every action secured and auditable.
+            {isFr ? "Découvrez comment l'intelligence AtelierOS coordonne les opérations du garage, avec chaque action sécurisée et auditable." : isDe ? "Erleben Sie, wie AtelierOS Werkstattabläufe automatisiert – auditierbar und sicher." : "See how the AtelierOS automotive intelligence coordinates workshop operations, with every action secured and auditable."}
           </p>
         </div>
 
@@ -453,9 +455,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="octo-chip" style={{ color: '#F76B15', marginBottom: '24px' }}>
               <Flame size={20} />
             </div>
-            <div className="octo-telemetry" style={{ color: '#F76B15', marginBottom: '6px' }}>PERFORMANCE</div>
+            <div className="octo-telemetry" style={{ color: '#F76B15', marginBottom: '6px' }}>{isFr ? "PERFORMANCE" : isDe ? "LEISTUNG" : "PERFORMANCE"}</div>
             <h3 style={{ fontSize: 'clamp(20px, 3.5vw, 26px)', fontWeight: '800', color: '#101010', margin: '0 0 16px', lineHeight: 1.25 }}>
-              Central scheduling coordinates more than half of garage dispatching.
+              {isFr ? "Le planning central coordonne plus de la moitié des interventions du garage." : isDe ? "Die zentrale Disposition koordiniert über die Hälfte aller Werkstatteinsätze." : "Central scheduling coordinates more than half of garage dispatching."}
             </h3>
             
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -463,19 +465,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#F76B15' }}>
                   <Zap size={11} />
                 </span>
-                <span><strong style={{ color: '#101010' }}>4.4M+</strong> <span style={{ color: '#64748B' }}>slots validated with 0 conflicts</span></span>
+                <span><strong style={{ color: '#101010' }}>4.4M+</strong> <span style={{ color: '#64748B' }}>{isFr ? "créneaux validés sans conflit" : isDe ? "konfliktfreie Termine validiert" : "slots validated with 0 conflicts"}</span></span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
                 <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#F76B15' }}>
                   <Check size={11} />
                 </span>
-                <span><strong style={{ color: '#101010' }}>€700M+</strong> <span style={{ color: '#64748B' }}>invoices generated compliant</span></span>
+                <span><strong style={{ color: '#101010' }}>€700M+</strong> <span style={{ color: '#64748B' }}>{isFr ? "factures conformes générées" : isDe ? "Rechnungen gesetzeskonform erstellt" : "invoices generated compliant"}</span></span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
                 <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#F76B15' }}>
                   <Clock size={11} />
                 </span>
-                <span><strong style={{ color: '#101010' }}>51%</strong> <span style={{ color: '#64748B' }}>administrative hours recovered</span></span>
+                <span><strong style={{ color: '#101010' }}>51%</strong> <span style={{ color: '#64748B' }}>{isFr ? "heures administratives récupérées" : isDe ? "administrative Stunden eingespart" : "administrative hours recovered"}</span></span>
               </li>
             </ul>
 
@@ -488,7 +490,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               marginTop: 'auto'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <span className="octo-telemetry">LIVE BAY AUTOMATION LOAD</span>
+                <span className="octo-telemetry">{isFr ? "CHARGE D'AUTOMATISATION ATELIER" : isDe ? "ECHTZEIT-AUSLASTUNG ATELIER" : "LIVE BAY AUTOMATION LOAD"}</span>
                 <span style={{ fontSize: '13px', fontWeight: '700', color: '#F76B15' }}>{liveMeterProgress}%</span>
               </div>
               <div style={{ height: '8px', background: '#FFF4ED', borderRadius: '9999px', overflow: 'hidden' }}>
@@ -508,9 +510,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="octo-chip" style={{ color: '#0071E3', marginBottom: '24px' }}>
               <Lock size={20} />
             </div>
-            <div className="octo-telemetry" style={{ color: '#0071E3', marginBottom: '6px' }}>CROSS-BORDER COMPLIANCE</div>
+            <div className="octo-telemetry" style={{ color: '#0071E3', marginBottom: '6px' }}>{isFr ? "CONFORMITÉ TRANSFRONTALIÈRE" : isDe ? "GRENZÜBERSCHREITENDE COMPLIANCE" : "CROSS-BORDER COMPLIANCE"}</div>
             <h3 style={{ fontSize: 'clamp(20px, 3.5vw, 26px)', fontWeight: '800', color: '#101010', margin: '0 0 16px', lineHeight: 1.25 }}>
-              Deterministic tax rules. Zero data leakage across tenants.
+              {isFr ? "Règles fiscales déterministes. Zéro fuite de données entre garages." : isDe ? "Deterministische Steuerregeln. Keine Datenübertragung zwischen Mandanten." : "Deterministic tax rules. Zero data leakage across tenants."}
             </h3>
 
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -518,19 +520,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#0071E3' }}>
                   <ShieldCheck size={11} />
                 </span>
-                <span><strong style={{ color: '#101010' }}>Chorus Pro PPF/PDP</strong> <span style={{ color: '#64748B' }}>compliant Factur-X</span></span>
+                <span><strong style={{ color: '#101010' }}>Chorus Pro PPF/PDP</strong> <span style={{ color: '#64748B' }}>{isFr ? "conforme Factur-X" : isDe ? "konformes Factur-X" : "compliant Factur-X"}</span></span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
                 <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#0071E3' }}>
                   <Check size={11} />
                 </span>
-                <span><strong style={{ color: '#101010' }}>Swiss QR-Bill</strong> <span style={{ color: '#64748B' }}>structured BVR with 27-digit Ref</span></span>
+                <span><strong style={{ color: '#101010' }}>Swiss QR-Bill</strong> <span style={{ color: '#64748B' }}>{isFr ? "QR-Facture avec réf. à 27 chiffres" : isDe ? "QR-Rechnung mit 27-stelliger Referenz" : "structured BVR with 27-digit Ref"}</span></span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
                 <span className="octo-chip" style={{ width: '22px', height: '22px', color: '#0071E3' }}>
                   <Lock size={11} />
                 </span>
-                <span><strong style={{ color: '#101010' }}>GDPR &amp; nLPD</strong> <span style={{ color: '#64748B' }}>zero-telemetry local storage</span></span>
+                <span><strong style={{ color: '#101010' }}>GDPR &amp; nLPD</strong> <span style={{ color: '#64748B' }}>{isFr ? "stockage local sécurisé" : isDe ? "lokaler Speicher" : "zero-telemetry local storage"}</span></span>
               </li>
             </ul>
 
@@ -636,7 +638,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div style={{ marginBottom: '26px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '4px' }}>
                 <label style={{ fontSize: '13px', color: '#475569', fontWeight: '600' }}>{t.landing?.roiMechanicsLabel || "Number of Active Mechanics"}</label>
-                <span style={{ fontSize: '15px', fontWeight: '700', color: '#0071E3', fontFamily: 'var(--font-mono)' }}>{mechanicsCount} Techs</span>
+                <span style={{ fontSize: '15px', fontWeight: '700', color: '#0071E3', fontFamily: 'var(--font-mono)' }}>
+                  {mechanicsCount} {isFr ? "Techniciens" : isDe ? "Mechaniker" : "Techs"}
+                </span>
               </div>
               <input
                 type="range"
@@ -652,7 +656,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div style={{ marginBottom: '18px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '4px' }}>
                 <label style={{ fontSize: '13px', color: '#475569', fontWeight: '600' }}>{t.landing?.roiMonthlyWorkOrders || "Work Orders Completed / Month"}</label>
-                <span style={{ fontSize: '15px', fontWeight: '700', color: '#10B981', fontFamily: 'var(--font-mono)' }}>{monthlyOrders} Orders</span>
+                <span style={{ fontSize: '15px', fontWeight: '700', color: '#10B981', fontFamily: 'var(--font-mono)' }}>
+                  {monthlyOrders} {isFr ? "Ordres" : isDe ? "Aufträge" : "Orders"}
+                </span>
               </div>
               <input
                 type="range"
@@ -679,7 +685,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div style={{ marginBottom: '22px' }}>
               <div className="octo-telemetry">{t.landing?.roiHoursSaved || "ADMINISTRATIVE HOURS SAVED / MONTH"}</div>
               <div style={{ fontSize: 'clamp(34px, 6.5vw, 48px)', fontWeight: '800', color: '#101010', letterSpacing: '-0.03em', margin: '4px 0' }}>
-                {hoursSavedPerMonth} <span style={{ fontSize: '18px', fontWeight: '500', color: '#64748B' }}>Hours</span>
+                {hoursSavedPerMonth} <span style={{ fontSize: '18px', fontWeight: '500', color: '#64748B' }}>{isFr ? "Heures" : isDe ? "Stunden" : "Hours"}</span>
               </div>
             </div>
 
@@ -689,7 +695,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 {pricingCurrency === 'EUR' ? `€${revenueGain.toLocaleString()}` : `CHF ${revenueGain.toLocaleString()}`}
               </div>
               <div style={{ fontSize: '12px', color: '#64748B' }}>
-                Based on {pricingCurrency === 'EUR' ? '€88/h (FR)' : 'CHF 148/h (CH)'} recovered technician capacity.
+                {isFr ? "Basé sur une capacité technicien récupérée de" : isDe ? "Basierend auf Techniker-Kapazität von" : "Based on"} {pricingCurrency === 'EUR' ? '€88/h (FR)' : 'CHF 148/h (CH)'} {isFr ? "par mois." : isDe ? "pro Monat." : "recovered technician capacity."}
               </div>
             </div>
           </div>
@@ -724,7 +730,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               />
             </div>
             <p style={{ fontSize: '13px', lineHeight: 1.6, color: '#475569', margin: '0 0 16px' }}>
-              The Operating System for Modern Automotive Workshops. Engineered for France &amp; Switzerland with ONE central scheduling engine.
+              {isFr 
+                ? "Le Système d'Exploitation pour Ateliers Automobiles Modernes. Conçu pour la France et la Suisse avec un moteur central unique."
+                : isDe
+                ? "Das Betriebssystem für moderne Autowerkstätten. Entwickelt für Frankreich und die Schweiz mit einem zentralen Planungssystem."
+                : "The Operating System for Modern Automotive Workshops. Engineered for France & Switzerland with ONE central scheduling engine."}
             </p>
             <div style={{
               display: 'inline-flex',
@@ -740,49 +750,49 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               fontFamily: 'var(--font-mono)'
             }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#F76B15' }}></span>
-              <span>PROTOTYPE PREVIEW • ACTIVE DEV</span>
+              <span>{isFr ? "VERSION PROTOTYPE • DEV ACTIF" : isDe ? "PROTOTYP VORSCHAU • AKTIV" : "PROTOTYPE PREVIEW • ACTIVE DEV"}</span>
             </div>
           </div>
 
           {/* Column 2: Platform Subsystems */}
           <div>
             <div style={{ fontSize: '13px', fontWeight: '700', color: '#101010', marginBottom: '14px', letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
-              Platform Subsystems
+              {isFr ? "Sous-Systèmes Atelier" : isDe ? "Plattform-Module" : "Platform Subsystems"}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
-              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchApp}>Central Scheduling Pipeline</span>
-              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchApp}>Mechanic iPad Bay Mode</span>
-              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchApp}>Magic Link Quote Approvals</span>
-              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchBooking}>Customer Web Booking</span>
-              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onOpenAi}>AutoAI Workshop Receptionist</span>
+              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchApp}>{isFr ? "Moteur de Planning Central" : isDe ? "Zentrale Disposition" : "Central Scheduling Pipeline"}</span>
+              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchApp}>{isFr ? "Mode Tablette Atelier" : isDe ? "Mechaniker Tablet-Station" : "Mechanic iPad Bay Mode"}</span>
+              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchApp}>{isFr ? "Approbation Devis par Lien Magique" : isDe ? "Offerten-Freigabe per Link" : "Magic Link Quote Approvals"}</span>
+              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onLaunchBooking}>{isFr ? "Réservation Web Client" : isDe ? "Kunden Online-Buchung" : "Customer Web Booking"}</span>
+              <span style={{ cursor: 'pointer', color: '#475569' }} onClick={onOpenAi}>{isFr ? "Réceptionniste IA AutoAI" : isDe ? "AutoAI Werkstatt-Empfang" : "AutoAI Workshop Receptionist"}</span>
             </div>
           </div>
 
           {/* Column 3: Regional Compliance */}
           <div>
             <div style={{ fontSize: '13px', fontWeight: '700', color: '#101010', marginBottom: '14px', letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
-              Regional Governance
+              {isFr ? "Fiscalité & Régions" : isDe ? "Regionale Compliance" : "Regional Governance"}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
-              <span style={{ color: '#475569' }}>France 20.0% TVA &amp; Factur-X</span>
-              <span style={{ color: '#475569' }}>Chorus Pro (PPF/PDP) E-Invoicing</span>
-              <span style={{ color: '#475569' }}>Switzerland 8.1% TVA &amp; QR-Bill</span>
-              <span style={{ color: '#475569' }}>Swiss BVR &amp; IBAN QR Generator</span>
-              <span style={{ color: '#475569' }}>Dual EUR (€) &amp; CHF Currency</span>
+              <span style={{ color: '#475569' }}>{isFr ? "France TVA 20.0% & Factur-X" : isDe ? "Frankreich 20.0% MWST & Factur-X" : "France 20.0% TVA & Factur-X"}</span>
+              <span style={{ color: '#475569' }}>{isFr ? "Facturation Chorus Pro (PPF/PDP)" : isDe ? "Chorus Pro E-Rechnung" : "Chorus Pro (PPF/PDP) E-Invoicing"}</span>
+              <span style={{ color: '#475569' }}>{isFr ? "Suisse TVA 8.1% & QR-Facture" : isDe ? "Schweiz 8.1% MWST & QR-Rechnung" : "Switzerland 8.1% TVA & QR-Bill"}</span>
+              <span style={{ color: '#475569' }}>{isFr ? "Générateur BVR & QR IBAN Suisse" : isDe ? "Schweizer BVR & QR Generator" : "Swiss BVR & IBAN QR Generator"}</span>
+              <span style={{ color: '#475569' }}>{isFr ? "Multi-Devises EUR (€) & CHF" : isDe ? "Währungen EUR (€) & CHF" : "Dual EUR (€) & CHF Currency"}</span>
             </div>
           </div>
 
           {/* Column 4: Legal & Security */}
           <div>
             <div style={{ fontSize: '13px', fontWeight: '700', color: '#101010', marginBottom: '14px', letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
-              Legal &amp; Trust
+              {isFr ? "Confidentialité & Sécurité" : isDe ? "Rechtliches & Sicherheit" : "Legal & Trust"}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
-              <span style={{ cursor: 'pointer', color: '#0071E3' }} onClick={() => onOpenLegal('PRIVACY')}>Privacy Policy (RGPD / nLPD)</span>
-              <span style={{ cursor: 'pointer', color: '#0071E3' }} onClick={() => onOpenLegal('TERMS')}>Terms of Service</span>
-              <span style={{ cursor: 'pointer', color: '#0071E3' }} onClick={() => onOpenLegal('EINVOICE_INFO')}>Factur-X &amp; QR-Bill Specifications</span>
-              <span style={{ color: '#475569' }}>Zero-Telemetry Local Storage</span>
-              <span style={{ color: '#475569' }}>Multi-Tenant RBAC Isolation</span>
+              <span style={{ cursor: 'pointer', color: '#0071E3' }} onClick={() => onOpenLegal('PRIVACY')}>{isFr ? "Politique de Confidentialité (RGPD / nLPD)" : isDe ? "Datenschutzerklärung (DSGVO / nDSG)" : "Privacy Policy (RGPD / nLPD)"}</span>
+              <span style={{ cursor: 'pointer', color: '#0071E3' }} onClick={() => onOpenLegal('TERMS')}>{isFr ? "Conditions Générales d'Utilisation" : isDe ? "Nutzungsbedingungen" : "Terms of Service"}</span>
+              <span style={{ cursor: 'pointer', color: '#0071E3' }} onClick={() => onOpenLegal('EINVOICE_INFO')}>{isFr ? "Spécifications Factur-X & QR-Facture" : isDe ? "Factur-X & QR-Rechnung Spezifikationen" : "Factur-X & QR-Bill Specifications"}</span>
+              <span style={{ color: '#475569' }}>{isFr ? "Stockage Local Zéro Télémétrie" : isDe ? "Null-Telemetrie Lokaler Speicher" : "Zero-Telemetry Local Storage"}</span>
+              <span style={{ color: '#475569' }}>{isFr ? "Isolation Multi-Garages RBAC" : isDe ? "Mandanten-Isolation RBAC" : "Multi-Tenant RBAC Isolation"}</span>
             </div>
           </div>
         </div>
@@ -803,10 +813,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           fontFamily: 'var(--font-mono)'
         }}>
           <div>
-            © 2026 ATELIEROS. PROTOTYPE VERSION • ALL RIGHTS RESERVED.
+            {isFr ? "© 2026 ATELIEROS. VERSION PROTOTYPE • TOUS DROITS RÉSERVÉS." : isDe ? "© 2026 ATELIEROS. PROTOTYP VERSION • ALLE RECHTE VORBEHALTEN." : "© 2026 ATELIEROS. PROTOTYPE VERSION • ALL RIGHTS RESERVED."}
           </div>
           <div>
-            ENGINEERED FOR INDEPENDENT AUTOMOTIVE WORKSHOPS • FRANCE &amp; SWITZERLAND
+            {isFr ? "CONÇU POUR LES ATELIERS AUTOMOBILES INDÉPENDANTS • FRANCE & SUISSE" : isDe ? "ENTWICKELT FÜR UNABHÄNGIGE AUTOWERKSTÄTTEN • FRANKREICH & SCHWEIZ" : "ENGINEERED FOR INDEPENDENT AUTOMOTIVE WORKSHOPS • FRANCE & SWITZERLAND"}
           </div>
         </div>
       </footer>

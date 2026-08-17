@@ -156,36 +156,11 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({
               flexShrink: 0,
               filter: 'drop-shadow(0 4px 10px rgba(0, 102, 255, 0.4))'
             }}>
-              <svg width="40" height="40" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="aiRibbonGradD" x1="30" y1="160" x2="160" y2="40" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#00D2FF" />
-                    <stop offset="40%" stopColor="#0066FF" />
-                    <stop offset="80%" stopColor="#0047E0" />
-                    <stop offset="100%" stopColor="#00D2FF" />
-                  </linearGradient>
-                  <linearGradient id="aiArchGradD" x1="40" y1="140" x2="110" y2="30" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#0080FF" />
-                    <stop offset="50%" stopColor="#00D2FF" />
-                    <stop offset="100%" stopColor="#0055FF" />
-                  </linearGradient>
-                  <linearGradient id="aiLoopGradD" x1="80" y1="60" x2="160" y2="160" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#004CD8" />
-                    <stop offset="50%" stopColor="#0077FF" />
-                    <stop offset="100%" stopColor="#00D4FF" />
-                  </linearGradient>
-                  <linearGradient id="aiDotGradD" x1="145" y1="35" x2="175" y2="65" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#00E5FF" />
-                    <stop offset="60%" stopColor="#0066FF" />
-                    <stop offset="100%" stopColor="#003ACC" />
-                  </linearGradient>
-                </defs>
-                <path d="M96 54 C 106 72, 118 108, 126 132 C 134 156, 148 162, 160 148 C 170 136, 172 108, 172 84 C 172 74, 154 74, 154 84 C 154 104, 152 124, 146 134 C 142 140, 136 138, 130 120 C 122 96, 112 64, 98 42 Z" fill="url(#aiLoopGradD)" />
-                <path d="M36 148 C 32 120, 52 48, 86 36 C 108 28, 122 42, 120 66 C 118 86, 102 128, 96 142 C 92 152, 78 152, 78 140 C 78 126, 86 98, 92 78 C 96 66, 92 56, 82 58 C 64 62, 52 106, 54 136 C 56 150, 40 158, 36 148 Z" fill="url(#aiArchGradD)" />
-                <path d="M62 136 C 70 126, 82 124, 104 140 C 108 144, 102 152, 94 148 C 78 140, 70 142, 62 148 C 56 152, 54 144, 62 136 Z" fill="url(#aiRibbonGradD)" opacity="0.95" />
-                <circle cx="158" cy="46" r="15" fill="url(#aiDotGradD)" />
-                <ellipse cx="153" cy="41" rx="5" ry="3" fill="#FFFFFF" opacity="0.75" transform="rotate(-30 153 41)" />
-              </svg>
+              <img 
+                src="/assets/ai_logo.png" 
+                alt="AutoAI" 
+                style={{ width: '40px', height: '40px', objectFit: 'contain', display: 'block' }} 
+              />
             </div>
             <div>
               <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#101010', margin: 0, letterSpacing: '-0.02em' }}>{tai.title}</h2>

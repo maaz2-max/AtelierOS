@@ -160,7 +160,7 @@ export const Header: React.FC<HeaderProps> = ({
                 cursor: 'pointer'
               }}
             >
-              Overview
+              {t.nav?.landing || "Overview"}
             </button>
 
             <button
@@ -176,7 +176,7 @@ export const Header: React.FC<HeaderProps> = ({
                 cursor: 'pointer'
               }}
             >
-              Web Booking
+              {t.nav?.bookingPortal || "Web Booking"}
             </button>
 
             <button
@@ -192,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
                 cursor: 'pointer'
               }}
             >
-              Live Status
+              {currentLanguage.startsWith('fr') ? "Suivi en Direct" : currentLanguage.startsWith('de') ? "Live-Status" : "Live Status"}
             </button>
 
             <button
@@ -208,7 +208,7 @@ export const Header: React.FC<HeaderProps> = ({
                 cursor: 'pointer'
               }}
             >
-              Quote Approval
+              {currentLanguage.startsWith('fr') ? "Approbation Devis" : currentLanguage.startsWith('de') ? "Offerten-Freigabe" : "Quote Approval"}
             </button>
           </nav>
 
@@ -305,7 +305,7 @@ export const Header: React.FC<HeaderProps> = ({
                 cursor: 'pointer'
               }}
             >
-              Log In
+              {currentLanguage.startsWith('fr') ? "Connexion" : currentLanguage.startsWith('de') ? "Anmelden" : "Log In"}
             </button>
 
             {/* Mobile Hamburger Menu Toggle */}

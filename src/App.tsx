@@ -359,9 +359,7 @@ export const App: React.FC = () => {
         isOpen={isCmdPaletteOpen}
         onClose={() => setIsCmdPaletteOpen(false)}
         onNavigate={handleNavigate}
-      />
-
-      {/* Floating AutoAI Assistant 3D Ribbon Logo (No Background Circle) */}
+      />      {/* Floating AutoAI Assistant 3D Ribbon Logo (No Background Circle) */}
       <button
         onClick={() => setIsAiOpen(true)}
         aria-label="Open AutoAI Assistant"
@@ -384,55 +382,12 @@ export const App: React.FC = () => {
         }}
         title="AutoAI Assistant"
       >
-        {/* Standalone 3D Ribbon "Ai" Vector Logo */}
-        <svg width="68" height="68" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', overflow: 'visible' }}>
-          <defs>
-            <linearGradient id="aiRibbonGradA" x1="30" y1="160" x2="160" y2="40" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#00D2FF" />
-              <stop offset="40%" stopColor="#0066FF" />
-              <stop offset="80%" stopColor="#0047E0" />
-              <stop offset="100%" stopColor="#00D2FF" />
-            </linearGradient>
-            <linearGradient id="aiArchGradA" x1="40" y1="140" x2="110" y2="30" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#0080FF" />
-              <stop offset="50%" stopColor="#00D2FF" />
-              <stop offset="100%" stopColor="#0055FF" />
-            </linearGradient>
-            <linearGradient id="aiLoopGradA" x1="80" y1="60" x2="160" y2="160" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#004CD8" />
-              <stop offset="50%" stopColor="#0077FF" />
-              <stop offset="100%" stopColor="#00D4FF" />
-            </linearGradient>
-            <linearGradient id="aiDotGradA" x1="145" y1="35" x2="175" y2="65" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#00E5FF" />
-              <stop offset="60%" stopColor="#0066FF" />
-              <stop offset="100%" stopColor="#003ACC" />
-            </linearGradient>
-          </defs>
-          
-          {/* Right Leg of A transitioning down into i stem */}
-          <path 
-            d="M96 54 C 106 72, 118 108, 126 132 C 134 156, 148 162, 160 148 C 170 136, 172 108, 172 84 C 172 74, 154 74, 154 84 C 154 104, 152 124, 146 134 C 142 140, 136 138, 130 120 C 122 96, 112 64, 98 42 Z" 
-            fill="url(#aiLoopGradA)" 
-          />
-
-          {/* Main 3D Ribbon Arch forming A */}
-          <path 
-            d="M36 148 C 32 120, 52 48, 86 36 C 108 28, 122 42, 120 66 C 118 86, 102 128, 96 142 C 92 152, 78 152, 78 140 C 78 126, 86 98, 92 78 C 96 66, 92 56, 82 58 C 64 62, 52 106, 54 136 C 56 150, 40 158, 36 148 Z" 
-            fill="url(#aiArchGradA)" 
-          />
-
-          {/* Dynamic 3D Cross-Fold */}
-          <path 
-            d="M62 136 C 70 126, 82 124, 104 140 C 108 144, 102 152, 94 148 C 78 140, 70 142, 62 148 C 56 152, 54 144, 62 136 Z" 
-            fill="url(#aiRibbonGradA)" 
-            opacity="0.95"
-          />
-
-          {/* Floating 3D Dot of i with luminous highlight */}
-          <circle cx="158" cy="46" r="15" fill="url(#aiDotGradA)" />
-          <ellipse cx="153" cy="41" rx="5" ry="3" fill="#FFFFFF" opacity="0.75" transform="rotate(-30 153 41)" />
-        </svg>
+        {/* User's Exact 3D Ribbon "Ai" Transparent Logo */}
+        <img 
+          src="/assets/ai_logo.png" 
+          alt="AutoAI Assistant" 
+          style={{ width: '64px', height: '64px', objectFit: 'contain', display: 'block' }} 
+        />
 
         {/* Soft Online Pulse Spark */}
         <span style={{
